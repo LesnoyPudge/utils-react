@@ -1,0 +1,39 @@
+{
+    "name": "@lesnoypudge/utils-react",
+    "description": "lesnoypudge's utils-react",
+    "version": "0.0.1",
+    "keywords": [
+        "lesnoypudge",
+        "utils",
+        "react"
+    ],
+    "type": "module",
+    "scripts": {
+        "formatter:config": "formatter-config",
+        "lint:check": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "publish": "npm publish --access public",
+        "deploy": "git add . && git commit -m 'update' && git push && git status"
+    },
+    "dependencies": {
+        "@fluentui/react-context-selector": "^9.1.61",
+        "@lesnoypudge/utils": "^8.0.0",
+        "fast-deep-equal": "^3.1.3",
+        "rfdc": "^1.3.1"
+    },
+    "peerDependencies": {
+        "react": ">=17.0.0"
+    },
+    "devDependencies": {
+        "@lesnoypudge/eslint-base-config": "^1.9.0",
+        "@lesnoypudge/eslint-react-config": "^2.0.1",
+        "@lesnoypudge/formatter-config": "^1.1.0",
+        "@lesnoypudge/types-global-base": "^1.2.0",
+        "@lesnoypudge/types-global-react": "^2.0.1",
+        "@lesnoypudge/types-utils-base": "^1.1.0",
+        "@lesnoypudge/types-utils-react": "^5.0.0",
+        "babel-plugin-jsx-control-statements": "^4.1.2",
+        "eslint": "^9.4.0",
+        "typescript-eslint": "^7.12.0"
+    }
+}
