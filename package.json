@@ -7,13 +7,15 @@
         "utils",
         "react"
     ],
+    "main": "build/index.js",
     "type": "module",
     "scripts": {
         "formatter:config": "formatter-config",
         "lint:check": "eslint .",
         "lint:fix": "eslint . --fix",
         "publish": "npm publish --access public",
-        "deploy": "git add . && git commit -m 'update' && git push && git status"
+        "deploy": "git add . && git commit -m 'update' && git push && git status",
+        "build": "del-cli build && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json"
     },
     "dependencies": {
         "@fluentui/react-context-selector": "^9.1.61",
@@ -33,7 +35,9 @@
         "@lesnoypudge/types-utils-base": "^1.1.0",
         "@lesnoypudge/types-utils-react": "^5.0.0",
         "babel-plugin-jsx-control-statements": "^4.1.2",
+        "del-cli": "^5.1.0",
         "eslint": "^9.4.0",
+        "tsc-alias": "^1.8.10",
         "typescript-eslint": "^7.12.0"
     }
 }
