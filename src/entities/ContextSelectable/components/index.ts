@@ -1,1 +1,2 @@
-export * from './ContextSelectableConsumer';
+export * from './ContextConsumerSelector';
+export * from './ContextConsumerProxy';

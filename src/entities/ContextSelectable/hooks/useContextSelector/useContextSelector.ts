@@ -1,19 +1,24 @@
 import { shallowEqual } from '@lesnoypudge/utils';
-import { ContextSelectable, defaultSelector } from '@root';
+import { ContextSelectable, defaultSelector, useConst } from '@root';
 import React from 'react';
 import {
     ContextValue as ContextValueFluent,
     useContextSelector as useContextSelectorFluent,
     Context as ContextFluent,
 } from '@fluentui/react-context-selector';
+import { T } from '@lesnoypudge/types-utils-base/namespace';
+
+
 
 export type ContextSelectableSelector<
     _Value,
     _SelectedValue = _Value,
 > = (value: _Value) => _SelectedValue;
 
-export const useContextSelectable = <
-    _Value,
+const EMPTY_VALUE = Symbol.for('EMPTY_VALUE');
+
+export const useContextSelector = <
+    _Value extends T.UnknownRecord,
     _SelectedValue = _Value,
 >(
     context: ContextSelectable<_Value>,
@@ -24,17 +29,26 @@ export const useContextSelectable = <
 ): _SelectedValue => {
     const contextValue = React.useContext(
         context,
-    ) as ContextValueFluent<_Value>;
-    const selected = selector(contextValue.value.current);
-    const prevSelectedRef = React.useRef(selected);
-    const selectorRef = React.useRef(() => prevSelectedRef.current);
+    ) as unknown as ContextValueFluent<_Value>;
 
-    if (!shallowEqual(prevSelectedRef.current, selected)) {
+    const prevSelectedRef = React.useRef<
+        _SelectedValue | typeof EMPTY_VALUE
+    >(EMPTY_VALUE);
+
+    const stableSelector = useConst(() => () => {
+        const selected = selector(contextValue.value.current);
+
+        if (shallowEqual(selected, prevSelectedRef.current)) {
+            return prevSelectedRef.current as _SelectedValue;
+        }
+
         prevSelectedRef.current = selected;
-    }
+
+        return selected;
+    });
 
     return useContextSelectorFluent(
         context as ContextFluent<_Value>,
-        selectorRef.current,
+        stableSelector,
     );
 };

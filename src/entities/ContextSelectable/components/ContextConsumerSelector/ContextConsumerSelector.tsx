@@ -1,13 +1,14 @@
+import { T } from '@lesnoypudge/types-utils-base/namespace';
 import { RT } from '@lesnoypudge/types-utils-react/namespace';
 import {
     ContextSelectable, ContextSelectableSelector,
-    renderFunction, useContextSelectable,
+    renderFunction, useContextSelector,
 } from '@root';
 
 
 
-type ContextSelectableConsumerProps<
-    _Value,
+type ContextConsumerSelectorProps<
+    _Value extends T.UnknownRecord,
     _SelectedValue = _Value,
 > = (
     RT.PropsWithRenderFunction<[_SelectedValue]>
@@ -20,15 +21,15 @@ type ContextSelectableConsumerProps<
     }
 );
 
-export const ContextSelectableConsumer = <
-    _Value,
+export const ContextConsumerSelector = <
+    _Value extends T.UnknownRecord,
     _SelectedValue = _Value,
 >({
     context,
     selector,
     children,
-}: ContextSelectableConsumerProps<_Value, _SelectedValue>) => {
-    const value = useContextSelectable(context, selector);
+}: ContextConsumerSelectorProps<_Value, _SelectedValue>) => {
+    const value = useContextSelector(context, selector);
 
     return renderFunction(children, value);
 };
