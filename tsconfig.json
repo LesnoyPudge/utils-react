@@ -25,7 +25,9 @@
         "baseUrl": ".",
         "declarationDir": "build",
         "paths": {
-            "@root": ["src/index.ts"]
+            "@utils": ["src/utils/index.ts"],
+            "@hooks": ["src/hooks/index.ts"],
+            "@entities": ["src/entities/index.ts"]
         }
     }
 }

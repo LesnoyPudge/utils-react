@@ -1,9 +1,11 @@
+import {
+    ContextSelectable,
+    ContextSelectableSelector,
+    useContextSelector,
+} from '@entities';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
 import { RT } from '@lesnoypudge/types-utils-react/namespace';
-import {
-    ContextSelectable, ContextSelectableSelector,
-    renderFunction, useContextSelector,
-} from '@root';
+import { renderFunction } from '@utils';
 
 
 

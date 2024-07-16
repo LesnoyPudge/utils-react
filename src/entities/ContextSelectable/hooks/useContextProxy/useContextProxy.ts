@@ -1,11 +1,12 @@
 import { pick, shallowEqual } from '@lesnoypudge/utils';
-import { ContextSelectable, useConst } from '@root';
 import React, { useMemo } from 'react';
 import {
     useContextSelector as useContextSelectorFluent,
     Context as ContextFluent,
 } from '@fluentui/react-context-selector';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
+import { ContextSelectable } from '@entities';
+import { useConst } from '@hooks';
 
 
 
@@ -35,9 +36,8 @@ export const useContextProxy = <
 
         const usedKeysList = Array.from(usedKeys.values());
 
-        // @ts-expect-error
         const newUsedValue = pick(value, ...usedKeysList);
-        // @ts-expect-error
+
         const prevUsedValue = pick(prev.current, ...usedKeysList);
 
         if (shallowEqual(newUsedValue, prevUsedValue)) {

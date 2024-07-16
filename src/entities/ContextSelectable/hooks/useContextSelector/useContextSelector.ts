@@ -1,5 +1,4 @@
 import { shallowEqual } from '@lesnoypudge/utils';
-import { ContextSelectable, defaultSelector, useConst } from '@root';
 import React from 'react';
 import {
     ContextValue as ContextValueFluent,
@@ -7,6 +6,9 @@ import {
     Context as ContextFluent,
 } from '@fluentui/react-context-selector';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
+import { defaultSelector } from '@utils';
+import { ContextSelectable } from '@entities';
+import { useConst } from '@hooks';
 
 
 
