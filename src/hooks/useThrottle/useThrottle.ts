@@ -1,33 +1,82 @@
-import { throttle as throttleLib } from '@lesnoypudge/utils';
-import { useCallback } from 'react';
-import { useMountedWrapper, useNamedState } from '@hooks';
+import { useRef } from 'react';
+import {
+    useFunction,
+    useLatest,
+    useUniqueState,
+    useUnmountEffect,
+} from '@hooks';
+import { T } from '@lesnoypudge/types-utils-base/namespace';
+import { noop } from '@lesnoypudge/utils';
 
 
+export namespace useThrottle {
+    export type Options = {
+        /**
+         * Disable state updating.
+         * Ref will keep updating.
+         *
+         * @default false
+         */
+        stateless?: boolean;
+    };
+}
 
-export const useThrottle = () => {
-    const namedState = useNamedState('isThrottling', false);
-    const { mounted } = useMountedWrapper();
+/**
+ * Callback aren't called when component is unmounted;
+ */
+export const useThrottle = (options: useThrottle.Options = {}) => {
+    const [isThrottling, setIsThrottling] = useUniqueState(false);
+    const isThrottlingRef = useRef(isThrottling);
+    const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+    const isCalledDuringThrottleRef = useRef(false);
+    const lastArgsRef = useRef<unknown>();
+    const lastFunctionRef = useRef<T.AnyFunction>(noop);
+    const lastOptionsRef = useLatest(options);
 
-    /**
-     * Passed callback may be called asynchronously.
-     * Check that component is mounted before setting state.
-     */
-    const throttle: typeof throttleLib = useCallback((
-        callback,
-        delay,
+    const throttle = useFunction(<
+        _Callback extends T.AnyFunction,
+    >(
+        callback: _Callback,
+        delay: number,
     ) => {
-        namedState.setIsThrottling(true);
+        lastFunctionRef.current = callback;
 
-        return throttleLib((...args: Parameters<typeof callback>) => {
-            callback(...args);
+        const throttleWork = (...args: Parameters<_Callback>) => {
+            lastFunctionRef.current(...args);
+            !lastOptionsRef.current.stateless && setIsThrottling(true);
+            isThrottlingRef.current = true;
 
-            mounted(() => namedState.setIsThrottling(false));
-        }, delay);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+            timeoutRef.current = setTimeout(() => {
+                if (!isCalledDuringThrottleRef.current) {
+                    !lastOptionsRef.current.stateless && setIsThrottling(false);
+                    isThrottlingRef.current = false;
+                    return;
+                }
+
+                throttleWork(...lastArgsRef.current as Parameters<_Callback>);
+                isCalledDuringThrottleRef.current = false;
+                lastArgsRef.current = null;
+            }, delay);
+        };
+
+        return (...args: Parameters<_Callback>) => {
+            if (isThrottlingRef.current) {
+                isCalledDuringThrottleRef.current = true;
+                lastArgsRef.current = args;
+                return;
+            }
+
+            throttleWork(...args);
+        };
+    });
+
+    useUnmountEffect(() => {
+        clearTimeout(timeoutRef.current);
+    });
 
     return {
-        ...namedState,
+        isThrottling,
+        isThrottlingRef,
         throttle,
     };
 };

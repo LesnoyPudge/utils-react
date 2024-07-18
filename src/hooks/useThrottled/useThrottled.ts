@@ -1,12 +1,10 @@
-import { throttle } from '@lesnoypudge/utils';
-import { useMemo } from 'react';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
-import { useConst, useLatest } from '@hooks';
+import { useFunction, useThrottle } from '@hooks';
+
 
 
 /**
- * Passed callback may be called asynchronously.
- * Check that component is mounted before setting state.
+ * Callback aren't called when component is unmounted;
  */
 export const useThrottled = <
     _CallBack extends T.AnyFunction,
@@ -14,13 +12,7 @@ export const useThrottled = <
     callback: _CallBack,
     delay: number,
 ) => {
-    const callbackRef = useLatest(callback);
-    const _delay = useConst(() => delay);
+    const { throttle } = useThrottle({ stateless: true });
 
-    return useMemo(() => {
-        return throttle((...args: Parameters<_CallBack>) => {
-            callbackRef.current(...args);
-        }, _delay);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    return useFunction(throttle(callback, delay));
 };

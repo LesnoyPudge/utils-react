@@ -1,6 +1,3 @@
-use(Mutation/Resize/Intersection)Observer
-протестировать всё на setState в unmounted компонентах
-поменять все useCallback useMemo с пустыми зависимостями
-на useConst, и все функции (которые нужно) на useFunction
-в useEventListener добавить функционал отписки от null
+- use(Mutation/Resize/Intersection)Observer
+-??? в useEventListener добавить функционал отписки от null
 рефов

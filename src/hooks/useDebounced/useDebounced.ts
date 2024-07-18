@@ -1,13 +1,10 @@
 import { T } from '@lesnoypudge/types-utils-base/namespace';
-import { debounce } from '@lesnoypudge/utils';
-import { useConst, useLatest } from '@hooks';
-import { useMemo } from 'react';
+import { useConst, useDebounce, useFunction } from '@hooks';
 
 
 
 /**
- * Passed callback may be called asynchronously.
- * Check that component is mounted before setting state.
+ * Callback aren't called when component is unmounted;
  */
 export const useDebounced = <
     _CallBack extends T.AnyFunction,
@@ -15,13 +12,7 @@ export const useDebounced = <
     callback: _CallBack,
     delay: number,
 ) => {
-    const callbackRef = useLatest(callback);
-    const _delay = useConst(() => delay);
+    const { debounce } = useDebounce({ stateless: true });
 
-    return useMemo(() => {
-        return debounce((...args: Parameters<_CallBack>) => {
-            callbackRef.current(...args);
-        }, _delay);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    return useFunction(debounce(callback, delay));
 };

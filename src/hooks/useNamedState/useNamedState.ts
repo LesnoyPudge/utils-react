@@ -1,13 +1,12 @@
 import { T } from '@lesnoypudge/types-utils-base/namespace';
 import {
-    useCallback,
     useRef,
-    useState,
     Dispatch,
     SetStateAction,
     MutableRefObject,
 } from 'react';
 import { capitalize, isCallable } from '@lesnoypudge/utils';
+import { useFunction, useUniqueState } from '@hooks';
 
 
 
@@ -39,30 +38,26 @@ export const useNamedState = <
     name: _Name,
     initialState: _State | (() => _State),
 ): useNamedState.Return<_State, _Name> => {
-    const [value, setValue] = useState(initialState);
-    const stateRef = useRef(value);
+    const [state, setState] = useUniqueState(initialState);
+    const stateRef = useRef(state);
 
-    const setUniqueValue: typeof setValue = useCallback((newValue) => {
-        const state = (
+    const setStateAndRef: typeof setState = useFunction((newValue) => {
+        const _state = (
             isCallable(newValue)
-                ? newValue(stateRef.current)
+                ? newValue(state)
                 : newValue
         );
 
-        if (stateRef.current === state) return;
+        stateRef.current = _state;
+        setState(_state);
+    });
 
-        stateRef.current = state;
-        setValue(state);
-    }, []);
-
-    const result = {
-        [name]: value,
+    return {
+        [name]: state,
         [`${name}Ref`]: stateRef,
-        [`set${capitalize(name)}`]: setUniqueValue,
-        [0]: value,
+        [`set${capitalize(name)}`]: setStateAndRef,
+        [0]: state,
         [1]: stateRef,
-        [2]: setUniqueValue,
+        [2]: setStateAndRef,
     } as useNamedState.Return<_State, _Name>;
-
-    return result;
 };

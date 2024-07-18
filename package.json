@@ -17,7 +17,8 @@
         "type:watch": "tsc --noEmit -watch -p tsconfig.build.json",
         "publish": "npm publish --access public",
         "deploy": "git add . && git commit -m 'update' && git push && git status",
-        "build": "del-cli build && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json"
+        "build": "del-cli build && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+        "test": "vitest"
     },
     "dependencies": {
         "@fluentui/react-context-selector": "^9.1.63",
@@ -38,10 +39,16 @@
         "@lesnoypudge/types-global-react": "^2.0.1",
         "@lesnoypudge/types-utils-base": "^3.3.0",
         "@lesnoypudge/types-utils-react": "^5.0.0",
+        "@testing-library/dom": "^10.3.2",
+        "@testing-library/react": "^16.0.0",
+        "@types/jsdom": "^21.1.7",
         "babel-plugin-jsx-control-statements": "^4.1.2",
         "del-cli": "^5.1.0",
         "eslint": "^9.7.0",
+        "jsdom": "^24.1.0",
         "tsc-alias": "^1.8.10",
-        "typescript-eslint": "^7.16.0"
+        "typescript-eslint": "^7.16.0",
+        "vite-tsconfig-paths": "^4.3.2",
+        "vitest": "^2.0.3"
     }
 }

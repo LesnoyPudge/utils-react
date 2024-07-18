@@ -4,7 +4,7 @@ import { useConst, useLatest } from '@hooks';
 
 
 /**
- * Returns stable reference to last version of passed function.
+ * Returns a stable reference to the last version of the passed function.
  */
 export const useFunction = <
     _Callback extends T.AnyFunction,

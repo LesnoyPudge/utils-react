@@ -3,6 +3,7 @@
     "exclude": ["node_modules", "build"],
     "compilerOptions": {
         "types": [
+            "vitest/globals",
             "@lesnoypudge/types-global-base",
             "@lesnoypudge/types-global-react"
         ],

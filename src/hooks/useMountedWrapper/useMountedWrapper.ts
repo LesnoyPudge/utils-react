@@ -1,17 +1,15 @@
-import { useIsMounted } from '@hooks';
-import { useCallback } from 'react';
+import { useFunction, useIsMounted } from '@hooks';
 
 
 
 export const useMountedWrapper = () => {
     const { getIsMounted } = useIsMounted();
 
-    const mounted = useCallback((callback: () => void) => {
+    const mounted = useFunction((callback: () => void) => {
         if (!getIsMounted()) return;
 
         callback();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    });
 
     return {
         mounted,

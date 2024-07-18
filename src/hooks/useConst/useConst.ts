@@ -2,7 +2,7 @@ import { useRef } from 'react';
 
 
 
-const EMPTY_STATE = {};
+const EMPTY_STATE = Symbol.for('EMPTY_STATE');
 
 export const useConst = <_Value>(
     factory: () => _Value,

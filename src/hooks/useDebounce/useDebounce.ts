@@ -1,32 +1,59 @@
-import { debounce as debounceLib } from '@lesnoypudge/utils';
-import { useCallback } from 'react';
-import { useMountedWrapper, useNamedState } from '@hooks';
+import {
+    useFunction,
+    useLatest,
+    useUniqueState,
+    useUnmountEffect,
+} from '@hooks';
+import { T } from '@lesnoypudge/types-utils-base/namespace';
+import { useRef } from 'react';
 
 
 
-export const useDebounce = () => {
-    const namedState = useNamedState('isDebouncing', false);
-    const { mounted } = useMountedWrapper();
+export namespace useDebounce {
+    export type Options = {
+        /**
+         * Disable state updating.
+         * Ref will keep updating.
+         */
+        stateless?: boolean;
+    };
+}
 
-    /**
-     * Passed callback may be called asynchronously.
-     * Check that component is mounted before setting state.
-     */
-    const debounce: typeof debounceLib = useCallback((
-        callback,
-        delay,
+/**
+ * Callback aren't called when component is unmounted;
+ */
+export const useDebounce = (options: useDebounce.Options = {}) => {
+    const [isDebouncing, setIsDebouncing] = useUniqueState(false);
+    const isDebouncingRef = useRef(isDebouncing);
+    const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+    const lastOptionsRef = useLatest(options);
+
+    const debounce = useFunction(<
+        _Callback extends T.AnyFunction,
+    >(
+        callback: _Callback,
+        delay: number,
     ) => {
-        namedState.setIsDebouncing(true);
+        return (...args: Parameters<_Callback>) => {
+            clearTimeout(timeoutRef.current);
+            !lastOptionsRef.current.stateless && setIsDebouncing(true);
+            isDebouncingRef.current = true;
 
-        return debounceLib((...args: Parameters<typeof callback>) => {
-            callback(...args);
-            mounted(() => namedState.setIsDebouncing(false));
-        }, delay);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+            timeoutRef.current = setTimeout(() => {
+                callback(...args);
+                !lastOptionsRef.current.stateless && setIsDebouncing(false);
+                isDebouncingRef.current = true;
+            }, delay);
+        };
+    });
+
+    useUnmountEffect(() => {
+        clearTimeout(timeoutRef.current);
+    });
 
     return {
-        ...namedState,
+        isDebouncing,
+        isDebouncingRef,
         debounce,
     };
 };

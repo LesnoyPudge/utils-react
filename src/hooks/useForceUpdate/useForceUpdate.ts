@@ -1,10 +1,11 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
+import { useFunction } from '@hooks';
 
 
 
 export const useForceUpdate = () => {
-    const [, setState] = useState<object>({});
-    const forceUpdate = useCallback(() => setState({}), []);
+    const [_, setState] = useState(0);
+    const forceUpdate = useFunction(() => setState((prev) => prev + 1));
 
     return {
         forceUpdate,

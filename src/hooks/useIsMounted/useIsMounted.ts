@@ -1,4 +1,4 @@
-import { useConst } from '@hooks';
+import { useFunction } from '@hooks';
 import { useEffect, useRef } from 'react';
 
 
@@ -14,7 +14,7 @@ export const useIsMounted = () => {
         };
     }, []);
 
-    const getIsMounted = useConst(() => () => {
+    const getIsMounted = useFunction(() => {
         return isMountedRef.current;
     });
 

@@ -3,11 +3,14 @@ import { useEffect } from 'react';
 
 
 
-export const useMount = (fn: () => void) => {
+export const useUnmountEffect = (fn: () => void) => {
     const fnRef = useLatest(fn);
 
     useEffect(() => {
-        fnRef.current();
+        return () => {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            fnRef.current();
+        };
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 };
