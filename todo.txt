@@ -1,4 +1,0 @@
-- use(Mutation/Resize/Intersection)Observer
--??? в useEventListener добавить функционал отписки
-от null рефов (возможно использовать callbackRef
-https://www.youtube.com/watch?v=wwiaw_8JmLQ)

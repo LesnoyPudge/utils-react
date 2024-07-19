@@ -1,30 +1,23 @@
-import { useFunction, useLatest } from '@hooks';
-import { RefObject, useEffect } from 'react';
+import { useFunction, useRefCallback } from '@hooks';
+import { SharedMutationObserver } from '@lesnoypudge/utils';
 
 
 
-// links regarding shared functionality of observer
-// https://github.com/whatwg/dom/issues/126
-// https://github.com/microsoft/fast/blob/d38d31d2dd7496b5eb1e7c65b57de9a5e05e8546/packages/web-components/fast-element/src/utilities.ts#L91
+const observer = new SharedMutationObserver();
 
 export const useMutationObserver = (
-    elementRef: RefObject<HTMLElement>,
-    callback: MutationCallback,
+    callback: (record: MutationRecord) => void,
     options?: MutationObserverInit,
 ) => {
     const _callback = useFunction(callback);
-    const optionsRef = useLatest(options);
 
-    useEffect(() => {
-        if (!elementRef.current) return;
-
-        const observer = new MutationObserver(_callback);
-
-        observer.observe(elementRef.current, optionsRef.current);
+    const elementRefCallback = useRefCallback<HTMLElement>((element) => {
+        observer.observe(element, _callback, options);
 
         return () => {
-            observer.disconnect();
+            observer.unobserve(element, _callback);
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    });
+
+    return elementRefCallback;
 };

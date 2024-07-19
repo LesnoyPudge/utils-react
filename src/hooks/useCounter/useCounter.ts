@@ -1,6 +1,7 @@
-import { useState, useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from 'react';
 import { useConst } from '../useConst';
-import { Counter } from '@lesnoypudge/utils';
+import { Counter, pick } from '@lesnoypudge/utils';
+import { T } from '@lesnoypudge/types-utils-base/namespace';
 
 
 
@@ -14,9 +15,25 @@ export const useCounter = (
     ));
 
     const methods = useConst(() => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { onCountChange, ...methods } = counter;
-        return methods;
+        return pick(
+            counter as T.Simplify<Counter>,
+            'dec',
+            'decrease',
+            'get',
+            'getCount',
+            'getInitialCount',
+            'getInitialStep',
+            'getStep',
+            'inc',
+            'increase',
+            'reset',
+            'resetCount',
+            'resetStep',
+            'set',
+            'setCount',
+            'setInitialCount',
+            'setStep',
+        );
     });
 
     const count = useSyncExternalStore(

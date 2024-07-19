@@ -73,7 +73,7 @@ export const useEventListener = <
             optionsRef.current,
         );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [element]);
+    }, [element, eventName]);
 
     return (
         element ? undefined : refCallback

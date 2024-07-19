@@ -26,3 +26,6 @@ export * from './useIntersectionObserver';
 export * from './useRefMerged';
 export * from './useRefCallback';
 export * from './useEventListener';
+export * from './useBoolean';
+export * from './useIsFocusVisible';
+export * from './useInlineWorker';

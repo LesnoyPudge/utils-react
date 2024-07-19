@@ -1,26 +1,40 @@
 import { useFunction } from '@hooks';
 import { isCallable } from '@lesnoypudge/utils';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 
+
+export namespace useUniqueState {
+    export type initialValue<_Value> = _Value | (() => _Value);
+
+    export type setState<_Value> = Dispatch<SetStateAction<_Value>>;
+
+    export type Result<_Value> = [state: _Value, setState: setState<_Value>];
+}
+
+const defaultCompare = (prev: unknown, next: unknown) => prev === next;
 
 /**
  * Similar to useState, but skips updates if
- * the same value is passed to the setter.
+ * compare function returns true.
+ * Strict equality is used by default.
  */
 export const useUniqueState = <_Value>(
-    initial: _Value | (() => _Value),
-) => {
-    const [state, setState] = useState(initial);
+    initialValue: useUniqueState.initialValue<_Value>,
+    compare: (prev: _Value, next: _Value) => boolean = defaultCompare,
+): useUniqueState.Result<_Value> => {
+    const [state, setState] = useState(initialValue);
 
-    const setUniqueState: typeof setState = useFunction((newValue) => {
+    const setUniqueState: (
+        useUniqueState.setState<_Value>
+    ) = useFunction((newValue) => {
         const newState = (
             isCallable(newValue)
                 ? newValue(state)
                 : newValue
         );
 
-        if (state === newState) return;
+        if (compare(state, newState)) return;
 
         setState(newState);
     });
@@ -28,5 +42,5 @@ export const useUniqueState = <_Value>(
     return [
         state,
         setUniqueState,
-    ] as [typeof state, typeof setUniqueState];
+    ];
 };
