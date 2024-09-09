@@ -29,7 +29,7 @@ export const useMap = <
     });
 
     const _clear: Map<_Key, _Value>['clear'] = useFunction(() => {
-        setValue(new Map());
+        setValue(new Map<_Key, _Value>());
     });
 
     value.set = _set;

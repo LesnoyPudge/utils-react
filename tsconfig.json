@@ -1,34 +1,50 @@
 {
-    "include": ["**/*.ts", "**/*.tsx"],
-    "exclude": ["node_modules", "build"],
+    "include": [
+        "./src/**/*.ts",
+        "./src/**/*.tsx",
+    ],
+    "exclude": [
+        "./src/_WIP",
+    ],
     "compilerOptions": {
-        "types": [
-            "vitest/globals",
-            "@lesnoypudge/types-global-base",
-            "@lesnoypudge/types-global-react"
-        ],
-        "jsx": "react-jsx",
-        "lib": ["ESNext", "DOM"],
-        "module": "ESNext",
-        "target": "ESNext",
-        "moduleDetection": "force",
-        "outDir": "build",
-        "skipLibCheck": true,
-        "strict": true,
-        "moduleResolution": "Node",
-        "esModuleInterop": true,
-        "resolveJsonModule": true,
-        "isolatedModules": true,
-        "composite": true,
-        "allowJs": true,
-        "declaration": true,
-        "declarationMap": false,
+        "explainFiles": false,
         "baseUrl": ".",
-        "declarationDir": "build",
         "paths": {
             "@utils": ["src/utils/index.ts"],
             "@hooks": ["src/hooks/index.ts"],
             "@entities": ["src/entities/index.ts"]
-        }
+        },
+        "types": [
+            "@lesnoypudge/types-global-base",
+            "@lesnoypudge/types-global-react",
+        ],
+
+        "jsx": "react-jsx",
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "target": "ES2022",
+        "verbatimModuleSyntax": false,
+        "allowJs": true,
+        "resolveJsonModule": true,
+        "moduleDetection": "auto",
+
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "noFallthroughCasesInSwitch": true,
+
+        // "moduleResolution": "NodeNext",
+        // "module": "NodeNext",
+        // "outDir": "dist",
+        // "sourceMap": true,
+        // "declaration": true,
+
+        "moduleResolution": "Bundler",
+        "module": "ESNext",
+        // "noEmit": true,
+        "outDir": "build",
+        "sourceMap": true,
+        "declaration": true,
+
+        "lib": ["ES2022", "DOM", "DOM.Iterable"],
     }
 }

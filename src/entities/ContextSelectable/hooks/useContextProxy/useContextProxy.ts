@@ -10,7 +10,7 @@ import { useConst } from '@hooks';
 
 
 
-const EMPTY_VALUE = Symbol.for('empty-state');
+const EMPTY_VALUE = Symbol.for('EMPTY_VALUE');
 
 export const useContextProxy = <
     _Value extends T.UnknownRecord,
@@ -41,8 +41,7 @@ export const useContextProxy = <
         const prevUsedValue = pick(prev.current, ...usedKeysList);
 
         if (shallowEqual(newUsedValue, prevUsedValue)) {
-            // prev.current = Object.assign(stableObject, value, newUsedValue);
-            return prev.current;
+           return prev.current;
         }
 
         prev.current = value;
@@ -65,23 +64,8 @@ export const useContextProxy = <
         },
     }));
 
-    // const prevUsedKeysSizeRef = useRef<number | null>(null);
-
     const memoizedValue = useMemo(() => {
         return new Proxy(value, proxyHandler);
-
-        // if (prevUsedKeysSizeRef.current === null) {
-        //     prevUsedKeysSizeRef.current = 0;
-        //     return new Proxy(value, proxyHandler) as _Value;
-        // }
-
-        // if (usedKeys.size === prevUsedKeysSizeRef.current) {
-        //     return value;
-        // }
-
-        // prevUsedKeysSizeRef.current = usedKeys.size;
-
-        // return new Proxy(value, proxyHandler) as _Value;
     }, [proxyHandler, value]);
 
     return memoizedValue;

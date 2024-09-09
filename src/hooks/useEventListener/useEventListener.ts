@@ -1,13 +1,13 @@
-import { useEffect } from 'react';
 import { addEventListener } from '@lesnoypudge/utils';
-import { T } from '@lesnoypudge/types-utils-base/namespace';
-import { useFunction, useLatest, useRefCallback } from '@hooks';
+import { useFunction, useMemoShallow } from '@hooks';
+import { useLayoutEffect } from 'react';
+import { useRefManager } from '@entities';
 
 
 
-type EventMap<Element extends addEventListener.ElementUnion> = {
-    [K in keyof addEventListener.AvailableEventNames<Element>]: (
-        addEventListener.AvailableEventNames<Element>[K]
+type EventMap<_Element extends addEventListener.ElementUnion> = {
+    [K in keyof addEventListener.AvailableEventNames<_Element>]: (
+        addEventListener.AvailableEventNames<_Element>[K]
     );
 };
 
@@ -15,67 +15,46 @@ type EventNames<_Element extends addEventListener.ElementUnion> = (
     keyof addEventListener.AvailableEventNames<_Element>
 );
 
-type Return<
-    _Element extends addEventListener.ElementUnion,
-    _ProvidedElement extends Window | Document | undefined,
-> = (
-    T.IsEqual<
-        _ProvidedElement,
-        undefined
-    > extends true
-        ? ReturnType<typeof useRefCallback<_Element>>
-        : undefined
-);
+export namespace useEventListener {
+    export type ProvidedElement<
+        _ProvidedType extends addEventListener.ElementUnion,
+    > = (
+        _ProvidedType extends HTMLElement
+            ? useRefManager.RefManager<_ProvidedType>
+            : _ProvidedType
+    );
+}
 
 export const useEventListener = <
-    _Element extends addEventListener.ElementUnion = HTMLElement,
-    _ProvidedElement extends Window | Document | undefined = undefined,
-    _EventName extends EventNames<(
-        T.IsEqual<_ProvidedElement, undefined> extends true
-            ? _Element
-            : NonNullable<_ProvidedElement>
-    )> = EventNames<(
-        T.IsEqual<_ProvidedElement, undefined> extends true
-            ? _Element
-            : NonNullable<_ProvidedElement>
-    )>,
+    _ProvidedType extends addEventListener.ElementUnion,
+    _EventName extends EventNames<_ProvidedType>,
 >(
+    element: useEventListener.ProvidedElement<_ProvidedType>,
     eventName: _EventName,
-    callback: (e: EventMap<(
-        T.IsEqual<_ProvidedElement, undefined> extends true
-            ? _Element
-            : NonNullable<_ProvidedElement>
-    )>[_EventName]) => void,
+    callback: (e: EventMap<_ProvidedType>[_EventName]) => void,
     options?: AddEventListenerOptions,
-    element?: _ProvidedElement,
-): Return<_Element, _ProvidedElement> => {
-    const optionsRef = useLatest(options);
+) => {
     const _callback = useFunction(callback);
+    const _options = useMemoShallow(options);
 
-    const refCallback = useRefCallback<_Element>((node) => {
+    useLayoutEffect(() => {
+        if ('effect' in element) {
+            return element.effect((node) => {
+                return addEventListener(
+                    node as _ProvidedType,
+                    eventName,
+                    _callback,
+                    _options,
+                );
+            });
+        }
+
         return addEventListener(
-            node,
-            // @ts-expect-error
+            element as _ProvidedType,
             eventName,
             _callback,
-            optionsRef.current,
-        );
-    });
-
-    useEffect(() => {
-        if (!element) return;
-
-        return addEventListener(
-            element,
-            // @ts-expect-error
-            eventName,
-            _callback,
-            optionsRef.current,
+            _options,
         );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [element, eventName]);
-
-    return (
-        element ? undefined : refCallback
-    ) as Return<_Element, _ProvidedElement>;
+    }, [_options]);
 };

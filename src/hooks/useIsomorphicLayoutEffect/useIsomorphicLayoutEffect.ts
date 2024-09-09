@@ -3,4 +3,6 @@ import { useEffect, useLayoutEffect } from 'react';
 
 
 
-export const useIsomorphicLayoutEffect = isSSR() ? useEffect : useLayoutEffect;
+const _isSSR = isSSR();
+
+export const useIsomorphicLayoutEffect = _isSSR ? useEffect : useLayoutEffect;

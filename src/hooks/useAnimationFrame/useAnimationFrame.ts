@@ -27,8 +27,7 @@ export const useAnimationFrame = (
 
         start();
 
-        return () => stop();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        return stop;
     }, [enabled]);
 
     return {

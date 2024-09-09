@@ -13,10 +13,24 @@ const style: CSSProperties = {
     borderWidth: 0,
 };
 
-export const VisuallyHidden: FC<PropsWithChildren> = ({ children }) => {
+export namespace VisuallyHidden {
+    export type Props = (
+        {
+            as?: keyof HTMLElementTagNameMap;
+        }
+        & PropsWithChildren
+    );
+}
+
+export const VisuallyHidden: FC<VisuallyHidden.Props> = ({
+    children,
+    as = 'div',
+}) => {
+    const Tag = as;
+
     return (
-        <div style={style}>
+        <Tag style={style}>
             {children}
-        </div>
+        </Tag>
     );
 };

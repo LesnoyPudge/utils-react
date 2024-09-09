@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEventListener, useRefMerged, useUniqueState } from '@hooks';
+import { useEventListener, useUniqueState } from '@hooks';
+import { useRefManager } from '@entities';
 
 
 
@@ -178,13 +179,15 @@ export namespace useIsFocusVisible {
     };
 }
 
-export const useIsFocusVisible = (options?: useIsFocusVisible.Options) => {
+export const useIsFocusVisible = (
+    elementRef: useRefManager.RefManager<HTMLElement>,
+    options?: useIsFocusVisible.Options,
+) => {
     const [isFocused, setIsFocused] = useUniqueState(false);
-
     const inEvent = options?.within ? 'focusin' : 'focus';
     const outEvent = options?.within ? 'focusout' : 'blur';
 
-    const ref1 = useEventListener(inEvent, (e) => {
+    useEventListener(elementRef, inEvent, (e) => {
         if (!e.target) return;
         if (!isValidFocusTarget(e.target)) return;
         if (
@@ -195,7 +198,7 @@ export const useIsFocusVisible = (options?: useIsFocusVisible.Options) => {
         setIsFocused(true);
     });
 
-    const ref2 = useEventListener(outEvent, (e) => {
+    useEventListener(elementRef, outEvent, (e) => {
         if (!e.target) return;
         if (!isValidFocusTarget(e.target)) return;
 
@@ -214,10 +217,7 @@ export const useIsFocusVisible = (options?: useIsFocusVisible.Options) => {
         setIsFocused(false);
     });
 
-    const elementRef = useRefMerged(ref1, ref2);
-
     return {
         isFocused,
-        elementRef,
     };
 };
