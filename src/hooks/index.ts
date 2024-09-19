@@ -32,3 +32,4 @@ export * from './useMemoCompare';
 export * from './useMemoDeep';
 export * from './useSynchronizedAnimation';
 export * from './useClickOutside';
+export * from './useSteps'

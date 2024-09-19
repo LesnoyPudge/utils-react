@@ -1,10 +1,7 @@
 {
     "include": [
         "./src/**/*.ts",
-        "./src/**/*.tsx",
-    ],
-    "exclude": [
-        "./src/_WIP",
+        "node_modules/@types"
     ],
     "compilerOptions": {
         "explainFiles": false,
@@ -14,6 +11,7 @@
             "@hooks": ["src/hooks/index.ts"],
             "@entities": ["src/entities/index.ts"]
         },
+
         "types": [
             "@lesnoypudge/types-global-base",
             "@lesnoypudge/types-global-react",
@@ -32,19 +30,21 @@
         "noUncheckedIndexedAccess": true,
         "noFallthroughCasesInSwitch": true,
 
-        // "moduleResolution": "NodeNext",
-        // "module": "NodeNext",
-        // "outDir": "dist",
-        // "sourceMap": true,
-        // "declaration": true,
-
-        "moduleResolution": "Bundler",
-        "module": "ESNext",
-        // "noEmit": true,
+        "noEmit": false,
         "outDir": "build",
         "sourceMap": true,
         "declaration": true,
 
-        "lib": ["ES2022", "DOM", "DOM.Iterable"],
+        // "moduleResolution": "NodeNext",
+        // "module": "NodeNext",
+
+        "moduleResolution": "Bundler",
+        "module": "ESNext",
+
+        "lib": [
+            "ES2022",
+            "DOM",
+            "DOM.Iterable"
+        ],
     }
 }

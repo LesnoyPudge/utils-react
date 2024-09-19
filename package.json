@@ -13,47 +13,45 @@
         "formatter:config": "formatter-config",
         "lint:check": "eslint .",
         "lint:fix": "eslint . --fix",
-        "type:check": "tsc --noEmit -p tsconfig.build.json",
-        "type:watch": "tsc --noEmit -watch -p tsconfig.build.json",
+        "type:check": "tsc --noEmit -p tsconfig.json",
+        "type:watch": "tsc --noEmit -watch -p tsconfig.json",
         "publish": "npm publish --access public",
         "deploy": "git add . && git commit -m 'update' && git push && git status",
-        "build": "del-cli build && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+        "build": "builder",
         "test": "vitest",
-        "bun:build": "bun build ./src/index.ts --splitting --outdir=build --sourcemap=inline --external react",
-        "build2": "del-cli build && tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
-        "ts:init": "tsc --init",
-        "ts:check": "tsc -p tsconfig.json --noEmit"
+        "bun:build": "bun build ./src/index.ts --splitting --outdir=build --sourcemap=inline --external react"
     },
     "dependencies": {
-        "@fluentui/react-context-selector": "^9.1.64",
-        "@lesnoypudge/utils": "^12.2.1",
+        "@fluentui/react-context-selector": "^9.1.66",
+        "@lesnoypudge/utils": "^12.4.2",
         "react-json-pretty": "^2.2.0",
-        "typescript": "^5.5.4"
+        "typescript": "^5.6.2"
     },
     "peerDependencies": {
         "react": ">=17.0.0"
     },
     "devDependencies": {
+        "@lesnoypudge/builder": "^1.0.4",
         "@lesnoypudge/eslint-base-config": "^1.9.0",
         "@lesnoypudge/eslint-react-config": "^2.0.1",
-        "@lesnoypudge/formatter-config": "^2.1.0",
+        "@lesnoypudge/formatter-config": "^3.2.0",
         "@lesnoypudge/types-global-base": "^1.4.0",
         "@lesnoypudge/types-global-react": "^2.0.1",
-        "@lesnoypudge/types-utils-base": "^3.3.0",
+        "@lesnoypudge/types-utils-base": "^3.4.0",
         "@lesnoypudge/types-utils-react": "^5.0.0",
-        "@testing-library/dom": "^10.3.2",
-        "@testing-library/react": "^16.0.0",
-        "@total-typescript/ts-reset": "^0.6.0",
-        "@types/bun": "^1.1.8",
+        "@testing-library/dom": "^10.4.0",
+        "@testing-library/react": "^16.0.1",
+        "@total-typescript/ts-reset": "^0.6.1",
+        "@types/bun": "^1.1.9",
         "@types/jsdom": "^21.1.7",
         "babel-plugin-jsx-control-statements": "^4.1.2",
         "del-cli": "^5.1.0",
-        "eslint": "^9.7.0",
-        "jsdom": "^24.1.0",
+        "eslint": "^9.10.0",
+        "jsdom": "^25.0.0",
         "tsc-alias": "^1.8.10",
         "types-spring": "^2.2.2",
-        "typescript-eslint": "^7.16.1",
-        "vite-tsconfig-paths": "^4.3.2",
-        "vitest": "^2.0.3"
+        "typescript-eslint": "^8.6.0",
+        "vite-tsconfig-paths": "^5.0.1",
+        "vitest": "^2.1.1"
     }
 }
