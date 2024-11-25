@@ -1,7 +1,7 @@
 {
     "name": "@lesnoypudge/utils-react",
     "description": "lesnoypudge's utils-react",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "keywords": [
         "lesnoypudge",
         "utils",
@@ -20,8 +20,7 @@
         "type:watch": "tsc --noEmit -watch -p tsconfig.json",
         "publish": "npm publish --access public",
         "deploy": "git add . && git commit -m 'update' && git push && git status",
-        "build": "tsc -p tsconfig.react.build.json && vite build",
-        "build2": "tsc -p tsconfig.react.build.json && builder --configName tsconfig.react.build.json",
+        "build": "tsc -p tsconfig.react.build.json && builder --configName tsconfig.react.build.json",
         "test": "vitest"
     },
     "dependencies": {
