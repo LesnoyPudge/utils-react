@@ -1,1 +1,1 @@
-export * from './useNamedState'
+export * from './useNamedState';

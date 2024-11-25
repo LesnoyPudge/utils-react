@@ -1,50 +1,11 @@
 {
-    "include": [
-        "./src/**/*.ts",
-        "node_modules/@types"
-    ],
-    "compilerOptions": {
-        "explainFiles": false,
-        "baseUrl": ".",
-        "paths": {
-            "@utils": ["src/utils/index.ts"],
-            "@hooks": ["src/hooks/index.ts"],
-            "@entities": ["src/entities/index.ts"]
+    "files": [],
+    "references": [
+        {
+            "path": "./tsconfig.react.json"
         },
-
-        "types": [
-            "@lesnoypudge/types-global-base",
-            "@lesnoypudge/types-global-react",
-        ],
-
-        "jsx": "react-jsx",
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "target": "ES2022",
-        "verbatimModuleSyntax": false,
-        "allowJs": true,
-        "resolveJsonModule": true,
-        "moduleDetection": "auto",
-
-        "strict": true,
-        "noUncheckedIndexedAccess": true,
-        "noFallthroughCasesInSwitch": true,
-
-        "noEmit": false,
-        "outDir": "build",
-        "sourceMap": true,
-        "declaration": true,
-
-        // "moduleResolution": "NodeNext",
-        // "module": "NodeNext",
-
-        "moduleResolution": "Bundler",
-        "module": "ESNext",
-
-        "lib": [
-            "ES2022",
-            "DOM",
-            "DOM.Iterable"
-        ],
-    }
+        {
+            "path": "./tsconfig.node.json"
+        }
+    ]
 }

@@ -6,7 +6,7 @@ import {
 } from '@fluentui/react-context-selector';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
 import { ContextSelectable } from '@entities';
-import { useConst } from '@hooks';
+import { useConst, useFunction } from '@hooks';
 
 
 
@@ -22,7 +22,7 @@ export const useContextProxy = <
         _Value | typeof EMPTY_VALUE
     >(EMPTY_VALUE);
 
-    const selector = useConst(() => (value: _Value) => {
+    const selector = useFunction((value: _Value) => {
         const prev = prevSelectedValueRef;
 
         if (prev.current === EMPTY_VALUE) {
@@ -34,14 +34,14 @@ export const useContextProxy = <
             return prev.current;
         }
 
-        const usedKeysList = Array.from(usedKeys.values());
+        const usedKeysList = [...usedKeys.values()];
 
         const newUsedValue = pick(value, ...usedKeysList);
 
         const prevUsedValue = pick(prev.current, ...usedKeysList);
 
         if (shallowEqual(newUsedValue, prevUsedValue)) {
-           return prev.current;
+            return prev.current;
         }
 
         prev.current = value;

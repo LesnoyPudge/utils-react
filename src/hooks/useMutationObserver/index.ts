@@ -1,1 +1,1 @@
-export * from './useMutationObserver'
+export * from './useMutationObserver';

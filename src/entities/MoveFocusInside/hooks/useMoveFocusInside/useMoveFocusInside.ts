@@ -1,5 +1,5 @@
 import { useFunction } from '@hooks';
-import { isHtmlElement } from '@lesnoypudge/utils';
+import { isHtmlElement } from '@lesnoypudge/utils-web';
 import { useLayoutEffect } from 'react';
 import { useRefManager } from '@entities';
 
@@ -62,7 +62,7 @@ const getFocusableElement = (container: HTMLElement) => {
     const focusableElements = container.querySelectorAll(FOCUSABLE_SELECTOR);
     if (!focusableElements) return;
 
-    return Array.from(focusableElements).find((element) => {
+    return [...focusableElements].find((element) => {
         return isVisible(container, element);
     });
 };

@@ -1,5 +1,5 @@
 import { useFunction, useMemoShallow } from '@hooks';
-import { SharedResizeObserver } from '@lesnoypudge/utils';
+import { SharedResizeObserver } from '@lesnoypudge/utils-web';
 import { useLayoutEffect } from 'react';
 import { useRefManager } from '@entities';
 

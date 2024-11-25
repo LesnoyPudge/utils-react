@@ -1,5 +1,5 @@
 import { useFunction, useMemoShallow } from '@hooks';
-import { SharedIntersectionObserver } from '@lesnoypudge/utils';
+import { SharedIntersectionObserver } from '@lesnoypudge/utils-web';
 import { useLayoutEffect } from 'react';
 import { useRefManager } from '@entities';
 

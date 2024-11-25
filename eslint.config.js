@@ -1,38 +1,48 @@
-import tseslint from 'typescript-eslint';
-import { eslintConfigBase } from '@lesnoypudge/eslint-base-config';
-import { eslintConfigReact } from '@lesnoypudge/eslint-react-config';
+import { config } from "@lesnoypudge/eslint-config";
+import { writeFileSync } from "node:fs";
+import * as flatted from "flatted";
 
 
+const configArr = config.createConfig({
+    files: [
+        './vite.config.ts'
+    ],
+    rules: {
+        '@stylistic/lines-between-class-members': 'off',
+        '@stylistic/jsx-tag-spacing': 'off',
+        '@stylistic/jsx-quotes': 'off',
+        '@stylistic/max-len': ['warn', {
+            'ignoreComments': true,
+        }],
+        '@typescript-eslint/no-namespace': 'off',
+        '@typescript-eslint/unbound-method': 'off',
+        'unicorn/expiring-todo-comments': 'off',
+        '@typescript-eslint/no-unnecessary-condition': 'off',
+        'unicorn/prefer-array-index-of': 'off',
+        '@typescript-eslint/consistent-indexed-object-style': 'off',
+        'promise/no-callback-in-promise': 'off',
+        '@typescript-eslint/no-unused-expressions': 'off',
+        '@typescript-eslint/no-non-null-assertion': 'off',
+    }
+});
 
-export default tseslint.config(
-    ...eslintConfigBase,
-    ...eslintConfigReact,
+const _config = config.createConfig(
+    config.mergeConfigs(
+        config.configs.base,
+        config.configs.react,
+        config.configs.web,
+        ...configArr,
+    ),
     {
-        rules: {
-            '@stylistic/lines-between-class-members': 'off',
-            '@stylistic/jsx-tag-spacing': 'off',
-            '@stylistic/jsx-quotes': 'off',
-            // 'object-curly-newline': ['warn', {
-            //     // "ObjectExpression": "always",
-            //     // "ObjectPattern": { "multiline": true },
-            //     // "ImportDeclaration": {"multiline": true, "minq"},
-            //     'ExportDeclaration': { 'multiline': true, 'minProperties': 3 },
-            // }],
-            '@stylistic/max-len': ['warn', {
-                'ignoreComments': true,
-            }],
-            '@typescript-eslint/no-namespace': 'off',
-            '@typescript-eslint/unbound-method': 'off',
-        },
+        ...config.configs.node,
+        files: ['./src/**/*.test.ts']
     },
-    {
-        files: ['**/*.test.*'],
-        rules: {
-            '@typescript-eslint/no-unsafe-call': 'off',
-            '@typescript-eslint/no-unsafe-member-access': 'off',
-        },
-    },
-    {
-        ignores: ['test', 'build'],
-    },
+    config.configs.disableTypeChecked,
 );
+
+// writeFileSync(
+//     'output.json',
+//     JSON.stringify({..._config[0], plugins: []}, undefined, 4)
+// )
+
+export default _config;

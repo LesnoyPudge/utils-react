@@ -1,9 +1,11 @@
-import { FC, useContext } from 'react';
-import { HeadingContext } from '@entities';
+import { FC, PropsWithChildren, useContext } from 'react';
+import { HeadingContext } from '../HeadingContext';
 
 
 
-export const HeadingProvider: FC = () => {
+export const HeadingProvider: FC<PropsWithChildren> = ({
+    children,
+}) => {
     const upperLevel = useContext(HeadingContext);
 
     if (upperLevel === 6) {
@@ -14,6 +16,7 @@ export const HeadingProvider: FC = () => {
 
     return (
         <HeadingContext.Provider value={nextLevel}>
+            {children}
         </HeadingContext.Provider>
     );
 };

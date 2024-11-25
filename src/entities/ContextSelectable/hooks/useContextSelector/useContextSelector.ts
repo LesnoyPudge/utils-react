@@ -8,7 +8,7 @@ import {
 import { T } from '@lesnoypudge/types-utils-base/namespace';
 import { defaultSelector } from '@utils';
 import { ContextSelectable } from '@entities';
-import { useConst } from '@hooks';
+import { useFunction } from '@hooks';
 
 
 
@@ -37,7 +37,7 @@ export const useContextSelector = <
         _SelectedValue | typeof EMPTY_VALUE
     >(EMPTY_VALUE);
 
-    const stableSelector = useConst(() => () => {
+    const stableSelector = useFunction(() => {
         const selected = selector(contextValue.value.current);
 
         if (shallowEqual(selected, prevSelectedRef.current)) {

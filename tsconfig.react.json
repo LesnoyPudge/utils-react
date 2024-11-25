@@ -1,0 +1,32 @@
+{
+    "extends": "./tsconfig.base.json",
+    "include": [
+        "src/**/*",
+        "node_modules/@types"
+    ],
+    "exclude": [],
+    "compilerOptions": {
+        "types": [
+            "@lesnoypudge/types-global-base",
+            "@lesnoypudge/types-global-web",
+            "@lesnoypudge/types-global-react"
+        ],
+        "paths": {
+            "@utils": [
+                "src/utils/index.ts"
+            ],
+            "@hooks": [
+                "src/hooks/index.ts"
+            ],
+            "@entities": [
+                "src/entities/index.ts"
+            ]
+        },
+        "jsx": "react-jsx",
+        "lib": [
+            "ES2023",
+            "DOM",
+            "DOM.Iterable"
+        ]
+    }
+}

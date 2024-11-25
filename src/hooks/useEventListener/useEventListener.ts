@@ -1,4 +1,4 @@
-import { addEventListener } from '@lesnoypudge/utils';
+import { addEventListener } from '@lesnoypudge/utils-web';
 import { useFunction, useMemoShallow } from '@hooks';
 import { useLayoutEffect } from 'react';
 import { useRefManager } from '@entities';

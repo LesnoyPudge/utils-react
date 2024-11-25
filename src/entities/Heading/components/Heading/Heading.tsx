@@ -1,5 +1,5 @@
 import { createElement, FC, HTMLProps, useContext } from 'react';
-import { HeadingContext } from '@entities';
+import { HeadingContext } from '../HeadingContext';
 
 
 
