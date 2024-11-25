@@ -1,5 +1,6 @@
 import { T } from '@lesnoypudge/types-utils-base/namespace';
-import { useConst, useLatest } from '@hooks';
+import { useConst } from '@hooks/useConst';
+import { useLatest } from '@hooks/useLatest';
 
 
 

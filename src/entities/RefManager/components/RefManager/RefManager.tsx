@@ -1,7 +1,7 @@
-import { useRefManager } from '@entities';
+import { useRefManager } from '@entities/RefManager';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
 import { RT } from '@lesnoypudge/types-utils-react/namespace';
-import { renderFunction } from '@utils';
+import { renderFunction } from '@utils/renderFunction';
 
 
 

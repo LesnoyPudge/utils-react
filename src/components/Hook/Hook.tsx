@@ -1,5 +1,5 @@
 import { RT } from '@lesnoypudge/types-utils-react/namespace';
-import { renderFunction } from '@utils';
+import { renderFunction } from '@utils/renderFunction';
 
 
 

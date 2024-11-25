@@ -1,5 +1,5 @@
 import { deepEqual } from '@lesnoypudge/utils';
-import { withDisplayName } from '@utils';
+import { withDisplayName } from '@utils/withDisplayName';
 import { memo, PropsWithChildren } from 'react';
 
 

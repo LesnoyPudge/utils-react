@@ -1,4 +1,6 @@
-import { useConst, useLatest, useNamedState } from '@hooks';
+import { useConst } from '@hooks/useConst';
+import { useLatest } from '@hooks/useLatest';
+import { useNamedState } from '@hooks/useNamedState';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
 import { LocalStorage } from '@lesnoypudge/utils-web';
 import { useEffect } from 'react';

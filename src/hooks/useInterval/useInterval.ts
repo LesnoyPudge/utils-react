@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useFunction } from '@hooks';
+import { useFunction } from '@hooks/useFunction';
 
 
 

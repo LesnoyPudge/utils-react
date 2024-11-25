@@ -1,4 +1,4 @@
-import { useFunction } from '@hooks';
+import { useFunction } from '@hooks/useFunction';
 import { useEffect, useRef } from 'react';
 
 

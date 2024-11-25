@@ -1,4 +1,6 @@
-import { useFunction, useMemoShallow, useUniqueState } from '@hooks';
+import { useFunction } from '@hooks/useFunction';
+import { useMemoShallow } from '@hooks/useMemoShallow';
+import { useUniqueState } from '@hooks/useUniqueState';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
 
 

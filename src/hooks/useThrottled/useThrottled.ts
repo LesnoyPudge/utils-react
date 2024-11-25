@@ -1,5 +1,7 @@
 import { T } from '@lesnoypudge/types-utils-base/namespace';
-import { useFunction, useThrottle } from '@hooks';
+import { useFunction } from '@hooks/useFunction';
+import { useThrottle } from '@hooks/useThrottle';
+
 
 
 

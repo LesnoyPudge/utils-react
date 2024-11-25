@@ -12,14 +12,14 @@
             "@lesnoypudge/types-global-react"
         ],
         "paths": {
-            "@utils": [
-                "src/utils/index.ts"
+            "@utils/*": [
+                "src/utils/*"
             ],
-            "@hooks": [
-                "src/hooks/index.ts"
+            "@hooks/*": [
+                "src/hooks/*"
             ],
-            "@entities": [
-                "src/entities/index.ts"
+            "@entities/*": [
+                "src/entities/*"
             ]
         },
         "jsx": "react-jsx",

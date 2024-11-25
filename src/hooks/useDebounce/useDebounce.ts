@@ -1,9 +1,7 @@
-import {
-    useFunction,
-    useLatest,
-    useUniqueState,
-    useUnmountEffect,
-} from '@hooks';
+import { useFunction } from '@hooks/useFunction';
+import { useLatest } from '@hooks/useLatest';
+import { useUniqueState } from '@hooks/useUniqueState';
+import { useUnmountEffect } from '@hooks/useUnmountEffect';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
 import { useRef } from 'react';
 

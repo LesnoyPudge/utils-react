@@ -1,6 +1,7 @@
-import { renderFunction } from '@utils';
+import { renderFunction } from '@utils/renderFunction';
 import { FC } from 'react';
-import { useMoveFocusAt, useRefManager } from '@entities';
+import { useMoveFocusAt } from '@entities/MoveFocusAt';
+import { useRefManager } from '@entities/RefManager';
 import { RT } from '@lesnoypudge/types-utils-react/namespace';
 
 

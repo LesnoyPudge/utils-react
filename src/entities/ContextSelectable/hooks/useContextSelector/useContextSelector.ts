@@ -6,9 +6,9 @@ import {
     Context as ContextFluent,
 } from '@fluentui/react-context-selector';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
-import { defaultSelector } from '@utils';
-import { ContextSelectable } from '@entities';
-import { useFunction } from '@hooks';
+import { defaultSelector } from '@utils/defaultSelector';
+import { ContextSelectable } from '@entities/ContextSelectable';
+import { useFunction } from '@hooks/useFunction';
 
 
 

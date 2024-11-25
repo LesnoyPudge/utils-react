@@ -21,14 +21,17 @@ const config: UserConfigFn = () => {
                 entry: 'src/index.ts',
                 formats: ['es'],
             },
+            sourcemap: true,
+            minify: false,
             rollupOptions: {
-                external: [
-                    'react',
-                    'react/jsx-runtime',
-                    '@lesnoypudge/utils',
-                    '@lesnoypudge/utils-web',
-                    'react-json-pretty',
-                ],
+                // external: [
+                //     'react',
+                //     'react/jsx-runtime',
+                //     '@lesnoypudge/utils',
+                //     '@lesnoypudge/utils-web',
+                //     'react-json-pretty',
+                //     '@fluentui/react-context-selector',
+                // ],
                 input: Object.fromEntries(
                     glob.sync('src/**/*.{ts,tsx}', {
                         ignore: ['src/**/*.d.ts'],

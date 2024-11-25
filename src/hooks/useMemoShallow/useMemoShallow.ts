@@ -1,5 +1,5 @@
 import { shallowEqual } from '@lesnoypudge/utils';
-import { useMemoCompare } from '@hooks';
+import { useMemoCompare } from '@hooks/useMemoCompare';
 
 
 

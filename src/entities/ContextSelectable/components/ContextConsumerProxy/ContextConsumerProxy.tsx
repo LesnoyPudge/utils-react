@@ -1,7 +1,10 @@
-import { ContextSelectable, useContextProxy } from '@entities';
+import { 
+    useContextProxy, 
+    ContextSelectable 
+} from '@entities/ContextSelectable';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
 import { RT } from '@lesnoypudge/types-utils-react/namespace';
-import { renderFunction } from '@utils';
+import { renderFunction } from '@utils/renderFunction';
 
 
 

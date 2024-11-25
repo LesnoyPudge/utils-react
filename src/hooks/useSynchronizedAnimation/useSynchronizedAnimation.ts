@@ -1,4 +1,4 @@
-import { useRefManager } from '@entities';
+import { useRefManager } from '@entities/RefManager';
 import { useLayoutEffect } from 'react';
 
 

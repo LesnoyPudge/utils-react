@@ -1,6 +1,8 @@
 import { InlineWorker } from '@lesnoypudge/utils-web';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
-import { useUniqueState, useConst, useUnmountEffect } from '@hooks';
+import { useUniqueState } from '@hooks/useUniqueState';
+import { useConst } from '@hooks/useConst';
+import { useUnmountEffect } from '@hooks/useUnmountEffect';
 
 
 

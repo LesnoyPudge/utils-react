@@ -1,4 +1,5 @@
-import { useFunction, useIsMounted } from '@hooks';
+import { useFunction } from '@hooks/useFunction';
+import { useIsMounted } from '@hooks/useIsMounted';
 
 
 

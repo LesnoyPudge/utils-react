@@ -1,8 +1,9 @@
 import { FC } from 'react';
-import { useMoveFocusInside, useRefManager } from '@entities';
+import { useMoveFocusInside } from '@entities/MoveFocusInside';
+import { useRefManager } from '@entities/RefManager';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
 import { RT } from '@lesnoypudge/types-utils-react/namespace';
-import { renderFunction } from '@utils';
+import { renderFunction } from '@utils/renderFunction';
 
 
 

@@ -1,7 +1,7 @@
 {
     "name": "@lesnoypudge/utils-react",
     "description": "lesnoypudge's utils-react",
-    "version": "3.0.1",
+    "version": "3.0.2",
     "keywords": [
         "lesnoypudge",
         "utils",
@@ -21,6 +21,7 @@
         "publish": "npm publish --access public",
         "deploy": "git add . && git commit -m 'update' && git push && git status",
         "build": "tsc -p tsconfig.react.build.json && builder --configName tsconfig.react.build.json",
+        "build2": "vite build",
         "test": "vitest"
     },
     "dependencies": {

@@ -1,4 +1,4 @@
-import { createHookComponent } from '@utils';
+import { createHookComponent } from '@utils/createHookComponent';
 import { useId } from 'react';
 
 

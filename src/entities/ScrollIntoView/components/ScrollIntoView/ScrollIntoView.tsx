@@ -1,6 +1,7 @@
-import { renderFunction } from '@utils';
+import { renderFunction } from '@utils/renderFunction';
 import { FC } from 'react';
-import { useScrollIntoView, useRefManager } from '@entities';
+import { useScrollIntoView } from '@entities/ScrollIntoView';
+import { useRefManager } from '@entities/RefManager';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
 import { RT } from '@lesnoypudge/types-utils-react/namespace';
 

@@ -6,7 +6,8 @@ import {
     MutableRefObject,
 } from 'react';
 import { capitalize, isCallable } from '@lesnoypudge/utils';
-import { useFunction, useUniqueState } from '@hooks';
+import { useFunction } from '@hooks/useFunction';
+import { useUniqueState } from '@hooks/useUniqueState';
 
 
 

@@ -1,4 +1,4 @@
-import { useLatest } from '@hooks';
+import { useLatest } from '@hooks/useLatest';
 import { useEffect } from 'react';
 
 

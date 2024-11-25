@@ -1,5 +1,6 @@
-import { useRefManager } from '@entities';
-import { useEventListener, useFunction } from '@hooks';
+import { useRefManager } from '@entities/RefManager';
+import { useEventListener } from '@hooks/useEventListener';
+import { useFunction } from '@hooks/useFunction';
 
 
 

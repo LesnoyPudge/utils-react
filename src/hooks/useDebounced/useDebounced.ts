@@ -1,5 +1,6 @@
 import { T } from '@lesnoypudge/types-utils-base/namespace';
-import { useDebounce, useFunction } from '@hooks';
+import { useDebounce } from '@hooks/useDebounce';
+import { useFunction } from '@hooks/useFunction';
 
 
 

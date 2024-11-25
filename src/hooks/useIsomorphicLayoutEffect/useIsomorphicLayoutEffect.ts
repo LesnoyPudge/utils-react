@@ -1,4 +1,4 @@
-import { isSSR } from '@utils';
+import { isSSR } from '@utils/isSSR';
 import { useEffect, useLayoutEffect } from 'react';
 
 

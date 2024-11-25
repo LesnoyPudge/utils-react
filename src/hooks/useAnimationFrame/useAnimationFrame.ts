@@ -1,5 +1,5 @@
 import { useRef, useLayoutEffect } from 'react';
-import { useFunction } from '@hooks';
+import { useFunction } from '@hooks/useFunction';
 
 
 

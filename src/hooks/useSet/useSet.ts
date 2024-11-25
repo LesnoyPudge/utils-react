@@ -1,4 +1,4 @@
-import { useFunction } from '@hooks';
+import { useFunction } from '@hooks/useFunction';
 import { useState } from 'react';
 
 

@@ -1,5 +1,6 @@
 import { useRef } from 'react';
-import { useFunction, useUnmountEffect } from '@hooks';
+import { useFunction } from '@hooks/useFunction';
+import { useUnmountEffect } from '@hooks/useUnmountEffect';
 
 
 

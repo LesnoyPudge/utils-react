@@ -1,4 +1,5 @@
-import { useFunction, useLatest } from '@hooks';
+import { useFunction } from '@hooks/useFunction';
+import { useLatest } from '@hooks/useLatest';
 import { useState } from 'react';
 
 

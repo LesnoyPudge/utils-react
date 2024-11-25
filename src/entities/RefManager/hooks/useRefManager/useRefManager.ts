@@ -1,6 +1,8 @@
-import { useConst, useFunction, useUnmountEffect } from '@hooks';
+import { useConst } from '@hooks/useConst';
+import { useFunction } from '@hooks/useFunction';
+import { useUnmountEffect } from '@hooks/useUnmountEffect';
 import { noop } from '@lesnoypudge/utils';
-import { isRef } from '@utils';
+import { isRef } from '@utils/isRef';
 import { RefCallback } from 'react';
 
 type MutableRefObject<_Value> = {

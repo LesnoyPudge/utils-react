@@ -1,6 +1,6 @@
-import { useFunction } from '@hooks';
+import { useFunction } from '@hooks/useFunction';
 import { useLayoutEffect } from 'react';
-import { useRefManager } from '@entities';
+import { useRefManager } from '@entities/RefManager';
 
 
 

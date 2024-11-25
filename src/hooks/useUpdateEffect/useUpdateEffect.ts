@@ -1,6 +1,7 @@
 import { T } from '@lesnoypudge/types-utils-base/namespace';
 import { useEffect } from 'react';
-import { useFunction, useIsFirstRender } from '@hooks';
+import { useFunction } from '@hooks/useFunction';
+import { useIsFirstRender } from '@hooks/useIsFirstRender';
 
 
 
