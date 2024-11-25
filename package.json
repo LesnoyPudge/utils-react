@@ -1,7 +1,7 @@
 {
     "name": "@lesnoypudge/utils-react",
     "description": "lesnoypudge's utils-react",
-    "version": "3.0.2",
+    "version": "3.0.3",
     "keywords": [
         "lesnoypudge",
         "utils",
@@ -35,7 +35,7 @@
     },
     "devDependencies": {
         "@babel/plugin-transform-react-jsx": "^7.25.9",
-        "@lesnoypudge/builder": "^3.0.4",
+        "@lesnoypudge/builder": "^4.0.0",
         "@lesnoypudge/eslint-config": "^6.0.5",
         "@lesnoypudge/formatter-config": "^7.0.0",
         "@lesnoypudge/types-global-base": "^4.0.0",
