@@ -1,5 +1,5 @@
 import { FC, HTMLProps, useContext } from 'react';
-import { HeadingContext } from '../HeadingContext';
+import { HeadingContext } from '../../context/HeadingContext';
 
 
 
