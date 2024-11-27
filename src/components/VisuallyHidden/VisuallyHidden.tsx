@@ -1,7 +1,8 @@
-import { CSSProperties, FC, PropsWithChildren } from 'react';
+import { ComponentProps, CSSProperties, FC } from 'react';
 
 
-const style: CSSProperties = {
+
+const styles: CSSProperties = {
     position: 'absolute',
     width: '1px',
     height: '1px',
@@ -14,23 +15,19 @@ const style: CSSProperties = {
 };
 
 export namespace VisuallyHidden {
-    export type Props = (
-        {
-            as?: keyof HTMLElementTagNameMap;
-        }
-        & PropsWithChildren
-    );
+    export type Props = ComponentProps<'div'>;
 }
 
 export const VisuallyHidden: FC<VisuallyHidden.Props> = ({
     children,
-    as = 'div',
+    style: _style,
+    ...rest
 }) => {
-    const Tag = as;
+    const style = _style ? { ...styles, ..._style } : styles;
 
     return (
-        <Tag style={style}>
+        <div style={style} {...rest}>
             {children}
-        </Tag>
+        </div>
     );
 };

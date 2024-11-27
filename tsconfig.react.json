@@ -13,13 +13,16 @@
         ],
         "paths": {
             "@utils/*": [
-                "src/utils/*"
+                "./src/utils/*"
             ],
             "@hooks/*": [
-                "src/hooks/*"
+                "./src/hooks/*"
             ],
             "@entities/*": [
-                "src/entities/*"
+                "./src/entities/*"
+            ],
+            "@components/*": [
+                "./src/components/*"
             ]
         },
         "jsx": "react-jsx",

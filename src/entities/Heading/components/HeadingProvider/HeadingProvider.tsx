@@ -1,5 +1,6 @@
 import { FC, PropsWithChildren, useContext } from 'react';
 import { HeadingContext } from '../HeadingContext';
+import { invariant } from '@lesnoypudge/utils';
 
 
 
@@ -8,9 +9,10 @@ export const HeadingProvider: FC<PropsWithChildren> = ({
 }) => {
     const upperLevel = useContext(HeadingContext);
 
-    if (upperLevel === 6) {
-        console.error('Maximum heading level exceeded');
-    }
+    invariant(
+        upperLevel === 6,
+        'Maximum heading level exceeded',
+    );
 
     const nextLevel = upperLevel + 1;
 

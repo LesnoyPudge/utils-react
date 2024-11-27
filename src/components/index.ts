@@ -1,4 +1,6 @@
+export * from './AccessiblyHidden';
 export * from './ContextConsumer';
+export * from './Hidden';
 export * from './Hook';
 export * from './Id';
 export * from './JsonView';

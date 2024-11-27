@@ -1,4 +1,4 @@
-import { createElement, FC, HTMLProps, useContext } from 'react';
+import { FC, HTMLProps, useContext } from 'react';
 import { HeadingContext } from '../HeadingContext';
 
 
@@ -7,13 +7,13 @@ export const Heading: FC<HTMLProps<HTMLHeadingElement>> = ({
     children,
     ...rest
 }) => {
-    const level = useContext(HeadingContext);
+    const level = useContext(HeadingContext) as number | undefined;
 
-    if (level === 0) {
-        console.error('Heading component is not wrapped in HeadingProvider');
-    }
+    const Tag = `h${level ?? 1}`;
 
-    const Tag = `h${String(level)}`;
-
-    return createElement(Tag, rest, children);
+    return (
+        <Tag {...rest}>
+            {children}
+        </Tag>
+    );
 };
