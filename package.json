@@ -1,7 +1,7 @@
 {
     "name": "@lesnoypudge/utils-react",
     "description": "lesnoypudge's utils-react",
-    "version": "4.0.1",
+    "version": "4.0.2",
     "keywords": [
         "lesnoypudge",
         "utils",
@@ -16,11 +16,10 @@
     "scripts": {
         "lint:check": "eslint ./src",
         "lint:fix": "eslint ./src --fix",
-        "type:check": "tsc --noEmit -p tsconfig.json",
-        "type:watch": "tsc --noEmit -watch -p tsconfig.json",
+        "type:check": "tsc -p tsconfig.react.build.json",
         "publish": "npm publish --access public",
         "deploy": "git add . && git commit -m 'update' && git push && git status",
-        "build": "tsc -p tsconfig.react.build.json && builder --configName tsconfig.react.build.json",
+        "build": "npm run type:check && builder --configName tsconfig.react.build.json",
         "build2": "vite build",
         "test": "vitest",
         "prepublishOnly": "npm run build"
@@ -37,9 +36,9 @@
     },
     "devDependencies": {
         "@babel/plugin-transform-react-jsx": "^7.25.9",
-        "@lesnoypudge/builder": "^4.0.0",
+        "@lesnoypudge/builder": "^4.0.1",
         "@lesnoypudge/eslint-config": "^6.0.5",
-        "@lesnoypudge/formatter-config": "^7.0.0",
+        "@lesnoypudge/formatter-config": "^8.0.0",
         "@lesnoypudge/types-global-base": "^4.0.0",
         "@lesnoypudge/types-global-node": "^1.0.0",
         "@lesnoypudge/types-global-react": "^2.1.1",
