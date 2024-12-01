@@ -1,42 +1,32 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import {VisuallyHidden, isSSR} from '@lesnoypudge/utils-react'
+
+import { createContext, FC, useContext } from 'react';
+import './App.css';
+import { createContextSelectable, useContextProxy } from '../../build';
 
 
-console.log(isSSR, isSSR())
-function App() {
-  const [count, setCount] = useState(0)
+const QweContext = createContextSelectable<{ some: 'data' }>();
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      
-      <div className="card">
-      <VisuallyHidden>
-      <h1>Vite + React</h1>
-      </VisuallyHidden>
+const ZxcContext = createContext<{ some: 'data' }>({ some: 'data' });
 
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+const App2 = () => {
+    const data = useContextProxy(QweContext);
+    const data2 = useContext(QweContext);
+    return (
+        <div>
+            <>
+                data:
+                {data.some}
+            </>
+        </div>
+    );
+};
 
-export default App
+const App: FC = () => {
+    return (
+        <QweContext.Provider value={{ some: 'data' }}>
+            <App2/>
+        </QweContext.Provider>
+    );
+};
+
+export default App;

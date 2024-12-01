@@ -1,6 +1,4 @@
 import { config } from "@lesnoypudge/eslint-config";
-import { writeFileSync } from "node:fs";
-import * as flatted from "flatted";
 
 
 const configArr = config.createConfig({

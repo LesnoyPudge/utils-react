@@ -1,5 +1,5 @@
 import { pick, shallowEqual } from '@lesnoypudge/utils';
-import React, { useMemo } from 'react';
+import React from 'react';
 import {
     useContextSelector as useContextSelectorFluent,
     Context as ContextFluent,
@@ -23,7 +23,9 @@ export const useContextProxy = <
         _Value | typeof EMPTY_VALUE
     >(EMPTY_VALUE);
 
-    const selector = useFunction((value: _Value) => {
+    const selector = useFunction((value: _Value | undefined) => {
+        if (value === undefined) return value;
+
         const prev = prevSelectedValueRef;
 
         if (prev.current === EMPTY_VALUE) {
@@ -65,9 +67,12 @@ export const useContextProxy = <
         },
     }));
 
-    const memoizedValue = useMemo(() => {
-        return new Proxy(value, proxyHandler);
-    }, [proxyHandler, value]);
+    const memoizedValue = React.useMemo(() => {
+        if (value === undefined) return value;
 
-    return memoizedValue;
+        return new Proxy(value, proxyHandler);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [value]);
+
+    return memoizedValue as unknown as _Value;
 };

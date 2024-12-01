@@ -5,6 +5,7 @@ import { T } from '@lesnoypudge/types-utils-base/namespace';
 import React from 'react';
 
 
+
 export type ContextSelectable<
     _Value extends T.UnknownRecord,
 > = (
@@ -15,7 +16,7 @@ export type ContextSelectable<
             'value'
         >>>;
         Consumer: never;
-        displayName?: string;
+        selectable: true;
     }
 );
 
