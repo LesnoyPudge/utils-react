@@ -6,19 +6,21 @@ import { useRefManager } from '@entities/RefManager';
 
 
 
-type EventMap<_Element extends addEventListener.ElementUnion> = {
-    [K in keyof addEventListener.AvailableEventNames<_Element>]: (
-        addEventListener.AvailableEventNames<_Element>[K]
-    );
-};
-
-type EventNames<_Element extends addEventListener.ElementUnion> = (
-    keyof addEventListener.AvailableEventNames<_Element>
-);
-
 export namespace useEventListener {
+    export type ElementUnion = addEventListener.ElementUnion;
+
+    export type EventMap<_Element extends ElementUnion> = {
+        [K in keyof addEventListener.AvailableEventNames<_Element>]: (
+            addEventListener.AvailableEventNames<_Element>[K]
+        );
+    };
+
+    export type EventNames<_Element extends ElementUnion> = (
+        keyof addEventListener.AvailableEventNames<_Element>
+    );
+
     export type ProvidedElement<
-        _ProvidedType extends addEventListener.ElementUnion,
+        _ProvidedType extends ElementUnion,
     > = (
         _ProvidedType extends HTMLElement
             ? useRefManager.RefManager<_ProvidedType>
@@ -27,12 +29,12 @@ export namespace useEventListener {
 }
 
 export const useEventListener = <
-    _ProvidedType extends addEventListener.ElementUnion,
-    _EventName extends EventNames<_ProvidedType>,
+    _ProvidedType extends useEventListener.ElementUnion,
+    _EventName extends useEventListener.EventNames<_ProvidedType>,
 >(
     element: useEventListener.ProvidedElement<_ProvidedType>,
     eventName: _EventName,
-    callback: (e: EventMap<_ProvidedType>[_EventName]) => void,
+    callback: (e: useEventListener.EventMap<_ProvidedType>[_EventName]) => void,
     options?: AddEventListenerOptions,
 ) => {
     const _callback = useFunction(callback);
