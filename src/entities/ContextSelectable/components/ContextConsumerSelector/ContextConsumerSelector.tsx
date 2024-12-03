@@ -9,19 +9,21 @@ import { renderFunction } from '@utils/renderFunction';
 
 
 
-type ContextConsumerSelectorProps<
-    _Value extends T.UnknownRecord,
-    _SelectedValue = _Value,
-> = (
-    RT.PropsWithRenderFunction<[_SelectedValue]>
-    & {
-        context: ContextSelectable<_Value>;
-        selector?: ContextSelectableSelector<
-            _Value,
-            _SelectedValue
-        >;
-    }
-);
+export namespace ContextConsumerSelector {
+    export type Props<
+        _Value extends T.UnknownRecord,
+        _SelectedValue = _Value,
+    > = (
+        RT.PropsWithRenderFunction<[_SelectedValue]>
+        & {
+            context: ContextSelectable<_Value>;
+            selector?: ContextSelectableSelector<
+                _Value,
+                _SelectedValue
+            >;
+        }
+    );
+}
 
 export const ContextConsumerSelector = <
     _Value extends T.UnknownRecord,
@@ -30,7 +32,7 @@ export const ContextConsumerSelector = <
     context,
     selector,
     children,
-}: ContextConsumerSelectorProps<_Value, _SelectedValue>) => {
+}: ContextConsumerSelector.Props<_Value, _SelectedValue>) => {
     const value = useContextSelector(context, selector);
 
     return renderFunction(children, value);
