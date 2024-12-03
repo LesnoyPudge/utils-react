@@ -14,7 +14,7 @@ export namespace ContextConsumerSelector {
         _Value extends T.UnknownRecord,
         _SelectedValue = _Value,
     > = (
-        RT.PropsWithRenderFunction<[_SelectedValue]>
+        RT.PropsWithRenderFunctionOrNode<[_SelectedValue]>
         & {
             context: ContextSelectable<_Value>;
             selector?: ContextSelectableSelector<

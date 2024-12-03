@@ -5,7 +5,7 @@ import React from 'react';
 
 
 type ContextConsumerProps<_Value> = (
-    RT.PropsWithRenderFunction<[_Value]>
+    RT.PropsWithRenderFunctionOrNode<[_Value]>
     & {
         context: React.Context<_Value>;
     }

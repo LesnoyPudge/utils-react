@@ -12,7 +12,7 @@ export namespace ContextConsumerProxy {
     export type Props<
         _Value extends T.UnknownRecord,
     > = (
-        RT.PropsWithRenderFunction<[_Value]>
+        RT.PropsWithRenderFunctionOrNode<[_Value]>
         & {
             context: ContextSelectable<_Value>;
         }
