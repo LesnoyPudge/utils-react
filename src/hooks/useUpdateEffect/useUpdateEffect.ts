@@ -1,17 +1,19 @@
 import { T } from '@lesnoypudge/types-utils-base/namespace';
-import { useEffect } from 'react';
-import { useIsFirstRender } from '@hooks/useIsFirstRender';
+import { shallowEqual } from '@lesnoypudge/utils';
+import { useEffect, useRef } from 'react';
 
 
 
 export const useUpdateEffect = (
     fn: () => void,
-    deps?: T.UnknownArray,
+    deps: T.UnknownArray,
 ) => {
-    const { getIsFirstRender } = useIsFirstRender();
+    const prevDepsRef = useRef<typeof deps>(deps);
 
     useEffect(() => {
-        if (getIsFirstRender()) return;
+        if (shallowEqual(deps, prevDepsRef.current)) return;
+
+        prevDepsRef.current = deps;
 
         return fn();
     // eslint-disable-next-line react-hooks/exhaustive-deps
