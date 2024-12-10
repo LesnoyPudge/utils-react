@@ -1,12 +1,12 @@
 import { useFunction } from '@hooks/useFunction';
-import { useEffect, useRef } from 'react';
+import { useInsertionEffect, useRef } from 'react';
 
 
 
 export const useIsMounted = () => {
     const isMountedRef = useRef(false);
 
-    useEffect(() => {
+    useInsertionEffect(() => {
         isMountedRef.current = true;
 
         return () => {
