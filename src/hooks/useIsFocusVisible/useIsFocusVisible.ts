@@ -4,6 +4,7 @@
 import { useEventListener } from '@hooks/useEventListener';
 import { useUniqueState } from '@hooks/useUniqueState';
 import { useRefManager } from '@entities/RefManager';
+import { useRef } from 'react';
 
 
 
@@ -160,7 +161,7 @@ const init = () => {
         if (!('nodeName' in e.target)) return;
         if (typeof e.target.nodeName !== 'string') return;
         if (
-            e.target.nodeName 
+            e.target.nodeName
             && e.target.nodeName.toLowerCase() === 'html'
         ) return;
 
@@ -186,18 +187,38 @@ export namespace useIsFocusVisible {
          * @default false
          */
         within?: boolean;
+        /**
+         * Disable state updates. Ref will keep updating.
+         * @default false
+         */
+        stateless?: boolean;
+        /**
+         * Triggered when element receive focus.
+         */
+        onFocus?: (e: FocusEvent) => void;
+        /**
+         * Triggered when element lose focus.
+         */
+        onBlur?: (e: FocusEvent) => void;
+    };
+
+    export type Return = {
+        isFocused: boolean;
+        isFocusedRef: React.MutableRefObject<boolean>;
     };
 }
 
 export const useIsFocusVisible = (
     elementRef: useRefManager.RefManager<HTMLElement>,
     options?: useIsFocusVisible.Options,
-) => {
+): useIsFocusVisible.Return => {
     init();
 
     const [isFocused, setIsFocused] = useUniqueState(false);
+    const isFocusedRef = useRef(isFocused);
     const inEvent = options?.within ? 'focusin' : 'focus';
     const outEvent = options?.within ? 'focusout' : 'blur';
+    const withStateUpdated = !options?.stateless;
 
     useEventListener(elementRef, inEvent, (e) => {
         if (!e.target) return;
@@ -207,7 +228,10 @@ export const useIsFocusVisible = (
             && !focusTriggersKeyboardModality(e.target)
         ) return;
 
-        setIsFocused(true);
+        withStateUpdated && setIsFocused(true);
+        isFocusedRef.current = true;
+
+        options?.onFocus?.(e);
     });
 
     useEventListener(elementRef, outEvent, (e) => {
@@ -226,10 +250,14 @@ export const useIsFocusVisible = (
             hadFocusVisibleRecently = false;
         }, 100);
 
-        setIsFocused(false);
+        withStateUpdated && setIsFocused(false);
+        isFocusedRef.current = true;
+
+        options?.onBlur?.(e);
     });
 
     return {
         isFocused,
+        isFocusedRef,
     };
 };
