@@ -1,7 +1,10 @@
 import { useFunction } from '@hooks/useFunction';
 import { isHtmlElement } from '@lesnoypudge/utils-web';
-import { useLayoutEffect, useRef } from 'react';
+import { useId, useLayoutEffect, useRef } from 'react';
 import { useRefManager } from '@entities/RefManager';
+import { useFocusContext } from '../../../../hooks';
+import { FocusContext } from '../../../../context';
+import { combinedFunction } from '@lesnoypudge/utils';
 
 
 
@@ -31,9 +34,12 @@ export namespace useMoveFocusInside {
         options?: Options,
     ];
 
-    export type Return = {
-        moveFocusInside: VoidFunction;
-    };
+    export type Return = (
+        FocusContext
+        & {
+            moveFocusInside: VoidFunction;
+        }
+    );
 }
 
 const FOCUSABLE_SELECTOR = [
@@ -83,7 +89,21 @@ export const useMoveFocusInside = (...[
     containerRef,
     options,
 ]: useMoveFocusInside.Args): useMoveFocusInside.Return => {
+    const id = useId();
+    const { focusMap, focusQueue } = useFocusContext();
     const isAppliedAtLeastOnceRef = useRef(false);
+
+    const removeId = useFunction(() => {
+        focusQueue.current = focusQueue.current.filter((_id) => {
+            return _id !== id;
+        });
+    });
+
+    const addId = useFunction(() => {
+        focusQueue.current.push(id);
+
+        return removeId;
+    });
 
     const moveFocusInside = useFunction(() => {
         const container = containerRef.current;
@@ -114,11 +134,12 @@ export const useMoveFocusInside = (...[
                 && isVisible(document.body, document.activeElement)
             );
             if (shouldGentleBail) return;
+            if (focusQueue.current.length) return;
 
             const isFocusApplied = moveFocusInside();
             isAppliedAtLeastOnceRef.current = isFocusApplied;
 
-            if (isFocusApplied) return;
+            if (isFocusApplied) return addId();
 
             const observer = new MutationObserver((_, observer) => {
                 const isFocusApplied = moveFocusInside();
@@ -126,6 +147,7 @@ export const useMoveFocusInside = (...[
 
                 if (!isFocusApplied) return;
 
+                addId();
                 observer.disconnect();
             });
 
@@ -135,12 +157,17 @@ export const useMoveFocusInside = (...[
                 subtree: true,
             });
 
-            return () => observer.disconnect();
+            return () => {
+                observer.disconnect();
+                removeId();
+            };
         });
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [!!options?.enabled]);
 
     return {
         moveFocusInside,
+        focusMap,
+        focusQueue,
     };
 };

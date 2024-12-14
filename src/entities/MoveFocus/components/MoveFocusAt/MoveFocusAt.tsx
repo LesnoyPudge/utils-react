@@ -1,8 +1,9 @@
 import { renderFunction } from '@utils/renderFunction';
 import { FC } from 'react';
-import { useMoveFocusAt } from '@entities/MoveFocusAt';
+import { useMoveFocusAt } from './hooks';
 import { useRefManager } from '@entities/RefManager';
 import { RT } from '@lesnoypudge/types-utils-react/namespace';
+import { FocusContext } from '../../context';
 
 
 
@@ -21,9 +22,7 @@ export namespace MoveFocusAt {
     type WithChildren = RT.PropsWithRequiredRenderFunction<[RenderProps]>;
 
     export type Props = (
-        {
-            enabled: useMoveFocusAt.Args[1];
-        }
+        useMoveFocusAt.Options
         & Partial<WithElementRef>
         & WithChildren
     );
@@ -31,15 +30,28 @@ export namespace MoveFocusAt {
 
 export const MoveFocusAt: FC<MoveFocusAt.Props> = ({
     elementRef,
-    enabled,
     children,
+    ...options
 }) => {
     const refManager = useRefManager<HTMLElement>(null);
     const manager = elementRef ?? refManager;
-    const { focus } = useMoveFocusAt(manager, enabled);
-
-    return renderFunction(children, {
-        elementRef: manager,
+    const {
         focus,
-    });
+        focusMap,
+        focusQueue,
+    } = useMoveFocusAt(manager, options);
+
+    const contextValue: FocusContext = {
+        focusMap,
+        focusQueue,
+    };
+
+    return (
+        <FocusContext.Provider value={contextValue}>
+            {renderFunction(children, {
+                elementRef: manager,
+                focus,
+            })}
+        </FocusContext.Provider>
+    );
 };

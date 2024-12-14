@@ -21,6 +21,7 @@ const configArr = config.createConfig({
         'promise/no-callback-in-promise': 'off',
         '@typescript-eslint/no-unused-expressions': 'off',
         '@typescript-eslint/no-non-null-assertion': 'off',
+        '@typescript-eslint/no-unnecessary-type-assertion': 'off',
     }
 });
 
