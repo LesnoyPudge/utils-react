@@ -25,18 +25,14 @@ export namespace MoveFocusInside {
 }
 
 export const MoveFocusInside: FC<MoveFocusInside.Props> = ({
-    children,
     containerRef,
-    enabled,
-    forced,
+    children,
+    ...options
 }) => {
     const refManager = useRefManager<HTMLElement>(null);
     const manager = containerRef ?? refManager;
 
-    const { moveFocusInside } = useMoveFocusInside(manager, {
-        enabled,
-        forced,
-    });
+    const { moveFocusInside } = useMoveFocusInside(manager, options);
 
     return renderFunction(children, {
         moveFocusInside,

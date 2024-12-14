@@ -1,6 +1,6 @@
 import { useFunction } from '@hooks/useFunction';
 import { isHtmlElement } from '@lesnoypudge/utils-web';
-import { useLayoutEffect } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { useRefManager } from '@entities/RefManager';
 
 
@@ -18,6 +18,12 @@ export namespace useMoveFocusInside {
          * @default false;
          */
         forced?: boolean;
+        /**
+         * If set to true, focus will be applied only once.
+         *
+         * @default false;
+         */
+        once?: boolean;
     };
 
     export type Args = [
@@ -77,6 +83,8 @@ export const useMoveFocusInside = (...[
     containerRef,
     options,
 ]: useMoveFocusInside.Args): useMoveFocusInside.Return => {
+    const isAppliedAtLeastOnceRef = useRef(false);
+
     const moveFocusInside = useFunction(() => {
         const container = containerRef.current;
         if (!container) return false;
@@ -93,9 +101,11 @@ export const useMoveFocusInside = (...[
         const {
             enabled = false,
             forced = false,
+            once = false,
         } = options ?? {};
 
         if (!enabled) return;
+        if (once && isAppliedAtLeastOnceRef.current) return;
 
         return containerRef.effect((node) => {
             const shouldGentleBail = (
@@ -106,10 +116,14 @@ export const useMoveFocusInside = (...[
             if (shouldGentleBail) return;
 
             const isFocusApplied = moveFocusInside();
+            isAppliedAtLeastOnceRef.current = isFocusApplied;
+
             if (isFocusApplied) return;
 
             const observer = new MutationObserver((_, observer) => {
                 const isFocusApplied = moveFocusInside();
+                isAppliedAtLeastOnceRef.current = isFocusApplied;
+
                 if (!isFocusApplied) return;
 
                 observer.disconnect();
