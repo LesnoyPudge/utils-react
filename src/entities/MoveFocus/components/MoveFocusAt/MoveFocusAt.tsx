@@ -1,5 +1,4 @@
 import { renderFunction } from '@utils/renderFunction';
-import { FC } from 'react';
 import { useMoveFocusAt } from './hooks';
 import { useRefManager } from '@entities/RefManager';
 import { RT } from '@lesnoypudge/types-utils-react/namespace';
@@ -8,32 +7,28 @@ import { FocusContext } from '../../context';
 
 
 export namespace MoveFocusAt {
-    type WithElementRef = {
-        elementRef: useMoveFocusAt.Args[0];
+    type WithElementRef<_Element extends HTMLElement> = {
+        elementRef: useRefManager.RefManager<_Element>;
     };
 
-    type RenderProps = (
-        {
-            focus: VoidFunction;
-        }
-        & WithElementRef
+    type ChildrenProps<_Element extends HTMLElement> = (
+        { focus: VoidFunction }
+        & WithElementRef<_Element>
     );
 
-    type WithChildren = RT.PropsWithRequiredRenderFunction<[RenderProps]>;
-
-    export type Props = (
+    export type Props<_Element extends HTMLElement> = (
         useMoveFocusAt.Options
-        & Partial<WithElementRef>
-        & WithChildren
+        & Partial<WithElementRef<_Element>>
+        & RT.PropsWithRenderFunctionOrNode<[ChildrenProps<_Element>]>
     );
 }
 
-export const MoveFocusAt: FC<MoveFocusAt.Props> = ({
+export const MoveFocusAt = <_Element extends HTMLElement>({
     elementRef,
     children,
     ...options
-}) => {
-    const refManager = useRefManager<HTMLElement>(null);
+}: MoveFocusAt.Props<_Element>) => {
+    const refManager = useRefManager<_Element>(null);
     const manager = elementRef ?? refManager;
     const {
         focus,

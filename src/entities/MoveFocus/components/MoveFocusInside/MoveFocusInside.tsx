@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import { useMoveFocusInside } from './hooks';
 import { useRefManager } from '@entities/RefManager';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
@@ -9,28 +8,28 @@ import { FocusContext } from '@entities/MoveFocus/context';
 
 
 export namespace MoveFocusInside {
-    type WithContainerRef = {
-        containerRef: useMoveFocusInside.Args[0];
+    type WithContainerRef<_Element extends HTMLElement> = {
+        containerRef: useRefManager.RefManager<_Element>;
     };
 
-    type ChildrenProps = T.Simplify<(
-        WithContainerRef
+    type ChildrenProps<_Element extends HTMLElement> = T.Simplify<(
+        WithContainerRef<_Element>
         & Pick<useMoveFocusInside.Return, 'moveFocusInside'>
     )>;
 
-    export type Props = T.Simplify<(
-        RT.PropsWithRenderFunctionOrNode<[ChildrenProps]>
-        & Partial<WithContainerRef>
+    export type Props<_Element extends HTMLElement> = T.Simplify<(
+        RT.PropsWithRenderFunctionOrNode<[ChildrenProps<_Element>]>
+        & Partial<WithContainerRef<_Element>>
         & useMoveFocusInside.Options
     )>;
 }
 
-export const MoveFocusInside: FC<MoveFocusInside.Props> = ({
+export const MoveFocusInside = <_Element extends HTMLElement>({
     containerRef,
     children,
     ...options
-}) => {
-    const refManager = useRefManager<HTMLElement>(null);
+}: MoveFocusInside.Props<_Element>) => {
+    const refManager = useRefManager<_Element>(null);
     const manager = containerRef ?? refManager;
 
     const {
