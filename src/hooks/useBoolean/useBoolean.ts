@@ -16,7 +16,7 @@ export const useBoolean = (
 
     const setFalse = useFunction(() => {
         setValue(false);
-        onChange?.(true);
+        onChange?.(false);
     });
 
     const toggle = useFunction(() => {
