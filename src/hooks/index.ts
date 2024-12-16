@@ -11,6 +11,7 @@ export * from './useFunction';
 export * from './useInlineWorker';
 export * from './useIntersectionObserver';
 export * from './useInterval';
+export * from './useIsFocusedWithin';
 export * from './useIsFocusVisible';
 export * from './useIsMounted';
 export * from './useIsomorphicLayoutEffect';
