@@ -9,7 +9,8 @@ export const useIsFocusedWithin = (
     container: useRefManager.RefManager<HTMLElement>,
 ) => {
     const [isFocusedWithin, setIsFocusedWithin] = useUniqueState((
-        document.activeElement === container.current
+        !!container.current?.contains(document.activeElement)
+        || (document.activeElement === container.current)
     ));
 
     useEventListener(
