@@ -1,8 +1,8 @@
 import { InlineWorker } from '@lesnoypudge/utils-web';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
-import { useUniqueState } from '@hooks/useUniqueState';
 import { useConst } from '@hooks/useConst';
 import { useUnmountEffect } from '@hooks/useUnmountEffect';
+import { useState } from 'react';
 
 
 
@@ -16,7 +16,7 @@ export const useInlineWorker = <
 >(
     fn: T.AnyFunction<_Args, _Return>,
 ) => {
-    const [value, setValue] = useUniqueState<_Return | undefined>(undefined);
+    const [value, setValue] = useState<_Return | undefined>(undefined);
     const worker = useConst(() => new InlineWorker(fn, setValue));
 
     useUnmountEffect(worker.terminate);

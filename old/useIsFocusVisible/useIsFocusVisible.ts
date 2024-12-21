@@ -2,9 +2,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEventListener } from '@hooks/useEventListener';
-import { useUniqueState } from '@hooks/useUniqueState';
 import { useRefManager } from '@entities/RefManager';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 
 
@@ -214,8 +213,9 @@ export const useIsFocusVisible = (
 ): useIsFocusVisible.Return => {
     init();
 
-    const [isFocused, setIsFocused] = useUniqueState(false);
+    const [isFocused, setIsFocused] = useState(false);
     const isFocusedRef = useRef(isFocused);
+
     const inEvent = options?.within ? 'focusin' : 'focus';
     const outEvent = options?.within ? 'focusout' : 'blur';
     const withStateUpdated = !options?.stateless;

@@ -1,7 +1,7 @@
 import { useFunction } from '@hooks/useFunction';
 import { useMemoShallow } from '@hooks/useMemoShallow';
-import { useUniqueState } from '@hooks/useUniqueState';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
+import { useState } from 'react';
 
 
 
@@ -38,10 +38,11 @@ export const useSteps = <
     onStepAttempt,
 }: useSteps.Props<_Steps>) => {
     const maxIndex = steps.length - 1;
+
     const [
         currentStep,
         setCurrentStep,
-    ] = useUniqueState(initialStep!);
+    ] = useState(initialStep);
 
     const makeStep = useFunction((step: T.ArrayValues<_Steps>) => {
         let bail = false;

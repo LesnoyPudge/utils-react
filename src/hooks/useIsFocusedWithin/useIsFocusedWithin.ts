@@ -1,14 +1,25 @@
 import { useRefManager } from '@entities/RefManager';
 import { useEventListener } from '@hooks/useEventListener';
-import { useUniqueState } from '@hooks/useUniqueState';
 import { isHtmlElement } from '@lesnoypudge/utils-web';
+import { useState } from 'react';
 
 
+
+const containsRelatedTarget = (event: FocusEvent) => {
+    if (
+        isHtmlElement(event.currentTarget)
+        && isHtmlElement(event.relatedTarget)
+    ) {
+        return event.currentTarget.contains(event.relatedTarget);
+    }
+
+    return false;
+};
 
 export const useIsFocusedWithin = (
     container: useRefManager.RefManager<HTMLElement>,
 ) => {
-    const [isFocusedWithin, setIsFocusedWithin] = useUniqueState((
+    const [isFocusedWithin, setIsFocusedWithin] = useState((
         !!container.current?.contains(document.activeElement)
         || (document.activeElement === container.current)
     ));
@@ -24,16 +35,9 @@ export const useIsFocusedWithin = (
         'focusout',
         (e) => {
             if (!container.current) return;
-            if (!isHtmlElement(e.relatedTarget)) {
-                return setIsFocusedWithin(false);
-            }
+            if (!containsRelatedTarget(e)) return;
 
-            const isWithin = (
-                container.current === e.relatedTarget
-                || container.current.contains(e.relatedTarget)
-            );
-
-            setIsFocusedWithin(isWithin);
+            setIsFocusedWithin(false);
         },
     );
 

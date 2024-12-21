@@ -4,10 +4,10 @@ import {
     Dispatch,
     SetStateAction,
     MutableRefObject,
+    useState,
 } from 'react';
 import { capitalize, isCallable } from '@lesnoypudge/utils';
 import { useFunction } from '@hooks/useFunction';
-import { useUniqueState } from '@hooks/useUniqueState';
 
 
 
@@ -39,10 +39,10 @@ export const useNamedState = <
     name: _Name,
     initialState: _State | (() => _State),
 ): useNamedState.Return<_State, _Name> => {
-    const [state, setState] = useUniqueState(initialState);
+    const [state, _setState] = useState(initialState);
     const stateRef = useRef(state);
 
-    const setStateAndRef: typeof setState = useFunction((newValue) => {
+    const setState: typeof _setState = useFunction((newValue) => {
         const _state = (
             isCallable(newValue)
                 ? newValue(state)
@@ -50,15 +50,15 @@ export const useNamedState = <
         );
 
         stateRef.current = _state;
-        setState(_state);
+        _setState(_state);
     });
 
     return {
         [name]: state,
         [`${name}Ref`]: stateRef,
-        [`set${capitalize(name)}`]: setStateAndRef,
+        [`set${capitalize(name)}`]: setState,
         [0]: state,
         [1]: stateRef,
-        [2]: setStateAndRef,
+        [2]: setState,
     } as useNamedState.Return<_State, _Name>;
 };

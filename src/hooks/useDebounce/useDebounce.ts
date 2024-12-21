@@ -1,9 +1,8 @@
 import { useFunction } from '@hooks/useFunction';
 import { useLatest } from '@hooks/useLatest';
-import { useUniqueState } from '@hooks/useUniqueState';
 import { useUnmountEffect } from '@hooks/useUnmountEffect';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 
 
@@ -21,7 +20,7 @@ export namespace useDebounce {
  * Callback aren't called when component is unmounted;
  */
 export const useDebounce = (options: useDebounce.Options = {}) => {
-    const [isDebouncing, setIsDebouncing] = useUniqueState(false);
+    const [isDebouncing, setIsDebouncing] = useState(false);
     const isDebouncingRef = useRef(isDebouncing);
     const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
     const lastOptionsRef = useLatest(options);

@@ -1,7 +1,6 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useFunction } from '@hooks/useFunction';
 import { useLatest } from '@hooks/useLatest';
-import { useUniqueState } from '@hooks/useUniqueState';
 import { useUnmountEffect } from '@hooks/useUnmountEffect';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
 import { noop } from '@lesnoypudge/utils';
@@ -23,7 +22,7 @@ export namespace useThrottle {
  * Callback aren't called when component is unmounted;
  */
 export const useThrottle = (options: useThrottle.Options = {}) => {
-    const [isThrottling, setIsThrottling] = useUniqueState(false);
+    const [isThrottling, setIsThrottling] = useState(false);
     const isThrottlingRef = useRef(isThrottling);
     const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
     const isCalledDuringThrottleRef = useRef(false);

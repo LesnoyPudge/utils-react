@@ -1,13 +1,13 @@
 import { useFunction } from '@hooks/useFunction';
-import { useUniqueState } from '@hooks/useUniqueState';
+import { useState } from 'react';
 
 
 
 export const useBoolean = (
-    initialValue: useUniqueState.initialValue<boolean>,
+    initialValue: boolean,
     onChange?: (value: boolean) => void,
 ) => {
-    const [value, setValue] = useUniqueState(initialValue);
+    const [value, setValue] = useState(initialValue);
 
     const setTrue = useFunction(() => {
         setValue(true);

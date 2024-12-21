@@ -1,7 +1,7 @@
 import { addEventListener } from '@lesnoypudge/utils-web';
 import { useFunction } from '@hooks/useFunction';
 import { useMemoShallow } from '@hooks/useMemoShallow';
-import { useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 import { useRefManager } from '@entities/RefManager';
 
 
@@ -40,7 +40,7 @@ export const useEventListener = <
     const _callback = useFunction(callback);
     const _options = useMemoShallow(options);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         if ('effect' in element) {
             return element.effect((node) => {
                 return addEventListener(
