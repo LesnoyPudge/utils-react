@@ -1,32 +1,45 @@
 import { useFunction } from '@hooks/useFunction';
+import { isCallable } from '@lesnoypudge/utils';
 import { useState } from 'react';
 
 
 
 export const useBoolean = (
     initialValue: boolean,
-    onChange?: (value: boolean) => void,
+    providedOnChange?: (value: boolean) => void,
 ) => {
-    const [value, setValue] = useState(initialValue);
+    const [value, _setValue] = useState(initialValue);
+
+    const setValue: typeof _setValue = useFunction((providedValue) => {
+        _setValue((prev) => {
+            const newValue = (
+                isCallable(providedValue)
+                    ? providedValue(prev)
+                    : providedValue
+            );
+
+            providedOnChange?.(newValue);
+
+            return newValue;
+        });
+    });
 
     const setTrue = useFunction(() => {
         setValue(true);
-        onChange?.(true);
     });
 
     const setFalse = useFunction(() => {
         setValue(false);
-        onChange?.(false);
     });
 
     const toggle = useFunction(() => {
-        let newValue = false;
-
         setValue((prev) => {
-            newValue = !prev;
+            const newValue = !prev;
+
+            providedOnChange?.(newValue);
+
             return newValue;
         });
-        onChange?.(newValue);
     });
 
     return {
