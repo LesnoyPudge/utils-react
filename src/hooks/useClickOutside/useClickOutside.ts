@@ -1,6 +1,5 @@
 import { useRefManager } from '@entities/RefManager';
 import { useEventListener } from '@hooks/useEventListener';
-import { useFunction } from '@hooks/useFunction';
 
 
 
@@ -8,7 +7,7 @@ export const useClickOutside = (
     elementRef: useRefManager.RefManager<HTMLElement>,
     handler: (e: MouseEvent) => void,
 ) => {
-    const callback = useFunction((e: MouseEvent) => {
+    useEventListener(document, 'mousedown', (e: MouseEvent) => {
         const target = e.target as Node | null;
 
         if (!target?.isConnected) return;
@@ -17,6 +16,4 @@ export const useClickOutside = (
 
         handler(e);
     });
-
-    useEventListener(elementRef, 'mousedown', callback);
 };
