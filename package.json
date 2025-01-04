@@ -1,7 +1,7 @@
 {
     "name": "@lesnoypudge/utils-react",
     "description": "lesnoypudge's utils-react",
-    "version": "8.0.2",
+    "version": "9.0.0",
     "keywords": [
         "lesnoypudge",
         "utils",
@@ -25,11 +25,11 @@
         "prepublishOnly": "npm run build"
     },
     "dependencies": {
-        "@fluentui/react-context-selector": "^9.1.69",
-        "@lesnoypudge/utils": "^16.2.0",
+        "@fluentui/react-context-selector": "^9.1.71",
+        "@lesnoypudge/utils": "^16.3.0",
         "@lesnoypudge/utils-web": "^1.0.0",
-        "react-error-boundary": "^4.1.2",
-        "react-focus-lock": "^2.13.5",
+        "react-error-boundary": "^5.0.0",
+        "react-focus-on": "^3.9.4",
         "react-json-pretty": "^2.2.0"
     },
     "peerDependencies": {
@@ -42,24 +42,24 @@
         "@lesnoypudge/formatter-config": "^8.0.0",
         "@lesnoypudge/types-global-base": "^4.0.0",
         "@lesnoypudge/types-global-node": "^1.0.0",
-        "@lesnoypudge/types-global-react": "^2.1.1",
+        "@lesnoypudge/types-global-react": "^4.0.1",
         "@lesnoypudge/types-global-web": "^1.0.0",
         "@lesnoypudge/types-utils-base": "^3.4.1",
         "@lesnoypudge/types-utils-react": "^5.0.0",
         "@testing-library/dom": "^10.4.0",
-        "@testing-library/react": "^16.0.1",
+        "@testing-library/react": "^16.1.0",
         "@types/jsdom": "^21.1.7",
-        "@vitejs/plugin-react": "^4.3.3",
+        "@vitejs/plugin-react": "^4.3.4",
         "babel-plugin-jsx-control-statements": "^4.1.2",
         "glob": "^11.0.0",
         "jsdom": "^25.0.1",
         "tsx": "^4.19.2",
         "typescript": "^5.7.2",
-        "vite": "^5.4.11",
+        "vite": "^6.0.7",
         "vite-plugin-checker": "^0.8.0",
-        "vite-plugin-dts": "^4.3.0",
-        "vite-plugin-lib-inject-css": "^2.1.1",
-        "vite-tsconfig-paths": "^5.1.3",
-        "vitest": "^2.1.5"
+        "vite-plugin-dts": "^4.4.0",
+        "vite-plugin-lib-inject-css": "^2.2.0",
+        "vite-tsconfig-paths": "^5.1.4",
+        "vitest": "^2.1.8"
     }
 }

@@ -7,4 +7,5 @@ export * from './JsonView';
 export * from './Memo';
 export * from './Ref';
 export * from './Static';
+export * from './StrictMode';
 export * from './VisuallyHidden';

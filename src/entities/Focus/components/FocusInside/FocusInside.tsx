@@ -1,42 +1,61 @@
+import { useRefManager } from '@entities/RefManager';
+import { useAutoFocusable } from '../../hooks';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
-import { RT } from '@lesnoypudge/types-utils-react/namespace';
-import { renderFunction } from '@utils/renderFunction';
-import { RefObject, useRef } from 'react';
-import { useFocusInside } from 'react-focus-lock';
+import { PropsWithChildren, useEffect, useRef } from 'react';
+// eslint-disable-next-line import-x/no-extraneous-dependencies
+import { moveFocusInside, focusInside } from 'focus-lock';
 
 
 
 export namespace FocusInside {
     export type Options = {
+        isEnabled: boolean;
+
         /**
-         * @default false;
+         * Once per activation;
+         * @default false
          */
-        enabled?: boolean;
+        once?: boolean;
     };
 
-    type WithContainerRef<_Element extends HTMLElement> = {
-        containerRef: RefObject<_Element>;
+    type WithContainerRef = {
+        containerRef: useRefManager.RefManager<HTMLElement>;
     };
 
-    export type Props<_Element extends HTMLElement> = T.Simplify<(
-        RT.PropsWithRenderFunctionOrNode<[WithContainerRef<_Element>]>
-        & Partial<WithContainerRef<_Element>>
+    export type Props = T.Simplify<(
+        PropsWithChildren
+        & WithContainerRef
         & Options
     )>;
 }
 
-export const FocusInside = <_Element extends HTMLElement>({
+export const FocusInside = ({
     containerRef,
-    enabled = false,
+    isEnabled,
+    once = false,
     children,
-}: FocusInside.Props<_Element>) => {
-    const ref = useRef<_Element>(null);
-    const _ref = containerRef ?? ref;
+}: FocusInside.Props) => {
+    const focusedOnceRef = useRef(false);
 
-    // @ts-expect-error
-    useFocusInside(enabled ? _ref : undefined);
+    useAutoFocusable(isEnabled, containerRef);
 
-    return renderFunction(children, {
-        containerRef: _ref,
-    });
+    // https://github.com/theKashey/react-focus-lock/blob/master/src/MoveFocusInside.js#L7
+    useEffect(() => {
+        if (!isEnabled) {
+            focusedOnceRef.current = false;
+            return;
+        }
+        if (focusedOnceRef.current) return;
+
+        return containerRef.effect((node) => {
+            if (focusInside(node)) return;
+
+            // null should be valid arg https://github.com/theKashey/focus-lock/blob/master/src/focusSolver.ts#L30
+            moveFocusInside(node, document.activeElement ?? document.body);
+
+            focusedOnceRef.current = once;
+        });
+    }, [once, isEnabled, containerRef]);
+
+    return children;
 };
