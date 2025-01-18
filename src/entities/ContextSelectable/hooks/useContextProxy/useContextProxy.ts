@@ -1,5 +1,4 @@
 import { pick, shallowEqual } from '@lesnoypudge/utils';
-import React from 'react';
 import {
     useContextSelector as useContextSelectorFluent,
     Context as ContextFluent,
@@ -8,6 +7,7 @@ import { T } from '@lesnoypudge/types-utils-base/namespace';
 import { ContextSelectable } from '@entities/ContextSelectable';
 import { useConst } from '@hooks/useConst';
 import { useFunction } from '@hooks/useFunction';
+import { useMemo, useRef } from 'react';
 
 
 
@@ -19,7 +19,7 @@ export const useContextProxy = <
     context: ContextSelectable<_Value>,
 ): _Value => {
     const usedKeys = useConst(() => new Set<PropertyKey>());
-    const prevSelectedValueRef = React.useRef<
+    const prevSelectedValueRef = useRef<
         _Value | typeof EMPTY_VALUE
     >(EMPTY_VALUE);
 
@@ -67,12 +67,11 @@ export const useContextProxy = <
         },
     }));
 
-    const memoizedValue = React.useMemo(() => {
+    const memoizedValue = useMemo(() => {
         if (value === undefined) return value;
 
         return new Proxy(value, proxyHandler);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [value]);
+    }, [value, proxyHandler]);
 
     return memoizedValue as unknown as _Value;
 };

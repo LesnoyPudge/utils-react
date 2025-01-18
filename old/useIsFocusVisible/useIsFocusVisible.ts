@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEventListener } from '@hooks/useEventListener';
 import { useRefManager } from '@entities/RefManager';
-import { useRef, useState } from 'react';
+import { MutableRefObject, useRef, useState } from 'react';
 
 
 
@@ -203,7 +203,7 @@ export namespace useIsFocusVisible {
 
     export type Return = {
         isFocused: boolean;
-        isFocusedRef: React.MutableRefObject<boolean>;
+        isFocusedRef: MutableRefObject<boolean>;
     };
 }
 

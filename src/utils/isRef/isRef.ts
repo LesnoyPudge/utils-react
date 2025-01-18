@@ -1,7 +1,7 @@
-import React from 'react';
+import { MutableRefObject } from 'react';
 
 
 
-export const isRef = (v: unknown): v is React.MutableRefObject<unknown> => {
+export const isRef = (v: unknown): v is MutableRefObject<unknown> => {
     return typeof v === 'object' && v !== null && 'current' in v;
 };

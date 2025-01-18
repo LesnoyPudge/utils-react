@@ -1,5 +1,4 @@
 import { shallowEqual } from '@lesnoypudge/utils';
-import React from 'react';
 import {
     ContextValue as ContextValueFluent,
     useContextSelector as useContextSelectorFluent,
@@ -9,6 +8,7 @@ import { T } from '@lesnoypudge/types-utils-base/namespace';
 import { defaultSelector } from '@utils/defaultSelector';
 import { ContextSelectable } from '@entities/ContextSelectable';
 import { useFunction } from '@hooks/useFunction';
+import { useContext, useRef } from 'react';
 
 
 
@@ -29,11 +29,11 @@ export const useContextSelector = <
         _SelectedValue
     > = defaultSelector,
 ): _SelectedValue => {
-    const contextValue = React.useContext(
+    const contextValue = useContext(
         context,
     ) as unknown as ContextValueFluent<_Value>;
 
-    const prevSelectedRef = React.useRef<
+    const prevSelectedRef = useRef<
         _SelectedValue | typeof EMPTY_VALUE
     >(EMPTY_VALUE);
 

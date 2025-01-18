@@ -4,7 +4,7 @@ import { useFunction } from '@hooks/useFunction';
 
 
 export const useForceUpdate = () => {
-    const [_, setState] = useState(0);
+    const [forcedState, setState] = useState(0);
 
     const forceUpdate = useFunction(() => {
         setState((prev) => prev + 1);
@@ -12,5 +12,6 @@ export const useForceUpdate = () => {
 
     return {
         forceUpdate,
+        forcedState,
     };
 };

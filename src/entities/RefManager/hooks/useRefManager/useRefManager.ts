@@ -3,11 +3,9 @@ import { useFunction } from '@hooks/useFunction';
 import { useUnmountEffect } from '@hooks/useUnmountEffect';
 import { noop } from '@lesnoypudge/utils';
 import { isRef } from '@utils/isRef';
-import { RefCallback } from 'react';
+import { MutableRefObject, RefCallback } from 'react';
 
-type MutableRefObject<_Value> = {
-    current: _Value;
-};
+
 
 export namespace useRefManager {
     export type SettablePossibleRef<_Value> = (
@@ -74,7 +72,7 @@ export namespace useRefManager {
  * Example usage:
  *
  * ```tsx
- * const MyComponent: React.FC = () => {
+ * const MyComponent: FC = () => {
  *   const refManager = useRefManager<HTMLButtonElement>(null);
  *   const ref1 = useRef<HTMLButtonElement>(null);
  *   const ref2 = useRef<HTMLButtonElement>(null);

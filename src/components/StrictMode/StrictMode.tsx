@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, StrictMode as ReactStrictMode } from 'react';
 
 
 
@@ -17,9 +17,9 @@ export const StrictMode: FC<StrictMode.Props> = ({
 }) => {
     if (isEnabled) {
         return (
-            <React.StrictMode>
+            <ReactStrictMode>
                 {children}
-            </React.StrictMode>
+            </ReactStrictMode>
         );
     }
 

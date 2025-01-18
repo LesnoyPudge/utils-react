@@ -1,6 +1,6 @@
 import { ContextConsumerProxy } from '@entities/ContextSelectable/components';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
-import React from 'react';
+import { FC } from 'react';
 
 
 
@@ -9,7 +9,7 @@ export const createContextConsumerProxy = <
 >(
     context: ContextConsumerProxy.Props<_Value>['context'],
 ) => {
-    const ConsumerProxy: React.FC<Pick<
+    const ConsumerProxy: FC<Pick<
         ContextConsumerProxy.Props<_Value>,
         'children'
     >> = ({ children }) => {

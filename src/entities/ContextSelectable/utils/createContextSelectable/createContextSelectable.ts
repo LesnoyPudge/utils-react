@@ -2,17 +2,17 @@ import {
     createContext as createContextFluent,
 } from '@fluentui/react-context-selector';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
-import React from 'react';
+import { Context, FC, ProviderProps } from 'react';
 
 
 
 export type ContextSelectable<
     _Value extends T.UnknownRecord,
 > = (
-    React.Context<_Value>
+    Context<_Value>
     & {
-        Provider: React.FC<T.Simplify<Pick<
-            React.ProviderProps<_Value>,
+        Provider: FC<T.Simplify<Pick<
+            ProviderProps<_Value>,
             'value'
         >>>;
         Consumer: never;

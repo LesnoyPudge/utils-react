@@ -1,13 +1,13 @@
 import { RT } from '@lesnoypudge/types-utils-react/namespace';
 import { renderFunction } from '@utils/renderFunction';
-import React from 'react';
+import { Context, useContext } from 'react';
 
 
 
 type ContextConsumerProps<_Value> = (
     RT.PropsWithRenderFunctionOrNode<[_Value]>
     & {
-        context: React.Context<_Value>;
+        context: Context<_Value>;
     }
 );
 
@@ -15,7 +15,7 @@ export const ContextConsumer = <_Value,>({
     context,
     children,
 }: ContextConsumerProps<_Value>) => {
-    const value = React.useContext(context);
+    const value = useContext(context);
 
     return renderFunction(children, value);
 };

@@ -8,15 +8,15 @@ export const useMemoCompare = <_Value>(
     getIsEqual: (a: unknown, b: unknown) => boolean,
 ) => {
     const prevValueRef = useRef(value);
-    const compare = useFunction(() => {
-        const isSame = getIsEqual(prevValueRef.current, value);
-        if (!isSame) {
+    const _getIsEqual = useFunction(getIsEqual);
+
+    return useMemo(() => {
+        const isEqual = _getIsEqual(prevValueRef.current, value);
+
+        if (!isEqual) {
             prevValueRef.current = value;
         }
 
-        return isSame;
-    });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    return useMemo(() => prevValueRef.current, [compare()]);
+        return prevValueRef.current;
+    }, [prevValueRef, value, _getIsEqual]);
 };

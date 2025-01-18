@@ -50,8 +50,11 @@ export const FocusInside = ({
         return containerRef.effect((node) => {
             if (focusInside(node)) return;
 
-            // null should be valid arg https://github.com/theKashey/focus-lock/blob/master/src/focusSolver.ts#L30
-            moveFocusInside(node, document.activeElement ?? document.body);
+            moveFocusInside(
+                node,
+                // @ts-expect-error null should be valid arg https://github.com/theKashey/focus-lock/blob/master/src/focusSolver.ts#L30
+                document.activeElement,
+            );
 
             focusedOnceRef.current = once;
         });

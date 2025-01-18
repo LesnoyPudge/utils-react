@@ -1,11 +1,11 @@
 import { RT } from '@lesnoypudge/types-utils-react/namespace';
-import React from 'react';
+import { ReactNode } from 'react';
 
 
 
 export const renderFunction = <_Args extends unknown[]>(
-    children: RT.RenderFunction<_Args> | React.ReactNode,
+    children: RT.RenderFunction<_Args> | ReactNode,
     ...args: _Args
-): React.ReactNode => {
+): ReactNode => {
     return typeof children === 'function' ? children(...args) : children;
 };
