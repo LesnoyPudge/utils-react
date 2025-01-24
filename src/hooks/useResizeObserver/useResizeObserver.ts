@@ -1,8 +1,8 @@
 import { useFunction } from '@hooks/useFunction';
-import { useMemoShallow } from '@hooks/useMemoShallow';
 import { SharedResizeObserver } from '@lesnoypudge/utils-web';
 import { useLayoutEffect } from 'react';
 import { useRefManager } from '@entities/RefManager';
+import { useMemoDeep } from '@hooks/useMemoDeep';
 
 
 
@@ -14,7 +14,7 @@ export const useResizeObserver = (
     options?: ResizeObserverOptions,
 ) => {
     const _callback = useFunction(callback);
-    const _options = useMemoShallow(options);
+    const _options = useMemoDeep(options);
 
     useLayoutEffect(() => {
         return elementRef.effect((node) => {
@@ -24,6 +24,5 @@ export const useResizeObserver = (
                 observer.unobserve(node, _callback);
             };
         });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [_options]);
+    }, [_callback, _options, elementRef]);
 };

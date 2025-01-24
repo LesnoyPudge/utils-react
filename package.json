@@ -1,7 +1,7 @@
 {
     "name": "@lesnoypudge/utils-react",
     "description": "lesnoypudge's utils-react",
-    "version": "10.0.0",
+    "version": "11.0.0",
     "keywords": [
         "lesnoypudge",
         "utils",
@@ -20,14 +20,15 @@
         "publish": "npm publish --access public",
         "deploy": "git add . && git commit -m 'update' && git push && git status",
         "build": "npm run type:check && builder --configName tsconfig.react.build.json",
-        "build2": "vite build",
-        "test": "vitest",
+        "test:check": "vitest --run",
+        "test:watch": "vitest",
+        "test:debug": "vitest --test-timeout=0 --inspect-brk=127.0.0.1:3000 --browser --no-file-parallelism",
         "prepublishOnly": "npm run build"
     },
     "dependencies": {
-        "@fluentui/react-context-selector": "^9.1.71",
+        "@fluentui/react-context-selector": "^9.1.72",
         "@lesnoypudge/utils": "^16.3.0",
-        "@lesnoypudge/utils-web": "^1.0.0",
+        "@lesnoypudge/utils-web": "^1.0.2",
         "react-error-boundary": "^5.0.0",
         "react-focus-on": "^3.9.4",
         "react-json-pretty": "^2.2.0"
@@ -38,7 +39,7 @@
     "devDependencies": {
         "@babel/plugin-transform-react-jsx": "^7.25.9",
         "@lesnoypudge/builder": "^4.0.1",
-        "@lesnoypudge/eslint-config": "^6.0.5",
+        "@lesnoypudge/eslint-config": "^6.1.0",
         "@lesnoypudge/formatter-config": "^8.0.0",
         "@lesnoypudge/types-global-base": "^4.0.0",
         "@lesnoypudge/types-global-node": "^1.0.0",
@@ -47,19 +48,20 @@
         "@lesnoypudge/types-utils-base": "^3.4.1",
         "@lesnoypudge/types-utils-react": "^5.0.0",
         "@testing-library/dom": "^10.4.0",
-        "@testing-library/react": "^16.1.0",
-        "@types/jsdom": "^21.1.7",
+        "@testing-library/react": "^16.2.0",
         "@vitejs/plugin-react": "^4.3.4",
+        "@vitest/browser": "^3.0.4",
         "babel-plugin-jsx-control-statements": "^4.1.2",
-        "glob": "^11.0.0",
-        "jsdom": "^25.0.1",
+        "glob": "^11.0.1",
+        "playwright": "^1.50.0",
         "tsx": "^4.19.2",
-        "typescript": "^5.7.2",
-        "vite": "^6.0.7",
+        "typescript": "^5.7.3",
+        "vite": "^6.0.11",
         "vite-plugin-checker": "^0.8.0",
-        "vite-plugin-dts": "^4.4.0",
-        "vite-plugin-lib-inject-css": "^2.2.0",
+        "vite-plugin-dts": "^4.5.0",
+        "vite-plugin-lib-inject-css": "^2.2.1",
         "vite-tsconfig-paths": "^5.1.4",
-        "vitest": "^2.1.8"
+        "vitest": "^3.0.4",
+        "vitest-browser-react": "^0.0.4"
     }
 }

@@ -1,50 +1,45 @@
 import { useFunction } from '@hooks/useFunction';
+import { useStateWithRef } from '@hooks/useStateWithRef';
 import { isCallable } from '@lesnoypudge/utils';
-import { useState } from 'react';
 
 
 
+/**
+ * Manages a boolean state with functionality to modify its value and
+ * optionally trigger an external callback when the state changes.
+ */
 export const useBoolean = (
-    initialValue: boolean,
-    providedOnChange?: (value: boolean) => void,
+    initialState: boolean,
+    providedOnChange?: (state: boolean) => void,
 ) => {
-    const [value, _setValue] = useState(initialValue);
+    const [state, stateRef, setState] = useStateWithRef(initialState);
 
-    const setValue: typeof _setValue = useFunction((providedValue) => {
-        _setValue((prev) => {
-            const newValue = (
-                isCallable(providedValue)
-                    ? providedValue(prev)
-                    : providedValue
-            );
+    const setStateModified: typeof setState = useFunction((providedState) => {
+        const newState = (
+            isCallable(providedState)
+                ? providedState(stateRef.current)
+                : providedState
+        );
 
-            providedOnChange?.(newValue);
-
-            return newValue;
-        });
+        setState(newState);
+        providedOnChange?.(newState);
     });
 
     const setTrue = useFunction(() => {
-        setValue(true);
+        setStateModified(true);
     });
 
     const setFalse = useFunction(() => {
-        setValue(false);
+        setStateModified(false);
     });
 
     const toggle = useFunction(() => {
-        setValue((prev) => {
-            const newValue = !prev;
-
-            providedOnChange?.(newValue);
-
-            return newValue;
-        });
+        setStateModified((prev) => !prev);
     });
 
     return {
-        value,
-        setValue,
+        value: state,
+        setValue: setStateModified,
         setTrue,
         setFalse,
         toggle,

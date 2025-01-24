@@ -28,6 +28,10 @@ export namespace useEventListener {
     );
 }
 
+/**
+ * Attaches an event listener to the provided element and cleans it up
+ * when the component unmounts or options change.
+ */
 export const useEventListener = <
     _ProvidedType extends useEventListener.ElementUnion,
     _EventName extends useEventListener.EventNames<_ProvidedType>,
@@ -58,6 +62,5 @@ export const useEventListener = <
             _callback,
             _options,
         );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [_options]);
+    }, [_callback, _options, element, eventName]);
 };

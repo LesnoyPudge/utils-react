@@ -2,9 +2,6 @@ import { config } from "@lesnoypudge/eslint-config";
 
 
 const configArr = config.createConfig({
-    files: [
-        './vite.config.ts'
-    ],
     rules: {
         '@stylistic/lines-between-class-members': 'off',
         '@stylistic/jsx-tag-spacing': 'off',

@@ -1,11 +1,12 @@
 {
     "extends": "./tsconfig.base.json",
     "include": [
-        "src/**/*",
+        "./src/**/*",
         "node_modules/@types",
-        "old/useIsFocusVisible"
     ],
-    "exclude": [],
+    "exclude": [
+        "./src/**/*.test.*"
+    ],
     "compilerOptions": {
         "types": [
             "@lesnoypudge/types-global-base",

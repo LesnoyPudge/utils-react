@@ -3,6 +3,10 @@ import { useEventListener } from '@hooks/useEventListener';
 
 
 
+/**
+ * Listens for a click outside a specified element and triggers
+ * the provided handler function when the click occurs.
+ */
 export const useClickOutside = (
     elementRef: useRefManager.RefManager<HTMLElement>,
     handler: (e: MouseEvent) => void,

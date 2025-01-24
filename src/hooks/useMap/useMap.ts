@@ -4,6 +4,9 @@ import { useState } from 'react';
 
 
 
+/**
+ * Returns a mutable map that tracks changes.
+ */
 export const useMap = <
     _Key,
     _Value,

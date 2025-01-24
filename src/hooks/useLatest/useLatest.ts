@@ -1,13 +1,16 @@
-import { MutableRefObject, useInsertionEffect, useRef } from 'react';
+import { MutableRefObject, useRef } from 'react';
 
 
 
-export const useLatest = <T>(providedValue: T): MutableRefObject<T> => {
+/**
+ * Returns an immutable ref object that stores the latest provided value.
+ */
+export const useLatest = <_Value>(
+    providedValue: _Value,
+): Readonly<MutableRefObject<_Value>> => {
     const value = useRef(providedValue);
 
-    // useInsertionEffect(() => {
     value.current = providedValue;
-    // });
 
     return value;
 };

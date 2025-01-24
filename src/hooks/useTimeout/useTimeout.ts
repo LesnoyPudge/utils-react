@@ -18,6 +18,5 @@ export const useTimeout = (
         return () => {
             clearTimeout(idRef.current);
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [delay]);
+    }, [_callback, delay]);
 };

@@ -1,11 +1,12 @@
 import { T } from '@lesnoypudge/types-utils-base/namespace';
 import { useDebounce } from '@hooks/useDebounce';
 import { useFunction } from '@hooks/useFunction';
+import { useConst } from '@hooks/useConst';
 
 
 
 /**
- * Callback aren't called when component is unmounted;
+ * Returns a debounced version of the provided callback function.
  */
 export const useDebounced = <
     _CallBack extends T.AnyFunction,
@@ -14,6 +15,7 @@ export const useDebounced = <
     delay: number,
 ) => {
     const { debounce } = useDebounce({ stateless: true });
+    const _callback = useFunction(callback);
 
-    return useFunction(debounce(callback, delay));
+    return useConst(() => debounce(_callback, delay));
 };

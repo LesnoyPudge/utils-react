@@ -1,7 +1,7 @@
 import { useRefManager } from '@entities/RefManager';
+import { useBoolean } from '@hooks/useBoolean';
 import { useEventListener } from '@hooks/useEventListener';
 import { isHtmlElement } from '@lesnoypudge/utils-web';
-import { useState } from 'react';
 
 
 
@@ -16,18 +16,22 @@ const containsRelatedTarget = (event: FocusEvent) => {
     return false;
 };
 
+/**
+ * Tracks if the container element is focused within.
+ */
 export const useIsFocusedWithin = (
     container: useRefManager.RefManager<HTMLElement>,
 ) => {
-    const [isFocusedWithin, setIsFocusedWithin] = useState((
+    const initialValue = (
         !!container.current?.contains(document.activeElement)
         || (document.activeElement === container.current)
-    ));
+    );
+    const focusState = useBoolean(initialValue);
 
     useEventListener(
         container,
         'focusin',
-        () => setIsFocusedWithin(true),
+        focusState.setTrue,
     );
 
     useEventListener(
@@ -35,13 +39,13 @@ export const useIsFocusedWithin = (
         'focusout',
         (e) => {
             if (!container.current) return;
-            if (!containsRelatedTarget(e)) return;
+            if (containsRelatedTarget(e)) return;
 
-            setIsFocusedWithin(false);
+            focusState.setFalse();
         },
     );
 
     return {
-        isFocusedWithin,
+        isFocusedWithin: focusState.value,
     };
 };

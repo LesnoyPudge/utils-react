@@ -1,51 +1,89 @@
 import { useConst } from '@hooks/useConst';
+import { useFunction } from '@hooks/useFunction';
 import { useLatest } from '@hooks/useLatest';
-import { useNamedState } from '@hooks/useNamedState';
+import { useStateWithRef } from '@hooks/useStateWithRef';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
+import { isCallable } from '@lesnoypudge/utils';
 import { LocalStorage } from '@lesnoypudge/utils-web';
-import { useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 
 
+
+export namespace createLocalStorageHook {
+    export namespace useLocalStorage {
+        export type SetValue<_Value> = Dispatch<SetStateAction<_Value>>;
+
+        export type Return<_Value> = {
+            value: _Value;
+            setValue: SetValue<_Value>;
+            clear: VoidFunction;
+            remove: VoidFunction;
+        };
+    }
+}
 
 export const createLocalStorageHook = <
     _Schema extends Record<string, unknown>,
 >() => {
     const _localStorage = new LocalStorage<_Schema>();
 
-    return <
+    const useLocalStorage = <
         _Key extends T.StringKeyOf<_Schema>,
-        _DefaultValue extends (_Schema[_Key] | undefined),
+        _DefaultValue extends _Schema[_Key],
     >(
         key: _Key,
         defaultValue?: _DefaultValue,
-    ): useNamedState.Return<(
-        _DefaultValue extends undefined
-            ? (_Schema[_Key] | undefined)
-            : _Schema[_Key]
-    ), _Key> => {
+    ): createLocalStorageHook.useLocalStorage.Return<
+        _Schema[_Key] | _DefaultValue | undefined
+    > => {
         const _key = useConst(() => key);
         const defaultValueRef = useLatest(defaultValue);
-        const state = useNamedState<_Schema[_Key] | undefined>(
-            _key,
-            _localStorage.get(_key, defaultValue),
-        );
-        const { '2': setValue } = state;
+        const [state, stateRef, setState] = useStateWithRef<
+            _Schema[_Key] | _DefaultValue | undefined
+        >(defaultValue);
 
         useEffect(() => {
-            return _localStorage.onChange(_key, (value) => {
-                const _value = (
-                    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-                    value === undefined
+            return _localStorage.onChange(_key, (newValue) => {
+                const value = (
+                // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+                    newValue === undefined
                         ? defaultValueRef.current
-                        : value
+                        : newValue
                 );
 
-                setValue(_value);
+                setState(value);
             });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, []);
+        }, [_key, defaultValueRef, setState]);
 
-        // @ts-expect-error
-        return state;
+        const setStorageState: (
+            createLocalStorageHook.useLocalStorage.SetValue<typeof state>
+        ) = useFunction((newValue) => {
+            const value = (
+                isCallable(newValue)
+                    ? newValue(stateRef.current)
+                    : newValue
+            ) ?? defaultValueRef.current;
+
+            if (value === undefined) return;
+
+            _localStorage.set(_key, value);
+        });
+
+        const clear = useFunction(() => {
+            _localStorage.clear();
+        });
+
+        const remove = useFunction(() => {
+            _localStorage.remove(_key);
+        });
+
+        return {
+            value: state,
+            setValue: setStorageState,
+            clear,
+            remove,
+        };
     };
+
+    return useLocalStorage;
 };

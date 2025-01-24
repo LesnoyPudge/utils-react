@@ -22,5 +22,6 @@
             100
         ],
         "editor.defaultFormatter": "vscode.json-language-features"
-    }
+    },
+    "debug.javascript.unmapMissingSources": true
 }

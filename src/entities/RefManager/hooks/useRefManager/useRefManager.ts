@@ -30,12 +30,6 @@ export namespace useRefManager {
         | undefined
     );
 
-    // export type Subscribe<
-    //     _Value,
-    // > = (
-    //     ...refs: PossibleRef<_Value>[]
-    // ) => RefManager<_Value>;
-
     export type EffectCleanup = () => void;
 
     export type EffectCallback<_Value> = (
@@ -49,7 +43,6 @@ export namespace useRefManager {
 
     export type RefManager<_Value> = {
         current: _Value | null;
-        // subscribe: Subscribe<_Value>;
         effect: Effect<_Value>;
     };
 
@@ -73,37 +66,46 @@ export namespace useRefManager {
  *
  * ```tsx
  * const MyComponent: FC = () => {
- *   const refManager = useRefManager<HTMLButtonElement>(null);
- *   const ref1 = useRef<HTMLButtonElement>(null);
- *   const ref2 = useRef<HTMLButtonElement>(null);
+ *     const refManager = useRefManager<HTMLButtonElement>(null);
+ *     const [isVisible, setIsVisible] = useState(false);
  *
- *   useEffect(() => {
- *     // Effect will be called when a node is provided to ref
- *     return refManager.effect((buttonNode) => {
- *       const handler = () => {};
- *       buttonNode.addEventListener('click', handler);
+ *     useEffect(() => {
+ *         // Effect will be called when a node is provided to ref
+ *         return refManager.effect((buttonNode) => {
+ *             const handler = () => {};
  *
- *       // Cleanup will be called on unmount or
- *       // when null is provided to ref
- *       return () => {
- *         buttonNode.removeEventListener(
-*              'click',
-*              handler
-*          );
- *       };
- *     });
- *   }, [refManager]);
+ *             buttonNode.addEventListener('click', handler);
  *
- *   useEffect(() => {
- *     // ref1 and ref2 are button refs
- *     console.log(ref1, ref2);
- *   }, []);
+ *             // Cleanup will be called on unmount or
+ *             // when null is provided to ref
+ *             return () => {
+ *                 buttonNode.removeEventListener(
+ *                     'click',
+ *                     handler,
+ *                 );
+ *             };
+ *         });
+ *     }, [refManager]);
  *
- *   return (
- *     <button ref={refManager.subscribe(ref1, ref2)}>
- *       <>Content</>
- *     </button>
- *   );
+ *     useEffect(() => {
+ *         console.log(refManager.current); // null
+ *
+ *         const id = setTimeout(() => {
+ *             setIsVisible(true);
+ *         }, 3000);
+ *
+ *         return () => clearTimeout(id);
+ *     }, []);
+ *
+ *     if (isVisible) {
+ *         return (
+ *             <button ref={refManager}>
+ *                 <>Content</>
+ *             </button>
+ *         );
+ *     }
+ *
+ *     return null;
  * };
  * ```
  */
@@ -156,14 +158,6 @@ export const useRefManager = <_Value>(...[
     const manager = useConst(() => {
         const rawManager: useRefManager.RefManager<_Value> = {
             current: initialValue,
-
-            // subscribe: (...refs) => {
-            //     refs.forEach((refToSubscribe) => {
-            //         subscribedRefs.set(refToSubscribe, rawManager.current);
-            //     });
-
-            //     return manager;
-            // },
 
             effect: (callback) => {
                 const value = rawManager.current;

@@ -3,14 +3,17 @@ import { useEffect } from 'react';
 
 
 
+/**
+ * Executes the provided function when the component is unmounted.
+ */
 export const useUnmountEffect = (fn: () => void) => {
     const fnRef = useLatest(fn);
 
     useEffect(() => {
+        const fn = fnRef.current;
+
         return () => {
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            fnRef.current();
+            fn();
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [fnRef]);
 };

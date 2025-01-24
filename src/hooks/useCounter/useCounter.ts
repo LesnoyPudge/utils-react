@@ -1,10 +1,13 @@
 import { useSyncExternalStore } from 'react';
-import { useConst } from '../useConst';
+import { useConst } from '@hooks/useConst';
 import { Counter, pick } from '@lesnoypudge/utils';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
 
 
 
+/**
+ * Provides a counter with methods to manipulate and track its value.
+ */
 export const useCounter = (
     initialCount?: number,
     initialStep?: number,

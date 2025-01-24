@@ -1,0 +1,19 @@
+{
+    "extends": "./tsconfig.react.json",
+    "include": [
+        "./src/**/*.test.*",
+        "./test/**/*",
+        "node_modules/@types",
+    ],
+    "exclude": [],
+    "compilerOptions": {
+        "types": [
+            "@lesnoypudge/types-global-base",
+            "@lesnoypudge/types-global-web",
+            "@lesnoypudge/types-global-react",
+            "vitest/globals",
+            "@vitest/browser/providers/playwright",
+            "vitest-browser-react",
+        ]
+    }
+}

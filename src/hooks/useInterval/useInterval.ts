@@ -2,7 +2,13 @@ import { useEffect, useRef } from 'react';
 import { useFunction } from '@hooks/useFunction';
 
 
-
+/**
+ * Sets up an interval that repeatedly calls the
+ * provided callback function.
+ *
+ * The interval is cleared whenever the delay changes
+ * or when the component unmounts.
+ */
 export const useInterval = (
     callback: () => void,
     delay: number,
@@ -18,6 +24,5 @@ export const useInterval = (
         return () => {
             clearInterval(idRef.current);
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [delay]);
+    }, [_callback, delay]);
 };

@@ -3,6 +3,9 @@ import { useInsertionEffect, useRef } from 'react';
 
 
 
+/**
+ * Returns a function to check if the component is mounted.
+ */
 export const useIsMounted = () => {
     const isMountedRef = useRef(false);
 

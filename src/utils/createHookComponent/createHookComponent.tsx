@@ -1,6 +1,6 @@
 import { RT } from '@lesnoypudge/types-utils-react/namespace';
-import { renderFunction } from '../renderFunction';
-import { withDisplayName } from '../withDisplayName';
+import { renderFunction } from '@utils/renderFunction';
+import { withDisplayName } from '@utils/withDisplayName';
 
 
 

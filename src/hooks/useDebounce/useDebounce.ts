@@ -1,3 +1,4 @@
+import { useBoolean } from '@hooks/useBoolean';
 import { useFunction } from '@hooks/useFunction';
 import { useLatest } from '@hooks/useLatest';
 import { useUnmountEffect } from '@hooks/useUnmountEffect';
@@ -17,13 +18,14 @@ export namespace useDebounce {
 }
 
 /**
- * Callback aren't called when component is unmounted;
+ * Provides a debounced function with the option to track debouncing state.
  */
 export const useDebounce = (options: useDebounce.Options = {}) => {
-    const [isDebouncing, setIsDebouncing] = useState(false);
-    const isDebouncingRef = useRef(isDebouncing);
+    const debounceState = useBoolean(false);
+    const isDebouncingRef = useRef(debounceState.value);
     const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
     const lastOptionsRef = useLatest(options);
+    const shouldUpdateState = !lastOptionsRef.current.stateless;
 
     const debounce = useFunction(<
         _Callback extends T.AnyFunction,
@@ -33,13 +35,15 @@ export const useDebounce = (options: useDebounce.Options = {}) => {
     ) => {
         return (...args: Parameters<_Callback>) => {
             clearTimeout(timeoutRef.current);
-            !lastOptionsRef.current.stateless && setIsDebouncing(true);
+
             isDebouncingRef.current = true;
+            shouldUpdateState && debounceState.setTrue();
 
             timeoutRef.current = setTimeout(() => {
                 callback(...args);
-                !lastOptionsRef.current.stateless && setIsDebouncing(false);
-                isDebouncingRef.current = true;
+
+                isDebouncingRef.current = false;
+                shouldUpdateState && debounceState.setFalse();
             }, delay);
         };
     });
@@ -49,7 +53,7 @@ export const useDebounce = (options: useDebounce.Options = {}) => {
     });
 
     return {
-        isDebouncing,
+        isDebouncing: debounceState.value,
         isDebouncingRef,
         debounce,
     };

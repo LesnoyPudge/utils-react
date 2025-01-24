@@ -61,8 +61,7 @@ export const useScrollIntoView = (...[
         return elementRef.effect(() => {
             scrollIntoView();
         });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [enabled]);
+    }, [elementRef, enabled, scrollIntoView]);
 
     return {
         scrollIntoView,
