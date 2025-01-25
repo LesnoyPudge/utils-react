@@ -1,3 +1,4 @@
+import { useFunction } from '@hooks/useFunction';
 import { useRef } from 'react';
 
 
@@ -6,17 +7,15 @@ import { useRef } from 'react';
  * Tracks if the component is mounted for the first time.
  */
 export const useIsFirstMount = () => {
-    const isFirst = useRef(true);
+    const countRef = useRef(0);
 
-    if (isFirst.current) {
-        isFirst.current = false;
+    countRef.current += 1;
 
-        return {
-            isFirstMount: true,
-        };
-    }
+    const getIsFirstMount = useFunction(() => {
+        return countRef.current === 1;
+    });
 
     return {
-        isFirstMount: isFirst.current,
+        getIsFirstMount,
     };
 };

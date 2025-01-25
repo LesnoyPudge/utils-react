@@ -19,7 +19,8 @@
         "type:check": "tsc -p tsconfig.react.build.json",
         "publish": "npm publish --access public",
         "deploy": "git add . && git commit -m 'update' && git push && git status",
-        "build": "npm run type:check && builder --configName tsconfig.react.build.json",
+        "buildOLD": "npm run type:check && builder --configName tsconfig.react.build.json",
+        "build": "vite build",
         "test:check": "vitest --run",
         "test:watch": "vitest",
         "test:debug": "vitest --test-timeout=0 --inspect-brk=127.0.0.1:3000 --browser --no-file-parallelism",
@@ -28,7 +29,7 @@
     "dependencies": {
         "@fluentui/react-context-selector": "^9.1.72",
         "@lesnoypudge/utils": "^16.3.0",
-        "@lesnoypudge/utils-web": "^1.0.2",
+        "@lesnoypudge/utils-web": "^2.0.0",
         "react-error-boundary": "^5.0.0",
         "react-focus-on": "^3.9.4",
         "react-json-pretty": "^2.2.0"

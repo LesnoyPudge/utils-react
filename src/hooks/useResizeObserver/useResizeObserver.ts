@@ -8,6 +8,10 @@ import { useMemoDeep } from '@hooks/useMemoDeep';
 
 const observer = new SharedResizeObserver();
 
+/**
+ * Tracks changes to an element's size.
+ * The callback is triggered when the element's size changes.
+ */
 export const useResizeObserver = (
     elementRef: useRefManager.RefManager<HTMLElement>,
     callback: (entry: ResizeObserverEntry) => void,

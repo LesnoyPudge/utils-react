@@ -19,7 +19,8 @@ export namespace useThrottle {
 }
 
 /**
- * Callback aren't called when component is unmounted;
+ * Controls the rate at which a function can be called, limiting it to a
+ * certain frequency, while tracking the throttling state.
  */
 export const useThrottle = (options: useThrottle.Options = {}) => {
     const [isThrottling, setIsThrottling] = useState(false);
@@ -29,6 +30,7 @@ export const useThrottle = (options: useThrottle.Options = {}) => {
     const lastArgsRef = useRef<unknown>();
     const lastFunctionRef = useRef<T.AnyFunction>(noop);
     const lastOptionsRef = useLatest(options);
+    const shouldUpdateState = !lastOptionsRef.current.stateless;
 
     const throttle = useFunction(<
         _Callback extends T.AnyFunction,
@@ -40,12 +42,12 @@ export const useThrottle = (options: useThrottle.Options = {}) => {
 
         const throttleWork = (...args: Parameters<_Callback>) => {
             lastFunctionRef.current(...args);
-            !lastOptionsRef.current.stateless && setIsThrottling(true);
+            shouldUpdateState && setIsThrottling(true);
             isThrottlingRef.current = true;
 
             timeoutRef.current = setTimeout(() => {
                 if (!isCalledDuringThrottleRef.current) {
-                    !lastOptionsRef.current.stateless && setIsThrottling(false);
+                    shouldUpdateState && setIsThrottling(false);
                     isThrottlingRef.current = false;
                     return;
                 }

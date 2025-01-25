@@ -9,11 +9,11 @@ describe('useMountEffect', () => {
 
         const hook = renderHook(() => useMountEffect(spy));
 
-        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy).toBeCalledTimes(1);
 
         hook.rerender();
         hook.unmount();
 
-        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy).toBeCalledTimes(1);
     });
 });

@@ -3,12 +3,12 @@ import { useDebounced } from './useDebounced';
 
 
 
-vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+vi.useFakeTimers();
 
 describe('useDebounced', () => {
     it('should debounce the callback', () => {
         const spy = vi.fn();
-        const DELAY = 500;
+        const DELAY = 1000;
         const hook = renderHook(() => useDebounced(spy, DELAY));
 
         hook.result.current();

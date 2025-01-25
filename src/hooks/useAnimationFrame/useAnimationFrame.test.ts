@@ -18,35 +18,35 @@ describe('useAnimationFrame', () => {
             },
         );
 
-        expect(spy).toHaveBeenCalledTimes(0);
+        expect(spy).toBeCalledTimes(0);
 
         vi.advanceTimersToNextFrame();
 
-        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy).toBeCalledTimes(1);
 
         vi.advanceTimersToNextFrame();
         vi.advanceTimersToNextFrame();
 
-        expect(spy).toHaveBeenCalledTimes(3);
+        expect(spy).toBeCalledTimes(3);
 
         hook.rerender({ enabled: false });
 
         vi.advanceTimersToNextFrame();
         vi.advanceTimersToNextFrame();
 
-        expect(spy).toHaveBeenCalledTimes(3);
+        expect(spy).toBeCalledTimes(3);
 
         hook.rerender({ enabled: true });
 
         vi.advanceTimersToNextFrame();
 
-        expect(spy).toHaveBeenCalledTimes(4);
+        expect(spy).toBeCalledTimes(4);
 
         hook.unmount();
 
         vi.advanceTimersToNextFrame();
 
-        expect(spy).toHaveBeenCalledTimes(4);
+        expect(spy).toBeCalledTimes(4);
     });
 
     it('should provide stable controls', () => {

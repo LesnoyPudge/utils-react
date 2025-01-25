@@ -11,7 +11,7 @@ describe('useMountedWrapper', () => {
 
         hook.result.current.mounted(spy);
 
-        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy).toBeCalledTimes(1);
     });
 
     it('should not trigger callback while unmounted', () => {
@@ -23,6 +23,6 @@ describe('useMountedWrapper', () => {
 
         hook.result.current.mounted(spy);
 
-        expect(spy).toHaveBeenCalledTimes(0);
+        expect(spy).toBeCalledTimes(0);
     });
 });

@@ -29,18 +29,18 @@ describe('useIsFocusedWithin', () => {
 
         await expect.element(button).not.toHaveFocus();
         expect(spy).toBeCalledTimes(1);
-        expect(spy).toHaveBeenLastCalledWith(false);
+        expect(spy).lastCalledWith(false);
 
         await userEvent.tab();
 
         await expect.element(button).toHaveFocus();
         expect(spy).toBeCalledTimes(2);
-        expect(spy).toHaveBeenLastCalledWith(true);
+        expect(spy).lastCalledWith(true);
 
         await userEvent.tab({ shift: true });
 
         await expect.element(button).not.toHaveFocus();
         expect(spy).toBeCalledTimes(3);
-        expect(spy).toHaveBeenLastCalledWith(false);
+        expect(spy).lastCalledWith(false);
     });
 });

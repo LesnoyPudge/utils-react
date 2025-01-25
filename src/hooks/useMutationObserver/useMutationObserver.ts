@@ -3,22 +3,13 @@ import { SharedMutationObserver } from '@lesnoypudge/utils-web';
 import { useLayoutEffect } from 'react';
 import { useRefManager } from '@entities/RefManager';
 import { useMemoDeep } from '@hooks/useMemoDeep';
-import { T } from '@lesnoypudge/types-utils-base/namespace';
 
 
 
 const observer = new SharedMutationObserver();
 
 export namespace useMutationObserver {
-    type RequiredOptions = T.RequireAtLeastOne<Pick<
-        MutationObserverInit,
-        'attributes' | 'childList' | 'characterData'
-    >>;
-
-    export type Options = (
-        RequiredOptions
-        & T.Except<MutationObserverInit, keyof RequiredOptions>
-    );
+    export type Options = SharedMutationObserver.Options;
 }
 
 /**
@@ -27,7 +18,7 @@ export namespace useMutationObserver {
  */
 export const useMutationObserver = (
     elementRef: useRefManager.RefManager<HTMLElement>,
-    callback: (record: MutationRecord) => void,
+    callback: SharedMutationObserver.StoreCallback,
     options: useMutationObserver.Options,
 ) => {
     const _callback = useFunction(callback);

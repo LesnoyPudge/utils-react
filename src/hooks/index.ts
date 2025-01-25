@@ -27,7 +27,6 @@ export * from './useRefInjection';
 export * from './useResizeObserver';
 export * from './useSet';
 export * from './useStateWithRef';
-export * from './useSteps';
 export * from './useSynchronizedAnimation';
 export * from './useThrottle';
 export * from './useThrottled';

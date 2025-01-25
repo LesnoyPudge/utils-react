@@ -30,14 +30,14 @@ describe('useIntersectionObserver', () => {
 
         await vi.waitFor(() => {
             expect(spy).toBeCalledTimes(1);
-            expect(spy).toHaveBeenLastCalledWith(true);
+            expect(spy).lastCalledWith(true);
         });
 
         screen.rerender(<Test visible={false}/>);
 
         await vi.waitFor(() => {
             expect(spy).toBeCalledTimes(2);
-            expect(spy).toHaveBeenLastCalledWith(false);
+            expect(spy).lastCalledWith(false);
         });
     });
 });

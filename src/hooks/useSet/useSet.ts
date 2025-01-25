@@ -3,6 +3,11 @@ import { useState } from 'react';
 
 
 
+/**
+ * Provides a set with functionality to manage its values, including
+ * adding, removing, and clearing items. The set is reactive, so updates
+ * to the set's state trigger re-renders.
+ */
 export const useSet = <_Value>(defaultValue?: _Value[]) => {
     const [value, setValue] = useState(() => new Set(defaultValue));
 

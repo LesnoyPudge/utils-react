@@ -1,13 +1,12 @@
 import { FC } from 'react';
 import { PropsWithClassName } from '@lesnoypudge/types-utils-react';
-import { T } from '@lesnoypudge/types-utils-base/namespace';
 import View from 'react-json-pretty';
 import 'react-json-pretty/themes/monikai.css';
 
 
 
 type JsonView = PropsWithClassName & {
-    data: string | T.UnknownRecord;
+    data: string;
 };
 
 export const JsonView: FC<JsonView> = ({

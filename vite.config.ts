@@ -3,12 +3,14 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import { checker } from 'vite-plugin-checker';
 import dts from 'vite-plugin-dts';
 import react from '@vitejs/plugin-react';
-// import { libInjectCss } from 'vite-plugin-lib-inject-css';
+import { libInjectCss } from 'vite-plugin-lib-inject-css';
 import path from 'node:path';
 import url from 'node:url';
 import { glob } from 'glob';
 
 
+
+const tsconfigPath = './tsconfig.react.build.json';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -17,24 +19,18 @@ export default defineConfig({
         emptyOutDir: true,
         copyPublicDir: false,
         lib: {
-            entry: 'src/index.ts',
+            entry: './src/index.ts',
             formats: ['es'],
         },
         sourcemap: true,
         minify: false,
+        ssr: true,
         rollupOptions: {
-            // external: [
-            //     'react',
-            //     'react/jsx-runtime',
-            //     '@lesnoypudge/utils',
-            //     '@lesnoypudge/utils-web',
-            //     'react-json-pretty',
-            //     '@fluentui/react-context-selector',
-            // ],
             input: Object.fromEntries(
-                glob.sync('src/**/*.{ts,tsx}', {
-                    ignore: ['src/**/*.{d,test}.{ts,tsx}'],
-                }).map((file) => [
+                glob.sync(
+                    'src/**/*.{ts,tsx}',
+                    { ignore: 'src/**/*.{d,test}.{ts,tsx}' },
+                ).map((file) => [
                     path.relative(
                         'src',
                         file.slice(
@@ -45,6 +41,7 @@ export default defineConfig({
                     url.fileURLToPath(new URL(file, import.meta.url)),
                 ]),
             ),
+            treeshake: true,
             output: {
                 assetFileNames: 'assets/[name][extname]',
                 entryFileNames: '[name].js',
@@ -54,6 +51,7 @@ export default defineConfig({
     plugins: [
         tsconfigPaths(),
         checker({ typescript: true }),
+        libInjectCss(),
         react({
             babel: {
                 plugins: [
@@ -65,7 +63,6 @@ export default defineConfig({
                 ],
             },
         }),
-        // libInjectCss(),
-        dts({ include: ['src'] }),
+        dts({ tsconfigPath }),
     ],
 });

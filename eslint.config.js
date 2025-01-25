@@ -1,6 +1,7 @@
 import { config } from "@lesnoypudge/eslint-config";
 
 
+
 const configArr = config.createConfig({
     rules: {
         '@stylistic/lines-between-class-members': 'off',

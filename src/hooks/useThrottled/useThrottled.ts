@@ -4,9 +4,8 @@ import { useThrottle } from '@hooks/useThrottle';
 
 
 
-
 /**
- * Callback aren't called when component is unmounted;
+ * Returns a throttled version of the provided callback function.
  */
 export const useThrottled = <
     _CallBack extends T.AnyFunction,

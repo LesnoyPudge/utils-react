@@ -31,7 +31,7 @@ describe('useBoolean', () => {
 
         act(() => hook.result.current.setTrue());
 
-        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy).toBeCalledTimes(1);
         expect(spy).lastCalledWith(true);
     });
 });
