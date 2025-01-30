@@ -36,9 +36,16 @@ export const useMap = <
         setValue(new Map<_Key, _Value>());
     });
 
-    value.set = _set;
-    value.delete = _delete;
-    value.clear = _clear;
-
-    return value;
+    return {
+        clear: _clear,
+        delete: _delete,
+        entries: value.entries.bind(value),
+        forEach: value.forEach.bind(value),
+        get: value.get.bind(value),
+        has: value.has.bind(value),
+        keys: value.keys.bind(value),
+        set: _set,
+        size: value.size,
+        values: value.values.bind(value),
+    };
 };

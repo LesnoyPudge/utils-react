@@ -1,6 +1,6 @@
 import { useIsFocusedWithin } from './useIsFocusedWithin';
 import { page, userEvent } from '@vitest/browser/context';
-import { useRefManager } from '@entities/RefManager';
+import { useRefManager } from '@hooks/useRefManager';
 import { useEffect } from 'react';
 
 

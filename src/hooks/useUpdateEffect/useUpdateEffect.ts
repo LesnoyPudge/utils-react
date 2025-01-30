@@ -1,6 +1,8 @@
 import { useFunction } from '@hooks/useFunction';
 import { useIsFirstMount } from '@hooks/useIsFirstMount';
+import { usePrevious } from '@hooks/usePrevious';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
+import { shallowEqual } from '@lesnoypudge/utils';
 import { useEffect } from 'react';
 
 
@@ -14,12 +16,13 @@ export const useUpdateEffect = (
     deps: T.UnknownArray,
 ) => {
     const _fn = useFunction(fn);
-    const { getIsFirstMount } = useIsFirstMount();
+    const { isFirstMount } = useIsFirstMount();
+    const prevDeps = usePrevious(deps);
 
     useEffect(() => {
-        if (getIsFirstMount()) return;
+        if (isFirstMount) return;
+        if (shallowEqual(deps, prevDeps)) return;
 
         return _fn();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [_fn, getIsFirstMount, ...deps]);
+    }, [_fn, isFirstMount, deps, prevDeps]);
 };

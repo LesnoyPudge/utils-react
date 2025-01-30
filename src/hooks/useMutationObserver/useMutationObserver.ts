@@ -1,7 +1,7 @@
 import { useFunction } from '@hooks/useFunction';
 import { SharedMutationObserver } from '@lesnoypudge/utils-web';
 import { useLayoutEffect } from 'react';
-import { useRefManager } from '@entities/RefManager';
+import { useRefManager } from '@hooks/useRefManager';
 import { useMemoDeep } from '@hooks/useMemoDeep';
 
 

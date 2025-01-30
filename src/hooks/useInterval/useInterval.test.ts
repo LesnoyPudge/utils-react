@@ -6,7 +6,7 @@ import { useInterval } from './useInterval';
 describe('useInterval', () => {
     it('should work', () => {
         const spy = vi.fn();
-        const DELAY = 1000;
+        const DELAY = 1_000;
         const DELAY_HALF = DELAY / 2;
 
         vi.useFakeTimers();

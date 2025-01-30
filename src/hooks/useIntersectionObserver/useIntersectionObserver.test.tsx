@@ -1,7 +1,7 @@
 import { page } from '@vitest/browser/context';
 import { useIntersectionObserver } from './useIntersectionObserver';
 import { CSSProperties, FC } from 'react';
-import { useRefManager } from '@entities/RefManager';
+import { useRefManager } from '@hooks/useRefManager';
 
 
 

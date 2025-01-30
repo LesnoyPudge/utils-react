@@ -2,7 +2,7 @@ import { addEventListener } from '@lesnoypudge/utils-web';
 import { useFunction } from '@hooks/useFunction';
 import { useMemoShallow } from '@hooks/useMemoShallow';
 import { useEffect } from 'react';
-import { useRefManager } from '@entities/RefManager';
+import { useRefManager } from '@hooks/useRefManager';
 
 
 

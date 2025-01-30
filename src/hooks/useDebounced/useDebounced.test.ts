@@ -8,7 +8,7 @@ vi.useFakeTimers();
 describe('useDebounced', () => {
     it('should debounce the callback', () => {
         const spy = vi.fn();
-        const DELAY = 1000;
+        const DELAY = 1_000;
         const hook = renderHook(() => useDebounced(spy, DELAY));
 
         hook.result.current();

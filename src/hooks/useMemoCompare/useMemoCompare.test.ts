@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/consistent-function-scoping */
 import { renderHook } from '@testing-library/react';
 import { useMemoCompare } from './useMemoCompare';
 
@@ -14,12 +15,15 @@ describe('useMemoCompare', () => {
             return useMemoCompare(value, (a, b) => a[0] === b[0]);
         }, { initialProps: { value: initialValue } });
 
+        expect(hooks.result.current).toBe(initialValue);
+
         hooks.rerender({ value: getValue1() });
 
         expect(hooks.result.current).toBe(initialValue);
 
-        hooks.rerender({ value: getValue2() });
+        const value2 = getValue2();
+        hooks.rerender({ value: value2 });
 
-        expect(hooks.result.current).not.toBe(initialValue);
+        expect(hooks.result.current).toBe(value2);
     });
 });

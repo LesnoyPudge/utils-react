@@ -1,4 +1,4 @@
-import { useRefManager } from '@entities/RefManager';
+import { useRefManager } from '@hooks/useRefManager';
 import { useBoolean } from '@hooks/useBoolean';
 import { useEventListener } from '@hooks/useEventListener';
 import { isHtmlElement } from '@lesnoypudge/utils-web';

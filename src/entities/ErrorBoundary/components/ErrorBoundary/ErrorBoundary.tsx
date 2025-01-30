@@ -8,6 +8,7 @@ import * as EB from 'react-error-boundary';
 import { ErrorBoundaryContext } from '@entities/ErrorBoundary/context';
 import { useConst } from '@hooks/useConst';
 import { Counter } from '@lesnoypudge/utils';
+import { T } from '@lesnoypudge/types-utils-base/namespace';
 
 
 
@@ -25,16 +26,10 @@ export namespace ErrorBoundary {
         & PropsWithChildren
     );
 
-    type ConditionalProps = (
-        {
-            FallbackComponent: FallbackComponent;
-            onError?: onError;
-        }
-        | {
-            FallbackComponent?: FallbackComponent;
-            onError: onError;
-        }
-    );
+    type ConditionalProps = T.Simplify<T.RequireAtLeastOne<{
+        FallbackComponent?: FallbackComponent;
+        onError?: onError;
+    }>>;
 
     export type Props = (
         StableProps
@@ -72,8 +67,10 @@ const Inner: FC<EB.FallbackProps> = ({
     );
 };
 
+const defaultFallback = () => null;
+
 export const ErrorBoundary: FC<ErrorBoundary.Props> = ({
-    FallbackComponent = () => null,
+    FallbackComponent = defaultFallback,
     onError,
     onReset,
     children,

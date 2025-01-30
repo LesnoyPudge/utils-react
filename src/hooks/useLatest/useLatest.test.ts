@@ -1,6 +1,5 @@
-import { act, renderHook } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import { useLatest } from './useLatest';
-import { useEffect, useState } from 'react';
 
 
 

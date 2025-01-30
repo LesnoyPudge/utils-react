@@ -8,7 +8,9 @@ import { useState } from 'react';
  * adding, removing, and clearing items. The set is reactive, so updates
  * to the set's state trigger re-renders.
  */
-export const useSet = <_Value>(defaultValue?: _Value[]) => {
+export const useSet = <_Value>(
+    defaultValue?: _Value[],
+) => {
     const [value, setValue] = useState(() => new Set(defaultValue));
 
     const _add: Set<_Value>['add'] = useFunction((...args) => {
@@ -33,9 +35,15 @@ export const useSet = <_Value>(defaultValue?: _Value[]) => {
         setValue(new Set());
     });
 
-    value.add = _add;
-    value.delete = _delete;
-    value.clear = _clear;
-
-    return value;
+    return {
+        size: value.size,
+        add: _add,
+        clear: _clear,
+        delete: _delete,
+        entries: value.entries.bind(value),
+        forEach: value.forEach.bind(value),
+        has: value.has.bind(value),
+        keys: value.keys.bind(value),
+        values: value.values.bind(value),
+    };
 };

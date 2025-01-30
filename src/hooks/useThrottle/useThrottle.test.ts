@@ -6,10 +6,10 @@ import { useThrottle } from './useThrottle';
 vi.useFakeTimers();
 
 describe('useThrottle', () => {
-    it('should throttle function calls', async () => {
+    it('should throttle function calls', () => {
         const spy = vi.fn();
         const hook = renderHook(() => useThrottle());
-        const DELAY = 1000;
+        const DELAY = 1_000;
 
         const throttledFn = hook.result.current.throttle(spy, DELAY);
 

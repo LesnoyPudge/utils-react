@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import { useSynchronizedAnimation } from './useSynchronizedAnimation';
-import { useRefManager } from '@entities/RefManager';
+import { useRefManager } from '@hooks/useRefManager';
 
 
 

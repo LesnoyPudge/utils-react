@@ -5,15 +5,10 @@ import viteConfig from './vite.config';
 
 export default mergeConfig(viteConfig, defineConfig({
     test: {
-        setupFiles: ['./test/setup-file.ts'],
+        setupFiles: ['./testUtils/testSetup.ts'],
         include: ['./src/**/*.test.*'],
         globals: true,
         mockReset: true,
-        // environment: 'jsdom',
-
-        // inspectBrk: true,
-        // fileParallelism: false,
-
         browser: {
             enabled: true,
             headless: true,

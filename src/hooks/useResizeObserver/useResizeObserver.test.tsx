@@ -1,7 +1,6 @@
-import { renderHook } from '@testing-library/react';
 import { useResizeObserver } from './useResizeObserver';
 import { FC } from 'react';
-import { useRefManager } from '@entities/RefManager';
+import { useRefManager } from '@hooks/useRefManager';
 import { page } from '@vitest/browser/context';
 
 

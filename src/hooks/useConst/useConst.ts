@@ -13,9 +13,12 @@ export const useConst = <_Value>(
 ): _Value => {
     const ref = useRef(EMPTY_VALUE as _Value);
 
+    // eslint-disable-next-line react-compiler/react-compiler
     if (ref.current === EMPTY_VALUE) {
+        // eslint-disable-next-line react-compiler/react-compiler
         ref.current = factory();
     }
 
+    // eslint-disable-next-line react-compiler/react-compiler
     return ref.current;
 };

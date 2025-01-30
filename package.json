@@ -1,7 +1,7 @@
 {
     "name": "@lesnoypudge/utils-react",
     "description": "lesnoypudge's utils-react",
-    "version": "11.0.0",
+    "version": "12.0.0",
     "keywords": [
         "lesnoypudge",
         "utils",
@@ -14,8 +14,8 @@
         "build"
     ],
     "scripts": {
-        "lint:check": "eslint ./src",
-        "lint:fix": "eslint ./src --fix",
+        "lint:check": "eslint",
+        "lint:fix": "eslint --fix",
         "type:check": "tsc -p tsconfig.react.build.json",
         "publish": "npm publish --access public",
         "deploy": "git add . && git commit -m 'update' && git push && git status",
@@ -24,27 +24,27 @@
         "test:check": "vitest --run",
         "test:watch": "vitest",
         "test:debug": "vitest --test-timeout=0 --inspect-brk=127.0.0.1:3000 --browser --no-file-parallelism",
-        "prepublishOnly": "npm run build"
+        "prepublishOnly": "npm run type:check && npm run test:check && npm run build"
     },
     "dependencies": {
         "@fluentui/react-context-selector": "^9.1.72",
-        "@lesnoypudge/utils": "^16.3.0",
+        "@lesnoypudge/utils": "^17.0.0",
         "@lesnoypudge/utils-web": "^2.0.0",
         "react-error-boundary": "^5.0.0",
         "react-focus-on": "^3.9.4",
         "react-json-pretty": "^2.2.0"
     },
     "peerDependencies": {
-        "react": ">=16.8.0"
+        "react": ">=18.*.*"
     },
     "devDependencies": {
         "@babel/plugin-transform-react-jsx": "^7.25.9",
-        "@lesnoypudge/builder": "^4.0.1",
-        "@lesnoypudge/eslint-config": "^6.1.0",
+        "@lesnoypudge/builder": "^5.0.1",
+        "@lesnoypudge/eslint-config": "^10.0.0",
         "@lesnoypudge/formatter-config": "^8.0.0",
         "@lesnoypudge/types-global-base": "^4.0.0",
-        "@lesnoypudge/types-global-node": "^1.0.0",
-        "@lesnoypudge/types-global-react": "^4.0.1",
+        "@lesnoypudge/types-global-node": "^1.0.1",
+        "@lesnoypudge/types-global-react": "^5.0.0",
         "@lesnoypudge/types-global-web": "^1.0.0",
         "@lesnoypudge/types-utils-base": "^3.4.1",
         "@lesnoypudge/types-utils-react": "^5.0.0",

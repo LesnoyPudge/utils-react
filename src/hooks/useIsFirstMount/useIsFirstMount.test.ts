@@ -7,10 +7,10 @@ describe('useIsFirstMount', () => {
     it('should return true only on the first mount', () => {
         const hook = renderHook(() => useIsFirstMount());
 
-        expect(hook.result.current.getIsFirstMount()).toBe(true);
+        expect(hook.result.current.isFirstMount).toBe(true);
 
         hook.rerender();
 
-        expect(hook.result.current.getIsFirstMount()).toBe(false);
+        expect(hook.result.current.isFirstMount).toBe(false);
     });
 });

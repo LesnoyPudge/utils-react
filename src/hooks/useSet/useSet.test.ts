@@ -58,4 +58,21 @@ describe('useSet', () => {
 
         expect(spy).toBeCalledTimes(2);
     });
+
+    it('should be bound', () => {
+        const spy = vi.fn();
+        const length = 3;
+        const hook = renderHook(() => useSet([1, 2, 3]));
+
+        const res = hook.result.current;
+
+        expect([...res.entries()].length).toBe(length);
+        expect([...res.keys()].length).toBe(length);
+        expect([...res.values()].length).toBe(length);
+        expect(res.has(1)).toBe(true);
+
+        res.forEach(spy);
+
+        expect(spy).toBeCalledTimes(length);
+    });
 });

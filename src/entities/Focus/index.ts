@@ -8,7 +8,7 @@ export namespace Focus {
 
     export import Lock = c1.FocusLock;
 
-    export const {
-        useAutoFocusable,
-    } = c2;
+    export import useAutoFocusable = c2.useAutoFocusable;
+
+    export import useMoveFocusInside = c2.useMoveFocusInside;
 }

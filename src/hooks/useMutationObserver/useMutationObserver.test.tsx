@@ -1,6 +1,6 @@
 import { useMutationObserver } from './useMutationObserver';
 import { FC } from 'react';
-import { useRefManager } from '@entities/RefManager';
+import { useRefManager } from '@hooks/useRefManager';
 import { page } from '@vitest/browser/context';
 
 

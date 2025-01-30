@@ -8,7 +8,7 @@ vi.useFakeTimers();
 describe('useTimeout', () => {
     it('should call callback after specified delay', () => {
         const spy = vi.fn();
-        const DELAY = 1000;
+        const DELAY = 1_000;
         renderHook(() => useTimeout(spy, DELAY));
 
         expect(spy).toBeCalledTimes(0);
@@ -20,7 +20,7 @@ describe('useTimeout', () => {
 
     it('should clear timeout on unmount', () => {
         const spy = vi.fn();
-        const DELAY = 1000;
+        const DELAY = 1_000;
         const hook = renderHook(() => useTimeout(spy, DELAY));
 
         hook.unmount();
@@ -32,7 +32,7 @@ describe('useTimeout', () => {
 
     it('should reset timeout when delay changes', () => {
         const spy = vi.fn();
-        const DELAY_1 = 1000;
+        const DELAY_1 = 1_000;
         const DELAY_2 = 500;
         const hook = renderHook(({ delay }) => useTimeout(spy, delay), {
             initialProps: { delay: DELAY_1 },

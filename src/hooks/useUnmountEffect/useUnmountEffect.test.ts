@@ -10,6 +10,9 @@ describe('useUnmountEffect', () => {
 
         hook.rerender();
         hook.rerender();
+
+        expect(spy).toBeCalledTimes(0);
+
         hook.unmount();
 
         expect(spy).toBeCalledTimes(1);

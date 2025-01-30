@@ -1,5 +1,6 @@
 import { useFunction } from '@hooks/useFunction';
-import { useMemo, useRef } from 'react';
+import { usePrevious } from '@hooks/usePrevious';
+import { useMemo } from 'react';
 
 
 
@@ -11,16 +12,15 @@ export const useMemoCompare = <_Value>(
     value: _Value,
     getIsEqual: (a: _Value, b: _Value) => boolean,
 ) => {
-    const prevValueRef = useRef(value);
     const _getIsEqual = useFunction(getIsEqual);
+    const prevValue = usePrevious(value);
 
     return useMemo(() => {
-        const isEqual = _getIsEqual(prevValueRef.current, value);
+        if (prevValue === undefined) return value;
 
-        if (!isEqual) {
-            prevValueRef.current = value;
-        }
+        const isEqual = _getIsEqual(value, prevValue);
+        if (isEqual) return prevValue;
 
-        return prevValueRef.current;
-    }, [prevValueRef, value, _getIsEqual]);
+        return value;
+    }, [_getIsEqual, prevValue, value]);
 };

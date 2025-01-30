@@ -1,21 +1,22 @@
-import { useFunction } from '@hooks/useFunction';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 
 
 /**
- * Tracks if the component is mounted for the first time.
+ * Tracks whether the component is on its first render.
+ * If a render is canceled, the value is not updated.
  */
 export const useIsFirstMount = () => {
-    const countRef = useRef(0);
+    const isFirstMountRef = useRef(true);
 
-    countRef.current += 1;
+    useEffect(() => {
+        if (!isFirstMountRef.current) return;
 
-    const getIsFirstMount = useFunction(() => {
-        return countRef.current === 1;
-    });
+        isFirstMountRef.current = false;
+    }, []);
 
     return {
-        getIsFirstMount,
+        // eslint-disable-next-line react-compiler/react-compiler
+        isFirstMount: isFirstMountRef.current,
     };
 };

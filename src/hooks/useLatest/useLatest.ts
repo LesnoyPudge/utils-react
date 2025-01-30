@@ -8,9 +8,10 @@ import { MutableRefObject, useRef } from 'react';
 export const useLatest = <_Value>(
     providedValue: _Value,
 ): Readonly<MutableRefObject<_Value>> => {
-    const value = useRef(providedValue);
+    const ref = useRef(providedValue);
 
-    value.current = providedValue;
+    // eslint-disable-next-line react-compiler/react-compiler
+    ref.current = providedValue;
 
-    return value;
+    return ref;
 };

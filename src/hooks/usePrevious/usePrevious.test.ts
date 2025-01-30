@@ -9,14 +9,14 @@ describe('usePrevious', () => {
             initialProps: { value: 1 },
         });
 
-        expect(hook.result.current.current).toBeUndefined();
+        expect(hook.result.current).toBeUndefined();
 
         hook.rerender({ value: 2 });
 
-        expect(hook.result.current.current).toBe(1);
+        expect(hook.result.current).toBe(1);
 
         hook.rerender({ value: 2 });
 
-        expect(hook.result.current.current).toBe(2);
+        expect(hook.result.current).toBe(2);
     });
 });

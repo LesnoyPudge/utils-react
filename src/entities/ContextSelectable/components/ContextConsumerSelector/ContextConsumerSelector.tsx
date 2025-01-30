@@ -1,8 +1,4 @@
-import {
-    ContextSelectable,
-    ContextSelectableSelector,
-    useContextSelector,
-} from '@entities/ContextSelectable';
+import { ContextSelectable } from '@entities/ContextSelectable';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
 import { RT } from '@lesnoypudge/types-utils-react/namespace';
 import { renderFunction } from '@utils/renderFunction';
@@ -16,8 +12,8 @@ export namespace ContextConsumerSelector {
     > = (
         RT.PropsWithRenderFunctionOrNode<[_SelectedValue]>
         & {
-            context: ContextSelectable<_Value>;
-            selector?: ContextSelectableSelector<
+            context: ContextSelectable.createContext.ContextSelectable<_Value>;
+            selector?: ContextSelectable.useSelector.ContextSelectableSelector<
                 _Value,
                 _SelectedValue
             >;
@@ -33,7 +29,7 @@ export const ContextConsumerSelector = <
     selector,
     children,
 }: ContextConsumerSelector.Props<_Value, _SelectedValue>) => {
-    const value = useContextSelector(context, selector);
+    const value = ContextSelectable.useSelector(context, selector);
 
     return renderFunction(children, value);
 };

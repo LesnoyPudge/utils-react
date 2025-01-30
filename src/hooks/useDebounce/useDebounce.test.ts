@@ -9,7 +9,7 @@ describe('useDebounce', () => {
     it('should track debounce state and trigger callback', async () => {
         const spy = vi.fn();
         const hook = renderHook(() => useDebounce());
-        const DELAY = 1000;
+        const DELAY = 1_000;
 
         const result = hook.result.current;
         const debouncedFn = result.debounce(spy, DELAY);
@@ -33,7 +33,7 @@ describe('useDebounce', () => {
     it('should prevent multiple triggers while debouncing', async () => {
         const spy = vi.fn();
         const hook = renderHook(() => useDebounce());
-        const DELAY = 1000;
+        const DELAY = 1_000;
         const SMALL_DELAY = DELAY - (DELAY / 3);
         const BIG_DELAY = DELAY * 2;
 

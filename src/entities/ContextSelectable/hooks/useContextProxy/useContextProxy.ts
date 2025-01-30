@@ -11,17 +11,17 @@ import { useMemo, useRef } from 'react';
 
 
 
-const EMPTY_VALUE = Symbol.for('EMPTY_VALUE');
+const EMPTY_VALUE = {};
 
 export const useContextProxy = <
     _Value extends T.UnknownRecord,
 >(
-    context: ContextSelectable<_Value>,
+    context: ContextSelectable.createContext.ContextSelectable<_Value>,
 ): _Value => {
-    const usedKeys = useConst(() => new Set<PropertyKey>());
+    const usedKeys = useConst(() => new Set<string>());
     const prevSelectedValueRef = useRef<
-        _Value | typeof EMPTY_VALUE
-    >(EMPTY_VALUE);
+        _Value
+    >(EMPTY_VALUE as _Value);
 
     const selector = useFunction((value: _Value | undefined) => {
         if (value === undefined) return value;
@@ -58,12 +58,15 @@ export const useContextProxy = <
     );
 
     const proxyHandler = useConst<ProxyHandler<_Value>>(() => ({
-        get: (target, p, receiver) => {
-            if (Object.hasOwn(target, p)) {
-                usedKeys.add(p);
+        get: (target, propertyKey, receiver) => {
+            if (
+                Object.hasOwn(target, propertyKey)
+                && typeof propertyKey === 'string'
+            ) {
+                usedKeys.add(propertyKey);
             }
 
-            return Reflect.get(target, p, receiver);
+            return Reflect.get(target, propertyKey, receiver);
         },
     }));
 

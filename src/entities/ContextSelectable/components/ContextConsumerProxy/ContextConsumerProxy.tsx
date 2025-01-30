@@ -1,7 +1,4 @@
-import {
-    useContextProxy,
-    ContextSelectable,
-} from '@entities/ContextSelectable';
+import { ContextSelectable } from '@entities/ContextSelectable';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
 import { RT } from '@lesnoypudge/types-utils-react/namespace';
 import { renderFunction } from '@utils/renderFunction';
@@ -14,7 +11,7 @@ export namespace ContextConsumerProxy {
     > = (
         RT.PropsWithRenderFunctionOrNode<[_Value]>
         & {
-            context: ContextSelectable<_Value>;
+            context: ContextSelectable.createContext.ContextSelectable<_Value>;
         }
     );
 }
@@ -25,7 +22,7 @@ export const ContextConsumerProxy = <
     context,
     children,
 }: ContextConsumerProxy.Props<_Value>) => {
-    const value = useContextProxy(context);
+    const value = ContextSelectable.useProxy(context);
 
     return renderFunction(children, value);
 };

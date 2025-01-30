@@ -12,19 +12,21 @@ import { useContext, useRef } from 'react';
 
 
 
-export type ContextSelectableSelector<
-    _Value,
-    _SelectedValue = _Value,
-> = (value: _Value) => _SelectedValue;
+const EMPTY_VALUE = {};
 
-const EMPTY_VALUE = Symbol.for('EMPTY_VALUE');
+export namespace useContextSelector {
+    export type ContextSelectableSelector<
+        _Value,
+        _SelectedValue = _Value,
+    > = (value: _Value) => _SelectedValue;
+}
 
 export const useContextSelector = <
     _Value extends T.UnknownRecord,
     _SelectedValue = _Value,
 >(
-    context: ContextSelectable<_Value>,
-    selector: ContextSelectableSelector<
+    context: ContextSelectable.createContext.ContextSelectable<_Value>,
+    selector: useContextSelector.ContextSelectableSelector<
         _Value,
         _SelectedValue
     > = defaultSelector,
@@ -34,8 +36,8 @@ export const useContextSelector = <
     ) as unknown as ContextValueFluent<_Value>;
 
     const prevSelectedRef = useRef<
-        _SelectedValue | typeof EMPTY_VALUE
-    >(EMPTY_VALUE);
+        _SelectedValue
+    >(EMPTY_VALUE as _SelectedValue);
 
     const stableSelector = useFunction(() => {
         const selected = selector(contextValue.value.current);

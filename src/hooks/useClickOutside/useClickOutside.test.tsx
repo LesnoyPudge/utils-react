@@ -1,5 +1,5 @@
 import { useClickOutside } from './useClickOutside';
-import { useRefManager } from '@entities/RefManager';
+import { useRefManager } from '@hooks/useRefManager';
 import { page } from '@vitest/browser/context';
 
 

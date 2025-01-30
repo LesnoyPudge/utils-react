@@ -1,4 +1,4 @@
-import { useRefManager } from '@entities/RefManager';
+import { useRefManager } from '@hooks/useRefManager';
 import { useEventListener } from '@hooks/useEventListener';
 
 
