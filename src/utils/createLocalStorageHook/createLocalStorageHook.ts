@@ -13,11 +13,18 @@ export namespace createLocalStorageHook {
     export namespace useLocalStorage {
         export type SetValue<_Value> = Dispatch<SetStateAction<_Value>>;
 
-        export type Return<_Value> = {
+        export type ReturnObject<_Value> = {
             value: _Value;
             setValue: SetValue<_Value>;
             clear: VoidFunction;
             remove: VoidFunction;
+        };
+
+        export type Return<
+            _Key extends string,
+            _Value,
+        > = {
+            [x in _Key]: ReturnObject<_Value>
         };
     }
 }
@@ -34,6 +41,7 @@ export const createLocalStorageHook = <
         key: _Key,
         defaultValue?: _DefaultValue,
     ): createLocalStorageHook.useLocalStorage.Return<
+        _Key,
         _Schema[_Key] | _DefaultValue | undefined
     > => {
         const _key = useConst(() => key);
@@ -77,12 +85,21 @@ export const createLocalStorageHook = <
             _localStorage.remove(_key);
         });
 
-        return {
+        const resultObject: createLocalStorageHook.useLocalStorage.ReturnObject<
+            _Schema[_Key] | _DefaultValue | undefined
+        > = {
             value: state,
             setValue: setStorageState,
             clear,
             remove,
         };
+
+        return {
+            [_key]: resultObject,
+        } as createLocalStorageHook.useLocalStorage.Return<
+            _Key,
+            _Schema[_Key] | _DefaultValue | undefined
+        >;
     };
 
     return useLocalStorage;
