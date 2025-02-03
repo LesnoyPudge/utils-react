@@ -48,7 +48,7 @@ export const createLocalStorageHook = <
         const defaultValueRef = useLatest(defaultValue);
         const [state, stateRef, setState] = useStateWithRef<
             _Schema[_Key] | _DefaultValue | undefined
-        >(defaultValue);
+        >(_localStorage.get(_key, defaultValue));
 
         useEffect(() => {
             return _localStorage.onChange(_key, (newValue) => {
@@ -93,7 +93,7 @@ export const createLocalStorageHook = <
             clear,
             remove,
         };
-
+        console.log('render', resultObject);
         return {
             [_key]: resultObject,
         } as createLocalStorageHook.useLocalStorage.Return<

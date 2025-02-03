@@ -28,8 +28,8 @@
     },
     "dependencies": {
         "@fluentui/react-context-selector": "^9.1.72",
-        "@lesnoypudge/utils": "^17.0.0",
-        "@lesnoypudge/utils-web": "^2.0.0",
+        "@lesnoypudge/utils": "^17.1.0",
+        "@lesnoypudge/utils-web": "^3.0.0",
         "react-error-boundary": "^5.0.0",
         "react-focus-on": "^3.9.4",
         "react-json-pretty": "^2.2.0"
@@ -40,7 +40,7 @@
     "devDependencies": {
         "@babel/plugin-transform-react-jsx": "^7.25.9",
         "@lesnoypudge/builder": "^5.0.1",
-        "@lesnoypudge/eslint-config": "^10.0.0",
+        "@lesnoypudge/eslint-config": "^11.0.0",
         "@lesnoypudge/formatter-config": "^8.0.0",
         "@lesnoypudge/types-global-base": "^4.0.0",
         "@lesnoypudge/types-global-node": "^1.0.1",
@@ -54,7 +54,7 @@
         "@vitest/browser": "^3.0.4",
         "babel-plugin-jsx-control-statements": "^4.1.2",
         "glob": "^11.0.1",
-        "playwright": "^1.50.0",
+        "playwright": "^1.50.1",
         "tsx": "^4.19.2",
         "typescript": "^5.7.3",
         "vite": "^6.0.11",

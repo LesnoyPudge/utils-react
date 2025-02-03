@@ -4,6 +4,9 @@ import { withDisplayName } from '@utils/withDisplayName';
 
 
 
+/**
+ * Creates a component that wraps a hook and renders its value.
+ */
 export const createHookComponent = <_Value,>(
     displayName: string,
     hookFactory: () => _Value,

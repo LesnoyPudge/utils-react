@@ -13,13 +13,13 @@ fs.readdirSync(folderPath).forEach((folder) => {
 
         if (!fs.existsSync(testFilePath)) {
             const fileData = [
-                `import { renderHook } from '@testing-library/react';`,
                 `import { ${folder} } from './${folder}';`,
                 '',
                 '',
                 '',
                 `describe('${folder}', () => {`,
-                `    it('1', () => {`,
+                `    it('should fail', () => {`,
+                '        expect(true).toBe(false);',
                 '    });',
                 '});',
             ].join('\n');
