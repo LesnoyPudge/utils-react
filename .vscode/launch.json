@@ -4,7 +4,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Debug Current Test File",
+            "name": "_Launch Current Node",
             "autoAttachChildProcesses": true,
             "skipFiles": [
                 "<node_internals>/**",
@@ -14,14 +14,52 @@
             "args": [
                 "run",
                 "${relativeFile}",
-                "--config=vitest.config.ts",
+                "--config=vitest.node.config.ts",
                 "--inspect-brk",
-                "--browser",
                 "--test-timeout=0",
-                "--no-file-parallelism"
+                "--no-file-parallelism",
             ],
             "smartStep": true,
             "console": "integratedTerminal",
+            "presentation": {
+                "hidden": true,
+            },
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "_Launch All Node",
+            "autoAttachChildProcesses": true,
+            "program": "${workspaceRoot}/node_modules/vitest/vitest.mjs",
+            "console": "integratedTerminal",
+            "args": [
+                "--config=vitest.node.config.ts",
+                "--inspect-brk",
+                "--test-timeout=0",
+                "--no-file-parallelism",
+            ],
+            "presentation": {
+                "hidden": true,
+            },
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "_Run Vitest Browser For Current",
+            "autoAttachChildProcesses": true,
+            "program": "${workspaceRoot}/node_modules/vitest/vitest.mjs",
+            "args": [
+                "run",
+                "${relativeFile}",
+                "--config=vitest.browser.config.ts",
+                "--inspect-brk",
+                "--test-timeout=0",
+                "--no-file-parallelism",
+            ],
+            "console": "integratedTerminal",
+            "presentation": {
+                "hidden": true,
+            },
         },
         {
             "type": "node",
@@ -30,28 +68,55 @@
             "program": "${workspaceRoot}/node_modules/vitest/vitest.mjs",
             "console": "integratedTerminal",
             "args": [
-                "--config=vitest.config.ts",
+                "--config=vitest.browser.config.ts",
                 "--inspect-brk",
-                "--browser",
                 "--test-timeout=0",
                 "--no-file-parallelism",
-            ]
+            ],
+            "presentation": {
+                "hidden": true,
+            },
         },
         {
             "type": "chrome",
             "request": "attach",
             "name": "_Attach to Vitest Browser",
-            "port": 9229
+            "port": 9229,
+            "presentation": {
+                "hidden": true,
+            },
         }
     ],
     "compounds": [
         {
-            "name": "Debug Vitest Browser",
+            "name": "Debug All vitest.browser.config.ts",
             "configurations": [
                 "_Attach to Vitest Browser",
                 "_Run Vitest Browser"
             ],
             "stopAll": true
-        }
+        },
+        {
+            "name": "Debug Current vitest.browser.config.ts",
+            "configurations": [
+                "_Attach to Vitest Browser",
+                "_Run Vitest Browser For Current"
+            ],
+            "stopAll": true
+        },
+        {
+            "name": "Debug Current vitest.node.config.ts",
+            "configurations": [
+                "_Launch Current Node"
+            ],
+            "stopAll": true,
+        },
+        {
+            "name": "Debug All vitest.node.config.ts",
+            "configurations": [
+                "_Launch All Node"
+            ],
+            "stopAll": true,
+        },
     ]
 }

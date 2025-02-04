@@ -1,25 +1,23 @@
-import { defineConfig, mergeConfig } from 'vitest/config';
+import { mergeConfig, UserWorkspaceConfig } from 'vitest/config';
 import viteConfig from './vite.config';
 
 
 
-export default mergeConfig(viteConfig, defineConfig({
+export const nodeConfig = {
     test: {
         name: 'node',
         include: ['./src/**/*.node.test.*'],
         environment: 'node',
         globals: true,
         mockReset: true,
-        inspectBrk: true,
-        inspector: {
-            enabled: true,
-            waitForDebugger: true,
-        },
-        poolOptions: {
-            forks: {
-                singleFork: true,
-            },
-        },
-        fileParallelism: false,
+        // inspectBrk: true,
+        // poolOptions: {
+        //     forks: {
+        //         singleFork: true,
+        //     },
+        // },
+        // fileParallelism: false,
     },
-}));
+} satisfies UserWorkspaceConfig;
+
+export default mergeConfig(viteConfig, nodeConfig);

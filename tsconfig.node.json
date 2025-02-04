@@ -7,8 +7,7 @@
         "./script.js",
         "./vitest.browser.config.ts",
         "./vitest.node.config.ts",
-        "./vitest.config.ts",
-        "___.ts",
+        "./vitest.extension.ts",
     ],
     "exclude": [],
     "compilerOptions": {
