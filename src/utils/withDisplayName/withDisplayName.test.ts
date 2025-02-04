@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/consistent-function-scoping */
 import { withDisplayName } from './withDisplayName';
 
 

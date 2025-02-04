@@ -1,30 +1,46 @@
+/* eslint-disable @typescript-eslint/only-throw-error */
+import { never } from '@lesnoypudge/utils';
 import { FC, PropsWithChildren } from 'react';
 
 
-
-export const createSleep = (duration: number, logId?: string) => {
+/**
+ * Creates a component that suspends rendering
+ * until a specified duration has passed.
+ */
+export const createSleep = (durationMs: number, logId?: string) => {
     let isResolved = false;
-    let timeoutId: number;
+    let isResolving = false;
+    let promise: Promise<void>;
 
     const Sleep: FC<PropsWithChildren> = ({ children }) => {
-        if (!isResolved) {
-            logId && console.log(`[${logId}}] sleeping for: ${duration}`);
+        if (!isResolved && !isResolving) {
+            isResolving = true;
 
-            // eslint-disable-next-line @typescript-eslint/only-throw-error
-            throw new Promise<void>((res) => {
-                clearTimeout(timeoutId);
+            logId && console.log(`[${logId}}] sleeping for: ${durationMs}`);
 
-                timeoutId = setTimeout(() => {
+            promise = new Promise<void>((resolve) => {
+                setTimeout(() => {
                     isResolved = true;
+                    isResolving = false;
 
                     logId && console.log(`[${logId}] sleep resolve`);
 
-                    res();
-                }, duration);
+                    resolve();
+                }, durationMs);
             });
+
+            throw promise;
         }
 
-        return children;
+        if (isResolving) {
+            throw promise;
+        }
+
+        if (isResolved) {
+            return children;
+        }
+
+        never();
     };
 
     return Sleep;

@@ -4,19 +4,43 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Run Vitest Browser",
+            "name": "Debug Current Test File",
+            "autoAttachChildProcesses": true,
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ],
+            "program": "${workspaceRoot}/node_modules/vitest/vitest.mjs",
+            "args": [
+                "run",
+                "${relativeFile}",
+                "--config=vitest.config.ts",
+                "--inspect-brk",
+                "--browser",
+                "--test-timeout=0",
+                "--no-file-parallelism"
+            ],
+            "smartStep": true,
+            "console": "integratedTerminal",
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "_Run Vitest Browser",
             "program": "${workspaceRoot}/node_modules/vitest/vitest.mjs",
             "console": "integratedTerminal",
             "args": [
+                "--config=vitest.config.ts",
                 "--inspect-brk",
                 "--browser",
-                "--no-file-parallelism"
+                "--test-timeout=0",
+                "--no-file-parallelism",
             ]
         },
         {
             "type": "chrome",
             "request": "attach",
-            "name": "Attach to Vitest Browser",
+            "name": "_Attach to Vitest Browser",
             "port": 9229
         }
     ],
@@ -24,8 +48,8 @@
         {
             "name": "Debug Vitest Browser",
             "configurations": [
-                "Attach to Vitest Browser",
-                "Run Vitest Browser"
+                "_Attach to Vitest Browser",
+                "_Run Vitest Browser"
             ],
             "stopAll": true
         }

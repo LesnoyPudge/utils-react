@@ -23,7 +23,7 @@
         "build": "vite build",
         "test:check": "vitest --run",
         "test:watch": "vitest",
-        "test:debug": "vitest --test-timeout=0 --inspect-brk=127.0.0.1:3000 --browser --no-file-parallelism",
+        "test:debug": "vitest --test-timeout=0 --inspect-brk=127.0.0.1:3000  --no-file-parallelism",
         "prepublishOnly": "npm run type:check && npm run test:check && npm run build"
     },
     "dependencies": {

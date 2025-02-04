@@ -5,7 +5,6 @@ import {
     Context as ContextFluent,
 } from '@fluentui/react-context-selector';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
-import { defaultSelector } from '@utils/defaultSelector';
 import { ContextSelectable } from '@entities/ContextSelectable';
 import { useFunction } from '@hooks/useFunction';
 import { useContext, useRef } from 'react';
@@ -13,6 +12,11 @@ import { useContext, useRef } from 'react';
 
 
 const EMPTY_VALUE = {};
+
+const defaultSelector = <
+    _Value,
+    _Return = _Value,
+>(v: _Value) => v as unknown as _Return;
 
 export namespace useContextSelector {
     export type ContextSelectableSelector<

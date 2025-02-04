@@ -93,7 +93,7 @@ export const createLocalStorageHook = <
             clear,
             remove,
         };
-        console.log('render', resultObject);
+
         return {
             [_key]: resultObject,
         } as createLocalStorageHook.useLocalStorage.Return<

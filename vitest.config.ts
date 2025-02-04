@@ -1,16 +1,19 @@
-import { defineConfig, mergeConfig } from 'vitest/config';
+import { defineConfig, defineWorkspace, mergeConfig } from 'vitest/config';
 import viteConfig from './vite.config';
 
 
 
-export default mergeConfig(viteConfig, defineConfig({
+const config = mergeConfig(viteConfig, defineConfig({
     test: {
+        name: 'browser',
         setupFiles: ['./testUtils/testSetup.ts'],
-        include: ['./src/**/*.test.*'],
         globals: true,
         mockReset: true,
+        include: ['./src/**/*.test.*'],
+        exclude: ['./src/**/*.node.test.*'],
         browser: {
             enabled: true,
+            fileParallelism: false,
             headless: true,
             provider: 'playwright',
             screenshotFailures: false,
@@ -22,3 +25,5 @@ export default mergeConfig(viteConfig, defineConfig({
         },
     },
 }));
+
+export default config;

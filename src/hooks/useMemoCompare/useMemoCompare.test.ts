@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/consistent-function-scoping */
 import { renderHook } from '@testing-library/react';
 import { useMemoCompare } from './useMemoCompare';
 

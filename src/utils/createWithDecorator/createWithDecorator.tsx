@@ -4,6 +4,9 @@ import { PropsWithChildren, ReactNode } from 'react';
 
 
 
+/**
+ * Creates a decorator with optional additional properties.
+ */
 export const createWithDecorator = <
     _ExtraProps extends T.UnknownRecord = T.EmptyObject,
 >(

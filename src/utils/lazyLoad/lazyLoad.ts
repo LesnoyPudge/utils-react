@@ -1,4 +1,4 @@
-import { catchErrorAsync, inRange, invariant, sleep } from '@lesnoypudge/utils';
+import { autoBind, catchErrorAsync, inRange, invariant, sleep } from '@lesnoypudge/utils';
 import { ComponentType, lazy } from 'react';
 
 
@@ -34,7 +34,7 @@ const asyncRetry = async <_Result>(
         await sleep(delayFn(count));
 
         const [res] = await catchErrorAsync(fn);
-
+        console.log(`\nretry ${count}`, res, '\n');
         if (res) {
             result = res;
             count = triesMaxCount;
@@ -45,7 +45,17 @@ const asyncRetry = async <_Result>(
 };
 
 class LazyLoad {
-    createPreloadGroup = () => {
+    constructor() {
+        autoBind(this);
+    }
+
+    /**
+     * Creates a group of components that is loaded together
+     * when one of them is called.
+     * Loading is resolved when all components is loaded.
+     * Throws error if called component is failed to load.
+     */
+    createPreloadGroup() {
         const promises: (() => ComponentPromise<BaseComponent>)[] = [];
         let result: (WithDefault<BaseComponent> | null)[] = [];
         const triesMaxCount = 5;
@@ -60,17 +70,22 @@ class LazyLoad {
             return async () => {
                 const component = result[index];
                 if (component) return component as WithDefault<_Component>;
-
+                console.log('\nbefore', result, '\n');
                 result = await Promise.all(
                     promises.map(async (promise, promiseIndex) => {
                         const alreadyLoaded = result[promiseIndex];
                         if (alreadyLoaded) return alreadyLoaded;
+
+                        // const res = await promise();
+
+                        console.log('\ncreate promise\n');
 
                         return await asyncRetry(triesMaxCount, promise) ?? null;
                     }),
                 );
 
                 const loadedComponent = result[index];
+                console.log({ loadedComponent });
                 invariant(loadedComponent);
 
                 return loadedComponent as WithDefault<_Component>;
@@ -82,7 +97,13 @@ class LazyLoad {
         };
     };
 
-    createAsyncLoadGroup = () => {
+    /**
+     * Creates a group of components that starts loading when
+     * one of them is called.
+     * Loading is resolved as soon as called component is loaded.
+     * Other components is loaded in background.
+     */
+    createAsyncLoadGroup() {
         const promises: (() => ComponentPromise<BaseComponent>)[] = [];
         const result: (WithDefault<BaseComponent> | null)[] = [];
         const triesMaxCount = 5;
@@ -120,29 +141,44 @@ class LazyLoad {
         };
     };
 
-    withDelay = <_Component extends BaseComponent>(
+    /**
+     * Wraps a component loading function to add additional
+     * delay before loading in dev mode.
+     */
+    withDelay<_Component extends BaseComponent>(
         fn: () => ComponentPromise<_Component>,
         options?: WithDelayOptions,
-    ) => {
+    ) {
         return async () => {
+            const result = await fn();
+
             if (options?.isDev) {
                 await sleep(options.delay ?? inRange(300, 500));
             }
 
-            return fn();
+            return result;
         };
     };
 
+    /**
+     * Re-export of 'React.lazy'
+     */
     reactLazy = lazy;
 
-    baseComponent = <_Component extends BaseComponent>(
+    /**
+     * Wrapper for basic lazy component.
+     */
+    baseComponent<_Component extends BaseComponent>(
         fn: () => ComponentPromise<_Component>,
         options?: WithDelayOptions,
-    ) => {
+    ) {
         return this.reactLazy(this.withDelay(fn, options));
     };
 
-    createBasePreloadedComponent = () => {
+    /**
+     * Creates predefined wrapper for preloaded components.
+     */
+    createBasePreloadedComponent() {
         const { withPreloadGroup } = this.createPreloadGroup();
 
         return <_Component extends BaseComponent>(
@@ -152,7 +188,10 @@ class LazyLoad {
         };
     };
 
-    createBaseAsyncLoadedComponent = () => {
+    /**
+     * Creates predefined wrapper for async components.
+     */
+    createBaseAsyncLoadedComponent() {
         const { withAsyncLoadGroup } = this.createAsyncLoadGroup();
 
         return <_Component extends BaseComponent>(
@@ -162,10 +201,18 @@ class LazyLoad {
         };
     };
 
+    /**
+     * Predefined wrapper for preloaded components.
+     */
     basePreloadedComponent = this.createBasePreloadedComponent();
 
+    /**
+     * Predefined wrapper for async components.
+     */
     baseAsyncComponent = this.createBaseAsyncLoadedComponent();
 }
 
-// eslint-disable-next-line @typescript-eslint/no-misused-spread
-export const lazyLoad = { ...new LazyLoad() };
+/**
+ * Utility functions for managing lazy-loaded components.
+ */
+export const lazyLoad = new LazyLoad();

@@ -8,6 +8,7 @@
     ],
     "exclude": [],
     "compilerOptions": {
+        "sourceMap": true,
         "types": [
             "@lesnoypudge/types-global-base",
             "@lesnoypudge/types-global-web",

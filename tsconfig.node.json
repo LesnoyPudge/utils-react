@@ -2,10 +2,13 @@
     "extends": "./tsconfig.base.json",
     "include": [
         "node_modules/@types",
-        "eslint.config.js",
-        "vite.config.ts",
-        "vitest.config.ts",
-        "script.js"
+        "./eslint.config.js",
+        "./vite.config.ts",
+        "./script.js",
+        "./vitest.browser.config.ts",
+        "./vitest.node.config.ts",
+        "./vitest.config.ts",
+        "___.ts",
     ],
     "exclude": [],
     "compilerOptions": {
