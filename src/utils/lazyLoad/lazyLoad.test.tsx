@@ -1,137 +1,97 @@
 import { page } from '@vitest/browser/context';
 import { lazyLoad } from './lazyLoad';
 import { FC, Suspense } from 'react';
-import { act } from '@testing-library/react';
 import { ErrorBoundary } from '@entities/ErrorBoundary';
+import { noop } from '@lesnoypudge/utils';
+import { act } from '@testing-library/react';
 
 
 
 vi.useFakeTimers();
 
 describe('lazyLoad', () => {
-    describe('createPreloadGroup', () => {
-        // it('should preload all components', async () => {
-        //     const SMALL_DELAY = 1_000;
-        //     const BIG_DELAY = 3_000;
-
-        //     const firstComponentSpy = vi.fn(() => Promise.resolve({
-        //         default: () => <div>Component1</div>,
-        //     }));
-
-        //     const secondComponentSpy = vi.fn(() => Promise.resolve({
-        //         default: () => <div>Component2</div>,
-        //     }));
-
-        //     const preloadGroup = lazyLoad.createPreloadGroup();
-
-        //     const LazyComponent1 = lazyLoad.reactLazy(
-        //         preloadGroup.withPreloadGroup(
-        //             lazyLoad.withDelay(
-        //                 firstComponentSpy,
-        //                 { delay: SMALL_DELAY, isDev: true },
-        //             ),
-        //         ),
-        //     );
-
-        //     const LazyComponent2 = lazyLoad.reactLazy(
-        //         preloadGroup.withPreloadGroup(
-        //             lazyLoad.withDelay(
-        //                 secondComponentSpy,
-        //                 { delay: BIG_DELAY, isDev: true },
-        //             ),
-        //         ),
-        //     );
-
-        //     const Test: FC<{ flag: boolean }> = ({ flag }) => {
-        //         if (flag) {
-        //             return (
-        //                 <Suspense>
-        //                     <LazyComponent1/>
-        //                 </Suspense>
-        //             );
-        //         }
-
-        //         return (
-        //             <Suspense>
-        //                 <LazyComponent2/>
-        //             </Suspense>
-        //         );
-        //     };
-
-        //     expect(firstComponentSpy).toBeCalledTimes(0);
-        //     expect(secondComponentSpy).toBeCalledTimes(0);
-
-        //     const screen = page.render(<Test flag={true}/>);
-
-        //     const firstComponentLocator = screen.getByText('Component1');
-        //     const secondComponentLocator = screen.getByText('Component2');
-
-        //     await vi.waitFor(() => {
-        //         expect(firstComponentSpy).toBeCalledTimes(1);
-        //         expect(secondComponentSpy).toBeCalledTimes(1);
-        //     });
-
-        //     await expect.element(
-        //         firstComponentLocator,
-        //     ).not.toBeInTheDocument();
-
-        //     await expect.element(
-        //         secondComponentLocator,
-        //     ).not.toBeInTheDocument();
-
-        //     act(() => {
-        //         vi.advanceTimersByTime(SMALL_DELAY);
-        //     });
-
-        //     await expect.element(
-        //         firstComponentLocator,
-        //     ).not.toBeInTheDocument();
-
-        //     await expect.element(
-        //         secondComponentLocator,
-        //     ).not.toBeInTheDocument();
-
-        //     act(() => {
-        //         vi.advanceTimersByTime(BIG_DELAY - SMALL_DELAY);
-        //     });
-
-        //     await expect.element(
-        //         firstComponentLocator,
-        //     ).toBeInTheDocument();
-
-        //     await expect.element(
-        //         secondComponentLocator,
-        //     ).not.toBeInTheDocument();
-
-        //     screen.rerender(<Test flag={false}/>);
-
-        //     await expect.element(
-        //         firstComponentLocator,
-        //     ).not.toBeInTheDocument();
-
-        //     await expect.element(
-        //         secondComponentLocator,
-        //     ).toBeInTheDocument();
-
-        //     expect(firstComponentSpy).toBeCalledTimes(1);
-        //     expect(secondComponentSpy).toBeCalledTimes(1);
-        // });
-
-        it(`
-            should throw error if called component is failed to load
-        `, async () => {
-            const SMALL_DELAY = 1_000;
-            const BIG_DELAY = 3_000;
+    describe('modifiedReactLazy', () => {
+        it('should recover after component is failed to load', async () => {
+            vi.spyOn(console, 'error').mockImplementation(noop);
 
             const errorSpy = vi.fn();
 
-            const firstComponentSpy = (
+            const componentSpy = (
                 vi.fn()
-                    // .mockResolvedValue({
-                    //     default: () => <div>Component1</div>,
-                    // })
-                    .mockRejectedValue(new Error('Fail'))
+                    .mockRejectedValueOnce(new Error('test'))
+                    .mockResolvedValueOnce({
+                        default: () => <div>Component1</div>,
+                    })
             );
+
+            const LazyComponent = lazyLoad.modifiedReactLazy(
+                componentSpy,
+            );
+
+            expect(componentSpy).toBeCalledTimes(0);
+
+            const Test1 = () => (
+                <ErrorBoundary.Node onError={errorSpy}>
+                    <Suspense>
+                        <LazyComponent/>
+                    </Suspense>
+                </ErrorBoundary.Node>
+            );
+
+            const screen1 = page.render(<Test1/>);
+            const firstComponentLocator1 = screen1.getByText('Component1');
+
+            await vi.waitFor(() => {
+                expect(componentSpy).toBeCalledTimes(1);
+                expect(errorSpy).toBeCalledTimes(1);
+            });
+
+            screen1.unmount();
+
+            page.render(<Test1/>);
+
+            await expect.element(firstComponentLocator1).toBeInTheDocument();
+
+            await vi.waitFor(() => {
+                expect(componentSpy).toBeCalledTimes(2);
+                expect(errorSpy).toBeCalledTimes(1);
+            });
+        });
+    });
+
+    describe('withDelay', () => {
+        it('should resolve after provided delay', async () => {
+            const DELAY = 1_000;
+
+            const promiseValue = {
+                default: () => null,
+            };
+
+            const spy = vi.fn().mockResolvedValue(promiseValue);
+
+            const lazyTrigger = lazyLoad.withDelay(spy, {
+                isDev: true, delay: DELAY,
+            });
+
+            const promise = lazyTrigger();
+
+            // spy should be called without delay
+            expect(spy).toBeCalledTimes(1);
+
+            await vi.advanceTimersByTimeAsync(DELAY);
+
+            await expect(promise).resolves.toBe(promiseValue);
+        });
+    });
+
+    describe('createPreloadGroup', () => {
+        it('should not resolve until all components is loaded', async () => {
+            const SMALL_DELAY = 1_000;
+            const BIG_DELAY = 3_000;
+
+            const firstComponentSpy = vi.fn(() => Promise.resolve({
+                default: () => <div>Component1</div>,
+            }));
 
             const secondComponentSpy = vi.fn(() => Promise.resolve({
                 default: () => <div>Component2</div>,
@@ -139,7 +99,7 @@ describe('lazyLoad', () => {
 
             const preloadGroup = lazyLoad.createPreloadGroup();
 
-            const LazyComponent1 = lazyLoad.reactLazy(
+            const LazyComponent1 = lazyLoad.modifiedReactLazy(
                 preloadGroup.withPreloadGroup(
                     lazyLoad.withDelay(
                         firstComponentSpy,
@@ -148,7 +108,7 @@ describe('lazyLoad', () => {
                 ),
             );
 
-            const LazyComponent2 = lazyLoad.reactLazy(
+            const LazyComponent2 = lazyLoad.modifiedReactLazy(
                 preloadGroup.withPreloadGroup(
                     lazyLoad.withDelay(
                         secondComponentSpy,
@@ -160,11 +120,9 @@ describe('lazyLoad', () => {
             const Test: FC<{ flag: boolean }> = ({ flag }) => {
                 if (flag) {
                     return (
-                        <ErrorBoundary.Node onError={errorSpy}>
-                            <Suspense>
-                                <LazyComponent1/>
-                            </Suspense>
-                        </ErrorBoundary.Node>
+                        <Suspense>
+                            <LazyComponent1/>
+                        </Suspense>
                     );
                 }
 
@@ -196,20 +154,25 @@ describe('lazyLoad', () => {
                 secondComponentLocator,
             ).not.toBeInTheDocument();
 
-            expect(errorSpy).toBeCalledTimes(0);
-
             act(() => {
-                vi.advanceTimersByTime(BIG_DELAY);
-            });
-
-            await vi.waitFor(() => {
-                console.log(screen.container);
-                expect(errorSpy).toBeCalledTimes(1);
+                vi.advanceTimersByTime(SMALL_DELAY);
             });
 
             await expect.element(
                 firstComponentLocator,
             ).not.toBeInTheDocument();
+
+            await expect.element(
+                secondComponentLocator,
+            ).not.toBeInTheDocument();
+
+            act(() => {
+                vi.advanceTimersByTime(BIG_DELAY - SMALL_DELAY);
+            });
+
+            await expect.element(
+                firstComponentLocator,
+            ).toBeInTheDocument();
 
             await expect.element(
                 secondComponentLocator,
@@ -230,9 +193,104 @@ describe('lazyLoad', () => {
         });
     });
 
-    describe('createPreloadGroup', () => {
-        it('should load called component and fetch others', async () => {});
+    describe('createAsyncLoadGroup', () => {
+        it('should load called component and fetch others', async () => {
+            const SMALL_DELAY = 20_000;
+            const BIG_DELAY = 50_000;
 
-        it('should retry on failure', async () => {});
+            const firstComponentSpy = vi.fn(() => Promise.resolve({
+                default: () => <div>Component1</div>,
+            }));
+
+            const secondComponentSpy = vi.fn(() => Promise.resolve({
+                default: () => <div>Component2</div>,
+            }));
+
+            const preloadGroup = lazyLoad.createAsyncLoadGroup();
+
+            const LazyComponent1 = lazyLoad.modifiedReactLazy(
+                preloadGroup.withAsyncLoadGroup(
+                    lazyLoad.withDelay(
+                        firstComponentSpy,
+                        { delay: SMALL_DELAY, isDev: true },
+                    ),
+                ),
+            );
+
+            const LazyComponent2 = lazyLoad.modifiedReactLazy(
+                preloadGroup.withAsyncLoadGroup(
+                    lazyLoad.withDelay(
+                        secondComponentSpy,
+                        { delay: BIG_DELAY, isDev: true },
+                    ),
+                ),
+            );
+
+            const Test: FC<{ flag: boolean }> = ({ flag }) => {
+                if (flag) {
+                    return (
+                        <Suspense>
+                            <LazyComponent1/>
+                        </Suspense>
+                    );
+                }
+
+                return (
+                    <Suspense>
+                        <LazyComponent2/>
+                    </Suspense>
+                );
+            };
+
+            expect(firstComponentSpy).toBeCalledTimes(0);
+            expect(secondComponentSpy).toBeCalledTimes(0);
+
+            const screen = page.render(<Test flag={true}/>);
+
+            const firstComponentLocator = page.getByText('Component1');
+            const secondComponentLocator = page.getByText('Component2');
+
+            await vi.waitFor(() => {
+                expect(firstComponentSpy).toBeCalledTimes(1);
+                expect(secondComponentSpy).toBeCalledTimes(1);
+            });
+
+            await expect.element(
+                firstComponentLocator,
+            ).not.toBeInTheDocument();
+
+            await expect.element(
+                secondComponentLocator,
+            ).not.toBeInTheDocument();
+
+            await act(async () => {
+                await vi.advanceTimersByTimeAsync(SMALL_DELAY);
+            });
+
+            await expect.element(
+                firstComponentLocator,
+            ).toBeInTheDocument();
+
+            await expect.element(
+                secondComponentLocator,
+            ).not.toBeInTheDocument();
+
+            screen.rerender(<Test flag={false}/>);
+
+            await act(async () => {
+                await vi.advanceTimersByTimeAsync(BIG_DELAY - SMALL_DELAY);
+            });
+
+            await expect.element(
+                firstComponentLocator,
+            ).not.toBeInTheDocument();
+
+            await expect.element(
+                secondComponentLocator,
+            ).toBeInTheDocument();
+
+            expect(firstComponentSpy).toBeCalledTimes(1);
+            expect(secondComponentSpy).toBeCalledTimes(1);
+        });
     });
 });
