@@ -7,6 +7,9 @@ export namespace Hidden {
     export type Props = VisuallyHidden.Props;
 }
 
+/**
+ * Makes children visually and accessibly hidden.
+ */
 export const Hidden: FC<Hidden.Props> = ({
     children,
     ...rest

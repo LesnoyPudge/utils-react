@@ -36,4 +36,29 @@ describe('createHookComponent', () => {
 
         await expect.element(countLocator).toHaveTextContent('1');
     });
+
+    it('should require props', async () => {
+        const HookComponent = createHookComponent(
+            'Counter',
+            (
+                initialValueA: number,
+                initialValueB: number,
+            ) => useCounter(initialValueA + initialValueB),
+        );
+
+        const Test: FC = () => {
+            return (
+                <HookComponent args={[2, 3]}>
+                    {({ count }) => (
+                        <div data-testid='count'>{count}</div>
+                    )}
+                </HookComponent>
+            );
+        };
+
+        const screen = page.render(<Test/>);
+        const countLocator = screen.getByTestId('count');
+
+        await expect.element(countLocator).toHaveTextContent('5');
+    });
 });

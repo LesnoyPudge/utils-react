@@ -18,6 +18,9 @@ export namespace VisuallyHidden {
     export type Props = ComponentProps<'div'>;
 }
 
+/**
+ * Visually hides provided children.
+ */
 export const VisuallyHidden: FC<VisuallyHidden.Props> = ({
     children,
     style: _style,

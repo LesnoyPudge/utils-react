@@ -51,7 +51,7 @@ describe('createSleep', () => {
         expect(fallbackSpy).toBeCalledTimes(2);
         expect(innerSpy).toBeCalledTimes(0);
 
-        await act(() => vi.advanceTimersByTime(DURATION / 2));
+        await act(() => vi.advanceTimersByTimeAsync(DURATION / 2));
 
         expect(consoleSpy).toBeCalledTimes(2);
         expect(fallbackSpy).toBeCalledTimes(2);

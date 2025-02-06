@@ -1,7 +1,6 @@
 export * from './AccessiblyHidden';
 export * from './ErrorThrower';
 export * from './Hidden';
-export * from './Hook';
 export * from './Iterate';
 export * from './JsonView';
 export * from './Memo';

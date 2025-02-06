@@ -6,17 +6,20 @@ export namespace ErrorThrower {
     export type Props = {
         message?: string;
         disable?: boolean;
-        options?: ErrorOptions;
+        cause?: string;
     };
 }
 
+/**
+ * Throws error on render.
+ */
 export const ErrorThrower: FC<ErrorThrower.Props> = ({
     message = 'ErrorThrower',
     disable = false,
-    options,
+    cause,
 }) => {
     if (!disable) {
-        throw new Error(message, options);
+        throw new Error(message, { cause });
     }
 
     return null;

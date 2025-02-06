@@ -9,6 +9,9 @@ type JsonView = PropsWithClassName & {
     data: string;
 };
 
+/**
+ * Creates visual preview of provided JSON data.
+ */
 export const JsonView: FC<JsonView> = ({
     className = '',
     data,

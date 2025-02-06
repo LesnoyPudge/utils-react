@@ -1,1 +1,1 @@
-export * from './StrictMode';
+export * from './ControllableStrictMode';

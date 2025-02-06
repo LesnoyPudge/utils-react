@@ -11,6 +11,9 @@ export namespace ControllableStrictMode {
     );
 }
 
+/**
+ * Allows to toggle React.StrictMode
+ */
 export const ControllableStrictMode: FC<ControllableStrictMode.Props> = ({
     isEnabled,
     children,

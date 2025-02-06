@@ -6,6 +6,9 @@ export namespace AccessiblyHidden {
     export type Props = ComponentProps<'div'>;
 };
 
+/**
+ * Hides children from accessibility tree.
+ */
 export const AccessiblyHidden: FC<AccessiblyHidden.Props> = ({
     children,
     ...rest

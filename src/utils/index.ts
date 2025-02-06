@@ -2,7 +2,6 @@ export * from './createHookComponent';
 export * from './createLocalStorageHook';
 export * from './createSleep';
 export * from './createWithDecorator';
-export * from './defaultSelector';
 export * from './isClient';
 export * from './isRef';
 export * from './isSSR';

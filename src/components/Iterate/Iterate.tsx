@@ -18,6 +18,9 @@ export namespace Iterate {
     );
 }
 
+/**
+ * Iterates over provided items and renders them as render prop.
+ */
 export const Iterate = <_Item,>({
     items,
     children,
