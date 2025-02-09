@@ -1,7 +1,7 @@
 {
     "name": "@lesnoypudge/utils-react",
     "description": "lesnoypudge's utils-react",
-    "version": "14.0.0",
+    "version": "14.0.1",
     "keywords": [
         "lesnoypudge",
         "utils",
@@ -17,7 +17,7 @@
         "lint:check": "eslint",
         "lint:fix": "eslint --fix",
         "type:check": "tsc -p tsconfig.react.build.json",
-        "publish": "npm publish --access public",
+        "npm:publish": "npm publish --access public",
         "deploy": "git add . && git commit -m 'update' && git push && git status",
         "buildOLD": "npm run type:check && builder --configName tsconfig.react.build.json",
         "build": "vite build",
@@ -27,8 +27,8 @@
     },
     "dependencies": {
         "@fluentui/react-context-selector": "^9.1.72",
-        "@lesnoypudge/utils": "^18.0.0",
-        "@lesnoypudge/utils-web": "^3.0.1",
+        "@lesnoypudge/utils": "^19.0.0",
+        "@lesnoypudge/utils-web": "^3.0.2",
         "react-error-boundary": "^5.0.0",
         "react-focus-on": "^3.9.4",
         "react-json-pretty": "^2.2.0"
@@ -50,18 +50,18 @@
         "@testing-library/dom": "^10.4.0",
         "@testing-library/react": "^16.2.0",
         "@vitejs/plugin-react": "^4.3.4",
-        "@vitest/browser": "^3.0.4",
+        "@vitest/browser": "^3.0.5",
         "babel-plugin-jsx-control-statements": "^4.1.2",
         "glob": "^11.0.1",
         "playwright": "^1.50.1",
         "tsx": "^4.19.2",
         "typescript": "^5.7.3",
-        "vite": "^6.0.11",
+        "vite": "^6.1.0",
         "vite-plugin-checker": "^0.8.0",
         "vite-plugin-dts": "^4.5.0",
         "vite-plugin-lib-inject-css": "^2.2.1",
         "vite-tsconfig-paths": "^5.1.4",
-        "vitest": "^3.0.4",
+        "vitest": "^3.0.5",
         "vitest-browser-react": "^0.0.4"
     }
 }
