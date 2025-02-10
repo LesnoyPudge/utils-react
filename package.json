@@ -17,7 +17,7 @@
         "lint:check": "eslint",
         "lint:fix": "eslint --fix",
         "type:check": "tsc -p tsconfig.react.build.json",
-        "npm:publish": "npm publish --access public",
+        "publish:npm": "npm publish --access public",
         "deploy": "git add . && git commit -m 'update' && git push && git status",
         "buildOLD": "npm run type:check && builder --configName tsconfig.react.build.json",
         "build": "vite build",
