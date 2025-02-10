@@ -1,7 +1,7 @@
 {
     "name": "@lesnoypudge/utils-react",
     "description": "lesnoypudge's utils-react",
-    "version": "14.0.1",
+    "version": "14.1.0",
     "keywords": [
         "lesnoypudge",
         "utils",
@@ -27,7 +27,7 @@
     },
     "dependencies": {
         "@fluentui/react-context-selector": "^9.1.72",
-        "@lesnoypudge/utils": "^19.0.0",
+        "@lesnoypudge/utils": "^19.0.1",
         "@lesnoypudge/utils-web": "^3.0.2",
         "react-error-boundary": "^5.0.0",
         "react-focus-on": "^3.9.4",

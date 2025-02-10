@@ -6,5 +6,6 @@ export * from './isClient';
 export * from './isRef';
 export * from './isSSR';
 export * from './lazyLoad';
+export * from './mergeRefs';
 export * from './renderFunction';
 export * from './withDisplayName';
