@@ -9,7 +9,7 @@ describe('mergeRefs', () => {
     it('should merge multiple refs and update them correctly', () => {
         const hook = renderHook(() => {
             const ref1 = useRef<HTMLElement | null>(null);
-            const ref2 = useRef<HTMLElement | null>(null);
+            const ref2 = useRef<HTMLDivElement | null>(null);
 
             return {
                 ref1,
@@ -27,5 +27,14 @@ describe('mergeRefs', () => {
         expect(ref1.current).toBe(div);
         expect(ref2.current).toBe(div);
         expect(refCallback).toHaveBeenCalledWith(div);
+    });
+
+    it('should accept null and undefined', () => {
+        const spy = vi.fn();
+        const ref = mergeRefs<number>(null, undefined, spy);
+
+        ref(1);
+
+        expect(spy).toBeCalledWith(1);
     });
 });

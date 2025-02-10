@@ -4,9 +4,11 @@ import { MutableRefObject, RefCallback } from 'react';
 
 
 export namespace mergeRefs {
-    export type Ref<_Element extends HTMLElement = HTMLElement> = (
-        MutableRefObject<HTMLElement | null>
-        | RefCallback<HTMLElement | null>
+    export type PassedRef<_Element = HTMLElement> = (
+        MutableRefObject<_Element | null>
+        | RefCallback<_Element | null>
+        | null
+        | undefined
     );
 }
 
@@ -15,10 +17,12 @@ export namespace mergeRefs {
  * When the returned function is called, it assigns the node to all refs.
  */
 export const mergeRefs = <
-    _Element extends HTMLElement,
->(...refs: mergeRefs.Ref<_Element>[]) => {
+    _Element = HTMLElement,
+>(...refs: mergeRefs.PassedRef<_Element>[]) => {
     return (node: _Element | null) => {
         refs.forEach((ref) => {
+            if (!ref) return;
+
             if (isRef(ref)) {
                 ref.current = node;
                 return;
