@@ -32,6 +32,7 @@ export const useMoveFocusInside = ({
             containerRef.current,
             // @ts-expect-error null should(???) be valid arg https://github.com/theKashey/focus-lock/blob/master/src/focusSolver.ts#L30
             document.activeElement,
+            // { focusOptions: { preventScroll: true } },
         );
 
         return true;

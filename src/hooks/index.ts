@@ -12,6 +12,7 @@ export * from './useHotKey';
 export * from './useIntersectionObserver';
 export * from './useInterval';
 export * from './useIsFirstMount';
+export * from './useIsFirstRender';
 export * from './useIsFocusedWithin';
 export * from './useIsMounted';
 export * from './useIsomorphicLayoutEffect';
