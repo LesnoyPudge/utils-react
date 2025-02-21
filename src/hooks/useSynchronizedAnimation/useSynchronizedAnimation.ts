@@ -8,10 +8,12 @@ import { useLayoutEffect } from 'react';
  * their start time to 0.
  */
 export const useSynchronizedAnimation = (
-    elementRef: useRefManager.RefManager<HTMLElement>,
+    elementRef: useRefManager.NullableRefManager<HTMLElement>,
 ) => {
     useLayoutEffect(() => {
         return elementRef.effect((node) => {
+            if (!node) return;
+
             node.getAnimations().forEach((animation) => {
                 animation.startTime = 0;
             });

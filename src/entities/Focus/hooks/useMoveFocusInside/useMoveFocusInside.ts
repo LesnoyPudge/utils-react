@@ -9,7 +9,7 @@ import { useFunction } from '@hooks/useFunction';
 
 export namespace useMoveFocusInside {
     export type Options = {
-        containerRef: useRefManager.RefManager<HTMLElement>;
+        containerRef: useRefManager.NullableRefManager<HTMLElement>;
         isEnabled: boolean;
     };
 

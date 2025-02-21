@@ -1,36 +1,11 @@
 import { useConst } from '@hooks/useConst';
-import { useFunction } from '@hooks/useFunction';
-import { useUnmountEffect } from '@hooks/useUnmountEffect';
-import { noop } from '@lesnoypudge/utils';
-import { isRef } from '@utils/isRef';
-import { MutableRefObject, RefCallback } from 'react';
+import { invariant, noop } from '@lesnoypudge/utils';
+import { useRef } from 'react';
 
 
 
 export namespace useRefManager {
-    export type SettablePossibleRef<_Value> = (
-        MutableRefObject<_Value>
-        | RefManager<_Value>
-    );
-
-    export type OptionalSettablePossibleRef<_Value> = (
-        SettablePossibleRef<_Value>
-        | null
-        | undefined
-    );
-
-    export type PossibleRef<_Value> = (
-        SettablePossibleRef<_Value>
-        | RefCallback<_Value>
-    );
-
-    export type OptionalPossibleRef<_Value> = (
-        PossibleRef<_Value>
-        | null
-        | undefined
-    );
-
-    type MaybeCleanup = (() => void) | void;
+    type MaybeCleanup = (() => void) | void | undefined;
 
     export type EffectCallback<_Value> = (value: _Value) => MaybeCleanup;
 
@@ -41,42 +16,53 @@ export namespace useRefManager {
     ) => EffectCleanup;
 
     export type RefManager<_Value> = {
-        current: _Value | null;
+        current: _Value;
         effect: Effect<_Value>;
     };
 
-    export type Args<_Value> = [
-        initialValue: _Value | null,
-        ...initialSubscribedRefs: useRefManager.OptionalPossibleRef<_Value>[],
-    ];
+    export type NullableRefManager<_Value> = {
+        current: _Value | null;
+        effect: Effect<_Value | null>;
+    };
+
+    export type Overload = {
+        <_Value>(initialValue: _Value): RefManager<_Value>;
+
+        <_Value>(initialValue: _Value | null): RefManager<_Value | null>;
+
+        <_Value = undefined>(
+            initialValue?: undefined
+        ): RefManager<_Value | undefined>;
+    };
 }
 
 /**
- * This hook provides an enhanced reference object (`RefManager`) that can:
- * - Manage multiple refs, including mutable ref objects, ref callbacks, and other RefManager instances.
- * - Apply and manage side effects when the ref's value changes.
- * - Provide a proxy to handle reactive updates to the `current` value.
+ * This hook provides an enhanced reference object (`RefManager`) that
+ * triggers registered effects on value change.
  *
  * The `RefManager` object includes:
  * - `current`: Holds the current value of the ref.
- * - `effect`: A stable method to register effects that run when the ref's value changes, returning a cleanup function.
+ * - `effect`: A stable method to register effects that run
+ * when the ref's value changes, returning a cleanup function.
  *
  * Example usage:
  *
  * ```tsx
- * const MyComponent: FC = () => {
+ * const ExampleComponent: FC = () => {
  *     const refManager = useRefManager<HTMLButtonElement>(null);
  *     const [isVisible, setIsVisible] = useState(false);
  *
  *     useEffect(() => {
- *         // Effect will be called when a node is provided to ref
+ *         // Effect registration
  *         return refManager.effect((buttonNode) => {
+ *             if (!buttonNode) return;
+ *
  *             const handler = () => {};
  *
  *             buttonNode.addEventListener('click', handler);
  *
- *             // Cleanup will be called on unmount or
- *             // when null is provided to ref
+ *             // Cleanup will be called on re-render
+ *             // or value change
  *             return () => {
  *                 buttonNode.removeEventListener(
  *                     'click',
@@ -108,83 +94,67 @@ export namespace useRefManager {
  * };
  * ```
  */
-export const useRefManager = <_Value>(...[
-    initialValue,
-    ...initialSubscribedRefs
-]: useRefManager.Args<_Value>): useRefManager.RefManager<_Value> => {
-    const subscribedRefs = useConst(() => {
-        return new Map<useRefManager.PossibleRef<_Value>, _Value | null>();
-    });
+export const useRefManager: useRefManager.Overload = (
+    initialValue?: unknown,
+): useRefManager.RefManager<unknown> => {
+    const isInEffectRef = useRef(false);
 
     const effectCallbackToCleanup = useConst(() => {
         return new Map<
-            useRefManager.EffectCallback<_Value>,
+            useRefManager.EffectCallback<unknown>,
             useRefManager.EffectCleanup
         >();
     });
 
-    const notifySubscribedRefs = useFunction((value: _Value | null) => {
-        for (const [subscribedRef] of subscribedRefs) {
-            if (isRef(subscribedRef)) {
-                subscribedRef.current = value;
-                continue;
-            }
-
-            subscribedRef(value);
-        }
-    });
-
-    const notifyEffects = useFunction((value: _Value | null) => {
-        if (value === null) {
-            for (const [callback, cleanup] of effectCallbackToCleanup) {
-                cleanup();
-                effectCallbackToCleanup.set(callback, noop);
-            }
-
-            return;
-        }
-
-        for (const [callback] of effectCallbackToCleanup) {
-            effectCallbackToCleanup.set(callback, callback(value) || noop);
-        }
-    });
-
-    const update = useFunction((value: _Value | null) => {
-        notifySubscribedRefs(value);
-        notifyEffects(value);
-    });
-
     const manager = useConst(() => {
-        const rawManager: useRefManager.RefManager<_Value> = {
+        const throwIfRefChanged = (callback: VoidFunction) => {
+            isInEffectRef.current = true;
+
+            callback();
+
+            isInEffectRef.current = false;
+        };
+
+        const rawManager: useRefManager.RefManager<unknown> = {
             current: initialValue,
 
             effect: (callback) => {
-                const value = rawManager.current;
-
-                effectCallbackToCleanup.set(
-                    callback,
-                    value === null ? noop : (callback(value) || noop),
-                );
+                throwIfRefChanged(() => {
+                    effectCallbackToCleanup.set(
+                        callback,
+                        callback(rawManager.current) ?? noop,
+                    );
+                });
 
                 return () => {
-                    effectCallbackToCleanup.get(callback)?.();
-                    effectCallbackToCleanup.delete(callback);
+                    throwIfRefChanged(() => {
+                        effectCallbackToCleanup.get(callback)?.();
+                        effectCallbackToCleanup.delete(callback);
+                    });
                 };
             },
         };
 
-        initialSubscribedRefs.filter(Boolean).forEach((refToSubscribe) => {
-            subscribedRefs.set(refToSubscribe, rawManager.current);
-        });
-
-        notifySubscribedRefs(rawManager.current);
+        const notifyEffects = (value: unknown) => {
+            throwIfRefChanged(() => {
+                for (const [callback, cleanup] of effectCallbackToCleanup) {
+                    cleanup();
+                    effectCallbackToCleanup.set(callback, callback(value) ?? noop);
+                }
+            });
+        };
 
         const proxy = new Proxy(rawManager, {
-            set: (target, propertyKey, value: _Value | null, receiver) => {
+            set: (target, propertyKey, value: unknown, receiver) => {
                 if (propertyKey === 'current') {
+                    invariant(
+                        !isInEffectRef.current,
+                        'Cannot change value of ref manager during effect',
+                    );
+
                     target.current = value;
 
-                    update(value);
+                    notifyEffects(value);
 
                     return true;
                 }
@@ -196,11 +166,29 @@ export const useRefManager = <_Value>(...[
         return proxy;
     });
 
-    useUnmountEffect(() => {
-        effectCallbackToCleanup.forEach((cleanup) => cleanup());
-        effectCallbackToCleanup.clear();
-        subscribedRefs.clear();
-    });
-
     return manager;
 };
+
+// const refTest1 = useRefManager();
+// refTest1.current;
+// //        ^?
+
+// const refTest2 = useRefManager<number>();
+// refTest2.current;
+// //        ^?
+
+// const refTest3 = useRefManager(2);
+// refTest3.current;
+// //        ^?
+
+// const refTest4 = useRefManager<number>(2);
+// refTest4.current;
+// //        ^?
+
+// const refTest5 = useRefManager<number>(null);
+// refTest5.current;
+// //        ^?
+
+// const refTest6 = useRefManager<number>(undefined);
+// refTest6.current;
+// //        ^?

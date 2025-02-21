@@ -20,7 +20,7 @@ const containsRelatedTarget = (event: FocusEvent) => {
  * Tracks if the container element is focused within.
  */
 export const useIsFocusedWithin = (
-    container: useRefManager.RefManager<HTMLElement>,
+    container: useRefManager.NullableRefManager<HTMLElement>,
 ) => {
     const initialValue = (
         !!container.current?.contains(document.activeElement)

@@ -17,7 +17,7 @@ export namespace useMutationObserver {
  * callback when changes occur.
  */
 export const useMutationObserver = (
-    elementRef: useRefManager.RefManager<HTMLElement>,
+    elementRef: useRefManager.NullableRefManager<HTMLElement>,
     callback: SharedMutationObserver.StoreCallback,
     options: useMutationObserver.Options,
 ) => {
@@ -26,6 +26,8 @@ export const useMutationObserver = (
 
     useLayoutEffect(() => {
         return elementRef.effect((node) => {
+            if (!node) return;
+
             observer.observe(node, _callback, _options);
 
             return () => {

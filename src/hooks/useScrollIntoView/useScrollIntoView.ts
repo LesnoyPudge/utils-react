@@ -28,7 +28,7 @@ export namespace useScrollIntoView {
     };
 
     export type Args = [
-        elementRef: useRefManager.RefManager<HTMLElement>,
+        elementRef: useRefManager.NullableRefManager<HTMLElement>,
         options?: Options,
     ];
 

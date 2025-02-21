@@ -39,28 +39,20 @@ describe('useRefManager', () => {
             return ref;
         }, { initialProps: { value: null } as { value: number | null } });
 
-        expect(spyEffectOn).toBeCalledTimes(0);
+        expect(spyEffectOn).toBeCalledTimes(1);
+        expect(spyEffectOn).lastCalledWith(null);
         expect(spyEffectOff).toBeCalledTimes(0);
 
         hook.rerender({ value: 1 });
 
-        expect(spyEffectOn).toBeCalledTimes(1);
-        expect(spyEffectOn).lastCalledWith(1);
-        expect(spyEffectOff).toBeCalledTimes(0);
-
-        hook.rerender({ value: null });
-
-        expect(spyEffectOn).toBeCalledTimes(1);
-        expect(spyEffectOff).toBeCalledTimes(1);
-
-        hook.rerender({ value: 2 });
-
         expect(spyEffectOn).toBeCalledTimes(2);
-        expect(spyEffectOn).lastCalledWith(2);
+        expect(spyEffectOn).lastCalledWith(1);
         expect(spyEffectOff).toBeCalledTimes(1);
 
         hook.unmount();
 
+        expect(spyEffectOn).toBeCalledTimes(2);
+        expect(spyEffectOn).lastCalledWith(1);
         expect(spyEffectOff).toBeCalledTimes(2);
     });
 });

@@ -2,13 +2,13 @@
     "extends": "./tsconfig.react.json",
     "include": [
         "./src/**/*.test.*",
-        "testUtils/**/*",
+        "./testUtils/**/*",
         "**/__tests__/**/*",
         // "node_modules/@types",
     ],
     "exclude": [],
     "compilerOptions": {
-        "sourceMap": true,
+        // "sourceMap": true,
         "types": [
             "@lesnoypudge/types-global-base",
             "@lesnoypudge/types-global-web",

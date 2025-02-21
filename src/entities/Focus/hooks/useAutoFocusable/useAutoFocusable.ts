@@ -11,10 +11,12 @@ const FOCUS_AUTO = 'data-autofocus-inside';
  */
 export const useAutoFocusable = (
     isEnabled: boolean,
-    elementRef?: useRefManager.RefManager<HTMLElement>,
+    elementRef?: useRefManager.NullableRefManager<HTMLElement>,
 ) => {
     useLayoutEffect(() => {
         return elementRef?.effect((node) => {
+            if (!node) return;
+
             node.setAttribute(FOCUS_AUTO, String(isEnabled));
         });
     }, [elementRef, isEnabled]);

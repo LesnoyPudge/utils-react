@@ -23,7 +23,7 @@ export namespace useEventListener {
         _ProvidedType extends ElementUnion,
     > = (
         _ProvidedType extends HTMLElement
-            ? useRefManager.RefManager<_ProvidedType>
+            ? useRefManager.NullableRefManager<_ProvidedType>
             : _ProvidedType
     );
 }
@@ -47,6 +47,8 @@ export const useEventListener = <
     useEffect(() => {
         if ('effect' in element) {
             return element.effect((node) => {
+                if (!node) return;
+
                 return addEventListener(
                     node as _ProvidedType,
                     eventName,

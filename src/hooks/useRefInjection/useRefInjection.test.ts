@@ -22,5 +22,6 @@ describe('useRefInjection', () => {
 
         expect(stateRef.current).toBe(newValue);
         expect(spy).toBeCalledTimes(1);
+        expect(spy).lastCalledWith(newValue);
     });
 });

@@ -13,7 +13,7 @@ const observer = new SharedResizeObserver();
  * The callback is triggered when the element's size changes.
  */
 export const useResizeObserver = (
-    elementRef: useRefManager.RefManager<HTMLElement>,
+    elementRef: useRefManager.NullableRefManager<HTMLElement>,
     callback: (entry: ResizeObserverEntry) => void,
     options?: ResizeObserverOptions,
 ) => {
@@ -22,6 +22,8 @@ export const useResizeObserver = (
 
     useLayoutEffect(() => {
         return elementRef.effect((node) => {
+            if (!node) return;
+
             observer.observe(node, _callback, _options);
 
             return () => {

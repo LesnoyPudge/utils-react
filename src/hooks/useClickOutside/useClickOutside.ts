@@ -8,7 +8,7 @@ import { useEventListener } from '@hooks/useEventListener';
  * the provided handler function when the click occurs.
  */
 export const useClickOutside = (
-    elementRef: useRefManager.RefManager<HTMLElement>,
+    elementRef: useRefManager.NullableRefManager<HTMLElement>,
     handler: (e: MouseEvent) => void,
 ) => {
     useEventListener(document, 'mousedown', (e: MouseEvent) => {

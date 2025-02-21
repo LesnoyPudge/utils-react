@@ -12,7 +12,7 @@ const observer = new SharedIntersectionObserver();
  * Tracks the intersection of an element with the viewport or another element.
  */
 export const useIntersectionObserver = (
-    elementRef: useRefManager.RefManager<HTMLElement>,
+    elementRef: useRefManager.NullableRefManager<HTMLElement>,
     callback: (entry: IntersectionObserverEntry) => void,
     options?: IntersectionObserverInit,
 ) => {
@@ -21,6 +21,8 @@ export const useIntersectionObserver = (
 
     useLayoutEffect(() => {
         return elementRef.effect((node) => {
+            if (!node) return;
+
             observer.observe(node, _callback, _options);
 
             return () => {
