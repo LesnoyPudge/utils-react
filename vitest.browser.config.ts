@@ -26,8 +26,8 @@ export const browserConfig = {
             screenshotFailures: false,
             instances: [
                 { browser: 'chromium' },
-                // { browser: 'firefox' },
-                // { browser: 'webkit' },
+                { browser: 'firefox' },
+                { browser: 'webkit' },
             ],
         },
     },

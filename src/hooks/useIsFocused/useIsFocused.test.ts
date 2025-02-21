@@ -5,15 +5,27 @@ import { page, userEvent } from '@vitest/browser/context';
 
 
 
+const expectToBeFocused = (element: HTMLElement) => {
+    expect(element).toBe(document.activeElement);
+};
+
+const expectBodyToBeFocused = () => {
+    expectToBeFocused(document.body);
+};
+
 const createElements = () => {
     const wrapper = document.createElement('div');
-    const button = document.createElement('button');
+    // webkit cant focus on actual button :)
+    const button = document.createElement('div');
 
     wrapper.tabIndex = 0;
     wrapper.dataset.testid = 'wrapper';
-    wrapper.style.padding = '10px';
     wrapper.style.margin = '10px';
+    wrapper.textContent = 'space for click';
+
+    button.tabIndex = 0;
     button.textContent = 'test';
+    button.style.margin = '10px';
     button.dataset.testid = 'button';
 
     wrapper.append(button);
@@ -29,6 +41,7 @@ const createElements = () => {
         buttonLoc,
         resetFocus: async () => {
             await act(async () => await userEvent.click(document.body));
+            expectBodyToBeFocused();
         },
         cleanup: () => {
             wrapper.remove();
@@ -56,20 +69,13 @@ const createHook = (
     };
 };
 
-const expectBodyToBeFocused = () => {
-    expect(document.body).toBe(document.activeElement);
-};
-
-const expectToBeFocused = (element: HTMLElement) => {
-    expect(element).toBe(document.activeElement);
-};
-
 const tab = async () => {
     await act(async () => await userEvent.tab());
 };
 
 const focus = async (element: HTMLElement) => {
     await act(async () => await userEvent.click(element));
+    expectToBeFocused(element);
 };
 
 describe('useIsFocused', () => {
@@ -81,15 +87,13 @@ describe('useIsFocused', () => {
 
         expectBodyToBeFocused();
 
+        await focus(button);
+
         expectFocusState(false);
 
         await focus(wrapper);
 
         expectFocusState(true);
-
-        await focus(button);
-
-        expectFocusState(false);
 
         await resetFocus();
 
