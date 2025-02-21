@@ -7,5 +7,6 @@ export * from './isRef';
 export * from './isSSR';
 export * from './lazyLoad';
 export * from './mergeRefs';
+export * from './mutate';
 export * from './renderFunction';
 export * from './withDisplayName';

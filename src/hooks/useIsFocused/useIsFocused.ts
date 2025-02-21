@@ -5,21 +5,9 @@ import { combinedFunction, noop } from '@lesnoypudge/utils';
 import { FocusVisibleManager } from '@lesnoypudge/utils-web';
 import { useFunction } from '@hooks/useFunction';
 import { useConst } from '@hooks/useConst';
+import { mutate } from '@utils/mutate';
 
 
-
-// escape hatch for react compiler
-const mutate = <
-    _Object extends object,
-    _Key extends keyof _Object,
-    _Value extends _Object[_Key],
->(
-    object: _Object,
-    key: _Key,
-    value: _Value,
-) => {
-    object[key] = value;
-};
 
 export namespace useIsFocused {
     export type Options = {
@@ -54,12 +42,11 @@ export namespace useIsFocused {
     };
 }
 
-
 /**
  * Tracks element's configurable focus state.
  */
 export const useIsFocused = (
-    elementRef: useRefManager.NullableRefManager<Element>,
+    elementRef: useRefManager.NullableRefManager<HTMLElement>,
     options?: useIsFocused.Options,
 ): useIsFocused.Return => {
     const {
@@ -120,7 +107,6 @@ export const useIsFocused = (
     ): boolean => {
         const observable = elementRef.current;
         if (!observable) return false;
-        if (!focusManager.isValidFocusTarget(element)) return false;
 
         const isIn = direction === 'in';
         const isSame = observable === element;
@@ -129,6 +115,12 @@ export const useIsFocused = (
                 ? !isFocusedRef.current
                 : isFocusedRef.current
         );
+
+        const shouldResetFocus = (
+            isFocusedRef.current
+            && !focusManager.isValidFocusTarget(element)
+        );
+        if (shouldResetFocus) return true;
 
         if (eventTypeToFlag.visible) {
             if (isIn) {
@@ -139,7 +131,10 @@ export const useIsFocused = (
         }
 
         if (eventTypeToFlag.visibleWithin) {
-            const isContains = observable.contains(element);
+            const isContains = (
+                focusManager.isValidFocusTarget(element)
+                && observable.contains(element)
+            );
 
             if (isIn) {
                 return shouldUpdateState && isContains;
@@ -178,6 +173,8 @@ export const useIsFocused = (
     });
 
     useEffect(() => {
+        focusManager.start();
+
         return combinedFunction(
             handleVisibleEvents(),
             focusManager.clean,

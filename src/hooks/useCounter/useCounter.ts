@@ -1,7 +1,6 @@
 import { useSyncExternalStore } from 'react';
 import { useConst } from '@hooks/useConst';
 import { Counter, pick } from '@lesnoypudge/utils';
-import { T } from '@lesnoypudge/types-utils-base/namespace';
 
 
 

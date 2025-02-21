@@ -1,5 +1,5 @@
 import { T } from '@lesnoypudge/types-utils-base/namespace';
-import { autoBind, catchErrorAsync, inRange, invariant, never, sleep } from '@lesnoypudge/utils';
+import { autoBind, catchErrorAsync, inRange, invariant, sleep } from '@lesnoypudge/utils';
 import { ComponentType, lazy, LazyExoticComponent } from 'react';
 
 
