@@ -1,9 +1,9 @@
-import { ComponentProps, FC } from 'react';
+import { FC, PropsWithChildren } from 'react';
 
 
 
 export namespace AccessiblyHidden {
-    export type Props = ComponentProps<'div'>;
+    export type Props = PropsWithChildren;
 };
 
 /**
@@ -11,13 +11,9 @@ export namespace AccessiblyHidden {
  */
 export const AccessiblyHidden: FC<AccessiblyHidden.Props> = ({
     children,
-    ...rest
 }) => {
     return (
-        <div
-            aria-hidden
-            {...rest}
-        >
+        <div aria-hidden>
             {children}
         </div>
     );
