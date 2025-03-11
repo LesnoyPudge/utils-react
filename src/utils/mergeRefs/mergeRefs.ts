@@ -10,10 +10,15 @@ export namespace mergeRefs {
         | null
         | undefined
     );
+
+    export type Return<
+        _Element = HTMLElement,
+    > = (node: _Element | null) => void;
 }
 
 /**
  * Merges multiple refs into one.
+ *
  * When the returned function is called, it assigns the node to all refs.
  */
 export const mergeRefs = <

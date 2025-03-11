@@ -21,6 +21,7 @@ export * from './useMap';
 export * from './useMemoCompare';
 export * from './useMemoDeep';
 export * from './useMemoShallow';
+export * from './useMergeRefs';
 export * from './useMountedWrapper';
 export * from './useMountEffect';
 export * from './useMutationObserver';
