@@ -10,6 +10,7 @@ export const usePrevious = <_Value>(
 ): _Value | undefined => {
     const prevRef = useRef<_Value>();
 
+    // assign current value for next render
     useEffect(() => {
         prevRef.current = value;
     });

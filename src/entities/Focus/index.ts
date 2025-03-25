@@ -1,6 +1,6 @@
 import * as c1 from './components';
 import * as c2 from './hooks';
-
+import * as c3 from './utils';
 
 
 export namespace Focus {
@@ -11,4 +11,6 @@ export namespace Focus {
     export import useAutoFocusable = c2.useAutoFocusable;
 
     export import useMoveFocusInside = c2.useMoveFocusInside;
+
+    export const { moveFocusInside } = c3;
 }

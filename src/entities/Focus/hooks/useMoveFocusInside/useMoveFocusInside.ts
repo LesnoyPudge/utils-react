@@ -1,16 +1,15 @@
 import { useRefManager } from '@hooks/useRefManager';
 import { useLayoutEffect } from 'react';
 import { useAutoFocusable } from '../useAutoFocusable';
-// eslint-disable-next-line import-x/no-extraneous-dependencies
-import { moveFocusInside as moveFocusInsideLib, focusInside } from 'focus-lock';
 import { useFunction } from '@hooks/useFunction';
-
+import { moveFocusInside } from '../../utils';
 
 
 export namespace useMoveFocusInside {
     export type Options = {
         containerRef: useRefManager.NullableRefManager<HTMLElement>;
         isEnabled: boolean;
+        preventScroll?: boolean;
     };
 
     export type Return = {
@@ -21,21 +20,14 @@ export namespace useMoveFocusInside {
 export const useMoveFocusInside = ({
     containerRef,
     isEnabled,
+    preventScroll,
 }: useMoveFocusInside.Options): useMoveFocusInside.Return => {
     useAutoFocusable(isEnabled, containerRef);
 
-    const moveFocusInside = useFunction((): boolean => {
-        if (!containerRef.current) return false;
-        if (focusInside(containerRef.current)) return false;
-
-        moveFocusInsideLib(
-            containerRef.current,
-            // @ts-expect-error null should(???) be valid arg https://github.com/theKashey/focus-lock/blob/master/src/focusSolver.ts#L30
-            document.activeElement,
-            // { focusOptions: { preventScroll: true } },
-        );
-
-        return true;
+    const _moveFocusInside = useFunction((): boolean => {
+        return moveFocusInside(containerRef.current, {
+            preventScroll,
+        });
     });
 
     // https://github.com/theKashey/react-focus-lock/blob/master/src/MoveFocusInside.js#L7
@@ -43,11 +35,11 @@ export const useMoveFocusInside = ({
         if (!isEnabled) return;
 
         return containerRef.effect(() => {
-            moveFocusInside();
+            _moveFocusInside();
         });
-    }, [containerRef, isEnabled, moveFocusInside]);
+    }, [containerRef, isEnabled, _moveFocusInside]);
 
     return {
-        moveFocusInside,
+        moveFocusInside: _moveFocusInside,
     };
 };
