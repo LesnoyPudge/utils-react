@@ -9,10 +9,10 @@ describe('Iterate', () => {
 
         const screen = page.render((
             <div data-testid='wrapper'>
-                <Iterate items={items}>
+                <Iterate items={items} getKey={(item) => item}>
                     {(item) => {
                         return (
-                            <div key={item}>{item}</div>
+                            <div>{item}</div>
                         );
                     }}
                 </Iterate>
