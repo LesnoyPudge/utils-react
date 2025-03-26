@@ -4,7 +4,7 @@ import {
     Context as ContextFluent,
 } from '@fluentui/react-context-selector';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
-import { ContextSelectable } from '@entities/ContextSelectable';
+import { ContextSelectable } from '@entities/ContextSelectable/ContextSelectable';
 import { useConst } from '@hooks/useConst';
 import { useFunction } from '@hooks/useFunction';
 import { useMemo, useRef } from 'react';

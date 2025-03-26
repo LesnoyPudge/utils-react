@@ -5,7 +5,7 @@ import {
     Context as ContextFluent,
 } from '@fluentui/react-context-selector';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
-import { ContextSelectable } from '@entities/ContextSelectable';
+import { ContextSelectable } from '@entities/ContextSelectable/ContextSelectable';
 import { useFunction } from '@hooks/useFunction';
 import { useContext, useRef } from 'react';
 
@@ -34,6 +34,7 @@ export const useContextSelector = <
         _Value,
         _SelectedValue
     > = defaultSelector,
+    equalityFn = shallowEqual,
 ): _SelectedValue => {
     const contextValue = useContext(
         context,
@@ -46,7 +47,7 @@ export const useContextSelector = <
     const stableSelector = useFunction(() => {
         const selected = selector(contextValue.value.current);
 
-        if (shallowEqual(selected, prevSelectedRef.current)) {
+        if (equalityFn(selected, prevSelectedRef.current)) {
             return prevSelectedRef.current as _SelectedValue;
         }
 

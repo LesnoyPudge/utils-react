@@ -1,4 +1,4 @@
-import { ContextSelectable } from '@entities/ContextSelectable';
+import { ContextSelectable } from '@entities/ContextSelectable/ContextSelectable';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
 import { RT } from '@lesnoypudge/types-utils-react/namespace';
 import { renderFunction } from '@utils/renderFunction';
