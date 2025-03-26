@@ -3,10 +3,10 @@ import { createLocalStorageHook } from './createLocalStorageHook';
 
 
 
+beforeEach(() => localStorage.clear());
+
 describe('createLocalStorageHook', () => {
     it('should rerender on value change', () => {
-        localStorage.clear();
-
         const useLocalStorage = createLocalStorageHook<{
             value: number;
         }>();
@@ -18,5 +18,18 @@ describe('createLocalStorageHook', () => {
         act(() => localStorage.setItem('value', '5'));
 
         expect(hook.result.current.value.value).toBe(5);
+    });
+
+    it('should provide default value', () => {
+        const useLocalStorage = createLocalStorageHook<{
+            value: number;
+        }>();
+
+        const hook = renderHook(() => useLocalStorage('value', 5));
+        const result = hook.result.current.value.value;
+
+        expect(result).toBe(5);
+
+        expectTypeOf(result).toBeNumber();
     });
 });

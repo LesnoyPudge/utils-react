@@ -36,13 +36,13 @@ export const createLocalStorageHook = <
 
     const useLocalStorage = <
         _Key extends T.StringKeyOf<_Schema>,
-        _DefaultValue extends _Schema[_Key],
+        _DefaultValue extends _Schema[_Key] | undefined,
     >(
         key: _Key,
         defaultValue?: _DefaultValue,
     ): createLocalStorageHook.useLocalStorage.Return<
         _Key,
-        _Schema[_Key] | _DefaultValue | undefined
+        _Schema[_Key] | _DefaultValue
     > => {
         const _key = useConst(() => key);
         const defaultValueRef = useLatest(defaultValue);
@@ -98,7 +98,7 @@ export const createLocalStorageHook = <
             [_key]: resultObject,
         } as createLocalStorageHook.useLocalStorage.Return<
             _Key,
-            _Schema[_Key] | _DefaultValue | undefined
+            _Schema[_Key] | _DefaultValue
         >;
     };
 
