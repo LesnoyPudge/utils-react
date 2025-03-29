@@ -1,7 +1,7 @@
 {
     "name": "@lesnoypudge/utils-react",
     "description": "lesnoypudge's utils-react",
-    "version": "17.1.1",
+    "version": "17.1.2",
     "keywords": [
         "lesnoypudge",
         "utils",
@@ -13,6 +13,7 @@
     "files": [
         "build"
     ],
+    "sideEffects": false,
     "scripts": {
         "lint:check": "eslint",
         "lint:fix": "eslint --fix",
