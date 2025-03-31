@@ -1,61 +1,13 @@
-import { T } from '@lesnoypudge/types-utils-base/namespace';
-import { autoBind, catchErrorAsync, inRange, invariant, sleep } from '@lesnoypudge/utils';
-import { ComponentType, lazy, LazyExoticComponent } from 'react';
+import {
+    autoBind,
+    inRange,
+    invariant,
+    sleep,
+} from '@lesnoypudge/utils';
+import { modifiedReactLazy, asyncRetry } from './utils';
+import { Types } from './types';
 
 
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type BaseComponent = ComponentType<any>;
-
-type WithDefault<_Component extends BaseComponent> = {
-    default: _Component;
-};
-
-type ComponentPromise<_Component extends BaseComponent> = Promise<
-    WithDefault<_Component>
->;
-
-namespace withDelay {
-    export type Options = {
-        delay?: number;
-        isDev?: boolean;
-    };
-}
-
-const defaultBackoffFn = (count: number) => {
-    return count * 2_000;
-};
-
-namespace asyncRetry {
-    export type Options = {
-        maxTriesCount?: number;
-        backoffFn?: (count: number) => number;
-    };
-}
-
-const asyncRetry = async <_Result,>(
-    fn: () => Promise<_Result>,
-    options?: asyncRetry.Options,
-) => {
-    const {
-        backoffFn = defaultBackoffFn,
-        maxTriesCount = 5,
-    } = options ?? {};
-
-    let result: _Result | undefined;
-
-    for (let count = 0; count < maxTriesCount; count++) {
-        await sleep(backoffFn(count));
-
-        const [res] = await catchErrorAsync(fn);
-        if (res) {
-            result = res;
-            count = maxTriesCount;
-        }
-    }
-
-    return result;
-};
 
 class LazyLoad {
     constructor() {
@@ -68,35 +20,70 @@ class LazyLoad {
      * Loading is resolved when all components is loaded.
      * Throws error if called component is failed to load.
      */
-    createPreloadGroup(options?: asyncRetry.Options) {
-        const promises: (() => ComponentPromise<BaseComponent>)[] = [];
-        let result: (WithDefault<BaseComponent> | null)[] = [];
+    createPreloadGroup(options?: Types.asyncRetry.Options) {
+        const promiseFactoryList: Types.PromiseModuleFactory<
+            Types.BaseComponent
+        >[] = [];
 
-        const withPreloadGroup = <_Component extends BaseComponent>(
-            fn: () => ComponentPromise<_Component>,
-        ): () => ComponentPromise<_Component> => {
-            const index = promises.length;
-            result[index] = null;
-            promises.push(fn);
+        const resolvedModules: (
+            Types.Module<Types.BaseComponent> | null
+        )[] = [];
 
-            return async () => {
-                const component = result[index];
-                if (component) return component as WithDefault<_Component>;
+        const promisesInWork: (
+            Promise<Types.Module<Types.BaseComponent> | null> | null
+        )[] = [];
 
-                result = await Promise.all(
-                    promises.map(async (promise, promiseIndex) => {
-                        const alreadyLoaded = result[promiseIndex];
+        const withPreloadGroup = <_Component extends Types.BaseComponent>(
+            factory: Types.PromiseModuleFactory<_Component>,
+        ): Types.ModuleOrPromiseModuleFactory<_Component> => {
+            const index = promiseFactoryList.length;
+
+            resolvedModules[index] = null;
+            promiseFactoryList[index] = factory;
+
+            const moduleOrPromiseModuleFactory = () => {
+                const module = resolvedModules[index];
+                if (module) return module as Types.Module<_Component>;
+
+                const promisesToAwait = promiseFactoryList.map(
+                    async (promiseFactory, index) => {
+                        const alreadyLoaded = resolvedModules[index];
                         if (alreadyLoaded) return alreadyLoaded;
 
-                        return await asyncRetry(promise, options) ?? null;
-                    }),
+                        const alreadyResolving = promisesInWork[index];
+                        if (alreadyResolving) return alreadyResolving;
+
+                        const modulePromise = asyncRetry(
+                            promiseFactory,
+                            options,
+                        ).then((v) => v ?? null);
+
+                        promisesInWork[index] = modulePromise;
+
+                        return await modulePromise;
+                    },
                 );
 
-                const loadedComponent = result[index];
-                invariant(loadedComponent);
+                return new Promise<Types.Module<_Component>>((res, rej) => {
+                    const asyncBody = async () => {
+                        const results = await Promise.all(promisesToAwait);
 
-                return loadedComponent as WithDefault<_Component>;
+                        results.forEach((result, index) => {
+                            resolvedModules[index] = result;
+                            promisesInWork[index] = null;
+                        });
+
+                        const loadedComponent = resolvedModules[index];
+                        invariant(loadedComponent, 'Failed to lazy load.');
+
+                        return loadedComponent as Types.Module<_Component>;
+                    };
+
+                    asyncBody().then(res).catch(rej);
+                }) as Types.PromiseModule<_Component>;
             };
+
+            return moduleOrPromiseModuleFactory as Types.ModuleOrPromiseModuleFactory<_Component>;
         };
 
         return {
@@ -110,41 +97,44 @@ class LazyLoad {
      * Loading is resolved as soon as called component is loaded.
      * Other components is loaded in background.
      */
-    createAsyncLoadGroup(options?: asyncRetry.Options) {
-        const factories: (() => ComponentPromise<BaseComponent>)[] = [];
-        const promises: (
-            Promise<WithDefault<BaseComponent>> | null
+    createAsyncLoadGroup(options?: Types.asyncRetry.Options) {
+        const promiseFactoryList: Types.PromiseModuleFactory<
+            Types.BaseComponent
+        >[] = [];
+
+        const resolvedModules: (
+            Types.Module<Types.BaseComponent> | null
         )[] = [];
-        const result: (WithDefault<BaseComponent> | null)[] = [];
 
-        const withAsyncLoadGroup = <_Component extends BaseComponent>(
-            factory: () => ComponentPromise<_Component>,
-        ): () => ComponentPromise<_Component> => {
-            const currentIndex = factories.length;
+        const promises: (
+            Promise<Types.Module<Types.BaseComponent> | null> | null
+        )[] = [];
 
-            result[currentIndex] = null;
-            factories.push(factory);
+        const withAsyncLoadGroup = <_Component extends Types.BaseComponent>(
+            factory: Types.PromiseModuleFactory<_Component>,
+        ): Types.ModuleOrPromiseModuleFactory<_Component> => {
+            const currentIndex = promiseFactoryList.length;
 
-            return () => {
-                const component = result[currentIndex];
-                if (component) return Promise.resolve(
-                    component as WithDefault<_Component>,
-                );
+            resolvedModules[currentIndex] = null;
+            promiseFactoryList[currentIndex] = factory;
 
-                factories.forEach((_factory, index) => {
-                    if (result[index]) return;
+            const moduleOrPromiseModuleFactory = () => {
+                const module = resolvedModules[currentIndex];
+                if (module) return module;
+
+                promiseFactoryList.forEach((promiseModuleFactory, index) => {
+                    if (resolvedModules[index]) return;
                     if (promises[index]) return;
 
                     const promise = asyncRetry(
-                        _factory,
+                        promiseModuleFactory,
                         options,
                     ).then((maybeComponent) => {
-                        if (result[index]) return result[index];
-                        invariant(maybeComponent);
+                        if (!maybeComponent) return null;
 
-                        result[index] = maybeComponent;
+                        resolvedModules[index] = maybeComponent;
 
-                        return maybeComponent;
+                        return maybeComponent ?? null;
                     }).finally(() => {
                         promises[index] = null;
                     });
@@ -152,11 +142,21 @@ class LazyLoad {
                     promises[index] = promise;
                 });
 
-                const promise = promises[currentIndex];
-                invariant(promise);
+                return new Promise<
+                    Types.Module<Types.BaseComponent>
+                >((res, rej) => {
+                    const asyncBody = async () => {
+                        const module = await promises[currentIndex];
+                        invariant(module);
 
-                return promise as Promise<WithDefault<_Component>>;
+                        return module;
+                    };
+
+                    asyncBody().then(res).catch(rej);
+                });
             };
+
+            return moduleOrPromiseModuleFactory as Types.ModuleOrPromiseModuleFactory<_Component>;
         };
 
         return {
@@ -168,14 +168,14 @@ class LazyLoad {
      * Wraps a component loading function to add additional
      * delay before loading in dev mode.
      */
-    withDelay<_Component extends BaseComponent>(
-        fn: () => ComponentPromise<_Component>,
-        options?: withDelay.Options,
+    withDelay<_Component extends Types.BaseComponent>(
+        factory: Types.PromiseModuleFactory<_Component>,
+        options?: Types.withDelay.Options,
     ) {
         return async () => {
-            const result = await fn();
+            const result = await factory();
 
-            if (options?.isDev) {
+            if (options?.enable) {
                 await sleep(options.delay ?? inRange(300, 500));
             }
 
@@ -191,141 +191,34 @@ class LazyLoad {
      * Source of React.lazy: https://github.com/facebook/react/blob/main/packages/react/src/ReactLazy.js
      * Abandoned (2019) pull request with similar solution: https://github.com/facebook/react/pull/15296
      */
-    modifiedReactLazy<_Component extends BaseComponent>(
-        factory: () => ComponentPromise<_Component>,
-    ): LazyExoticComponent<_Component> {
-        // different implementation (as component)
-        // const statuses = {
-        //     Uninitialized: 'Uninitialized',
-        //     Pending: 'Pending',
-        //     Resolved: 'Resolved',
-        //     Rejected: 'Rejected',
-        // };
-        // let status = statuses.Uninitialized;
-        // let Result: _Component | Error | undefined;
-        // let promise: ComponentPromise<_Component>;
-
-        // const LazyComponentWrapper = (props: ComponentProps<_Component>) => {
-        //     if (status === statuses.Uninitialized) {
-        //         promise = factory();
-
-        //         status = statuses.Pending;
-        //         Result = undefined;
-
-        //         void promise.then((value) => {
-        //             status = statuses.Resolved;
-        //             Result = value.default;
-        //         }, (error) => {
-        //             status = statuses.Rejected;
-        //             Result = (
-        //                 error instanceof Error
-        //                     ? error
-        //                     : new Error('Lazy-load failed')
-        //             );
-        //         });
-        //     }
-
-        //     if (status === statuses.Pending) {
-        //         // eslint-disable-next-line @typescript-eslint/only-throw-error
-        //         throw promise;
-        //     }
-
-        //     if (status === statuses.Resolved) {
-        //         if (Result === undefined) never();
-        //         if (Result instanceof Error) never();
-
-        //         return (
-        //             <Result {...props}/>
-        //         );
-        //     }
-
-        //     if (status === statuses.Rejected) {
-        //         if (!(Result instanceof Error)) never();
-        //         const error = Result;
-
-        //         setTimeout(() => {
-        //             if (status !== statuses.Rejected) return;
-
-        //             status = statuses.Uninitialized;
-        //             Result = undefined;
-        //         });
-
-        //         throw error;
-        //     }
-
-        //     never();
-        // };
-
-        // return LazyComponentWrapper;
-
-        const originalResult = lazy(factory) as (
-            LazyExoticComponent<_Component> & {
-                _payload: {
-                    _status: -1 | 0 | 1 | 2;
-                    _result: typeof factory | ReturnType<typeof factory>;
-                };
-                _init: T.AnyFunction;
-            }
-        );
-
-        const Uninitialized = -1;
-        const Rejected = 2;
-        let rejectedTimeoutId: number;
-
-        return {
-            ...originalResult,
-            // @ts-expect-error internals
-            _init: (...args: unknown[]) => {
-                if (originalResult._payload._status === Rejected) {
-                    clearTimeout(rejectedTimeoutId);
-
-                    // In case of rejection, react calls rejected component
-                    // multiple times (4?).
-                    // Since those calls are synchronous, we can mutate
-                    // lazy-load result in timeout, so that when it called
-                    // again it is treated as if it was just created.
-                    rejectedTimeoutId = setTimeout(() => {
-                        if (
-                            originalResult._payload._status !== Rejected
-                        ) return;
-
-                        originalResult._payload._status = Uninitialized;
-                        originalResult._payload._result = factory;
-                    });
-                }
-
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-                return originalResult._init(...args);
-            },
-        };
-    }
+    modifiedReactLazy = modifiedReactLazy;
 
     /**
      * Wrapper for basic lazy component.
      */
-    baseComponent<_Component extends BaseComponent>(
-        fn: () => ComponentPromise<_Component>,
-        options?: withDelay.Options,
+    baseComponent<_Component extends Types.BaseComponent>(
+        factory: Types.PromiseModuleFactory<_Component>,
+        options?: Types.withDelay.Options,
     ) {
-        return this.modifiedReactLazy(this.withDelay(fn, options));
+        return this.modifiedReactLazy(this.withDelay(factory, options));
     };
 
     /**
      * Creates predefined wrapper for preloaded components.
      */
     createBasePreloadedComponent(options?: {
-        delay?: withDelay.Options;
-        retry?: asyncRetry.Options;
+        delay?: Types.withDelay.Options;
+        retry?: Types.asyncRetry.Options;
     }) {
         const {
             withPreloadGroup,
         } = this.createPreloadGroup(options?.retry);
 
-        return <_Component extends BaseComponent>(
-            fn: () => ComponentPromise<_Component>,
+        return <_Component extends Types.BaseComponent>(
+            factory: Types.PromiseModuleFactory<_Component>,
         ) => {
             return this.modifiedReactLazy(withPreloadGroup(
-                this.withDelay(fn, options?.delay),
+                this.withDelay(factory, options?.delay),
             ));
         };
     };
@@ -334,18 +227,18 @@ class LazyLoad {
      * Creates predefined wrapper for async components.
      */
     createBaseAsyncLoadedComponent(options?: {
-        delay?: withDelay.Options;
-        retry?: asyncRetry.Options;
+        delay?: Types.withDelay.Options;
+        retry?: Types.asyncRetry.Options;
     }) {
         const {
             withAsyncLoadGroup,
         } = this.createAsyncLoadGroup(options?.retry);
 
-        return <_Component extends BaseComponent>(
-            fn: () => ComponentPromise<_Component>,
+        return <_Component extends Types.BaseComponent>(
+            factory: Types.PromiseModuleFactory<_Component>,
         ) => {
             return this.modifiedReactLazy(withAsyncLoadGroup(
-                this.withDelay(fn, options?.delay),
+                this.withDelay(factory, options?.delay),
             ));
         };
     };

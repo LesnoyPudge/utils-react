@@ -11,6 +11,36 @@ vi.useFakeTimers();
 
 describe('lazyLoad', () => {
     describe('modifiedReactLazy', () => {
+        it('should load component', async () => {
+            const errorSpy = vi.fn();
+            const componentSpy = vi.fn().mockResolvedValue({
+                default: () => <div>Component1</div>,
+            });
+
+            const FallbackSpy = vi.fn(() => null);
+
+            const LazyComponent = lazyLoad.modifiedReactLazy(componentSpy);
+
+            expect(componentSpy).toBeCalledTimes(0);
+
+            const Test1 = () => (
+                <ErrorBoundary.Node onError={errorSpy}>
+                    <Suspense fallback={<FallbackSpy/>}>
+                        <LazyComponent/>
+                    </Suspense>
+                </ErrorBoundary.Node>
+            );
+
+            const screen1 = page.render(<Test1/>);
+            const firstComponentLocator1 = screen1.getByText('Component1');
+
+            await expect.element(firstComponentLocator1).toBeInTheDocument();
+
+            expect(componentSpy).toBeCalledTimes(1);
+            expect(FallbackSpy).toBeCalledTimes(1);
+            expect(errorSpy).toBeCalledTimes(0);
+        });
+
         it('should recover after component is failed to load', async () => {
             vi.spyOn(console, 'error').mockImplementation(noop);
 
@@ -52,10 +82,8 @@ describe('lazyLoad', () => {
 
             await expect.element(firstComponentLocator1).toBeInTheDocument();
 
-            await vi.waitFor(() => {
-                expect(componentSpy).toBeCalledTimes(2);
-                expect(errorSpy).toBeCalledTimes(1);
-            });
+            expect(componentSpy).toBeCalledTimes(2);
+            expect(errorSpy).toBeCalledTimes(1);
         });
     });
 
@@ -70,7 +98,7 @@ describe('lazyLoad', () => {
             const spy = vi.fn().mockResolvedValue(promiseValue);
 
             const lazyTrigger = lazyLoad.withDelay(spy, {
-                isDev: true, delay: DELAY,
+                enable: true, delay: DELAY,
             });
 
             const promise = lazyTrigger();
@@ -103,7 +131,7 @@ describe('lazyLoad', () => {
                 preloadGroup.withPreloadGroup(
                     lazyLoad.withDelay(
                         firstComponentSpy,
-                        { delay: SMALL_DELAY, isDev: true },
+                        { delay: SMALL_DELAY, enable: true },
                     ),
                 ),
             );
@@ -112,7 +140,7 @@ describe('lazyLoad', () => {
                 preloadGroup.withPreloadGroup(
                     lazyLoad.withDelay(
                         secondComponentSpy,
-                        { delay: BIG_DELAY, isDev: true },
+                        { delay: BIG_DELAY, enable: true },
                     ),
                 ),
             );
@@ -191,6 +219,61 @@ describe('lazyLoad', () => {
             expect(firstComponentSpy).toBeCalledTimes(1);
             expect(secondComponentSpy).toBeCalledTimes(1);
         });
+
+        it(`
+            already loaded (but not rendered) components should 
+            not trigger Suspense
+        `, async () => {
+            const component1Spy = vi.fn().mockResolvedValue({
+                default: () => <div>Component1</div>,
+            });
+            const component2Spy = vi.fn().mockResolvedValue({
+                default: () => <div>Component2</div>,
+            });
+
+            const FallbackSpy = vi.fn(() => null);
+
+            const { withPreloadGroup } = lazyLoad.createPreloadGroup();
+
+            const LazyComponent1 = lazyLoad.modifiedReactLazy(
+                withPreloadGroup(component1Spy),
+            );
+            const LazyComponent2 = lazyLoad.modifiedReactLazy(
+                withPreloadGroup(component2Spy),
+            );
+
+            const Test1 = () => (
+                <Suspense>
+                    <LazyComponent1/>
+                </Suspense>
+            );
+
+            const Test2 = () => (
+                <Suspense fallback={<FallbackSpy/>}>
+                    <LazyComponent2/>
+                </Suspense>
+            );
+
+            const screen = page.render(<Test1/>);
+            const firstComponentLocator = screen.getByText('Component1');
+            const secondComponentLocator = screen.getByText('Component2');
+
+            await vi.advanceTimersByTimeAsync(1_000);
+
+            await expect.element(
+                firstComponentLocator,
+            ).toBeInTheDocument();
+
+            screen.rerender(<Test2/>);
+
+            await expect.element(
+                secondComponentLocator,
+            ).toBeInTheDocument();
+
+            // at the moment of render, second component should be already
+            // loaded and not trigger fallback
+            expect(FallbackSpy).toBeCalledTimes(0);
+        });
     });
 
     describe('createAsyncLoadGroup', () => {
@@ -212,7 +295,7 @@ describe('lazyLoad', () => {
                 preloadGroup.withAsyncLoadGroup(
                     lazyLoad.withDelay(
                         firstComponentSpy,
-                        { delay: SMALL_DELAY, isDev: true },
+                        { delay: SMALL_DELAY, enable: true },
                     ),
                 ),
             );
@@ -221,7 +304,7 @@ describe('lazyLoad', () => {
                 preloadGroup.withAsyncLoadGroup(
                     lazyLoad.withDelay(
                         secondComponentSpy,
-                        { delay: BIG_DELAY, isDev: true },
+                        { delay: BIG_DELAY, enable: true },
                     ),
                 ),
             );
@@ -291,6 +374,61 @@ describe('lazyLoad', () => {
 
             expect(firstComponentSpy).toBeCalledTimes(1);
             expect(secondComponentSpy).toBeCalledTimes(1);
+        });
+
+        it(`
+            already loaded (but not rendered) components should 
+            not trigger Suspense
+        `, async () => {
+            const component1Spy = vi.fn().mockResolvedValue({
+                default: () => <div>Component1</div>,
+            });
+            const component2Spy = vi.fn().mockResolvedValue({
+                default: () => <div>Component2</div>,
+            });
+
+            const FallbackSpy = vi.fn(() => null);
+
+            const { withAsyncLoadGroup } = lazyLoad.createAsyncLoadGroup();
+
+            const LazyComponent1 = lazyLoad.modifiedReactLazy(
+                withAsyncLoadGroup(component1Spy),
+            );
+            const LazyComponent2 = lazyLoad.modifiedReactLazy(
+                withAsyncLoadGroup(component2Spy),
+            );
+
+            const Test1 = () => (
+                <Suspense>
+                    <LazyComponent1/>
+                </Suspense>
+            );
+
+            const Test2 = () => (
+                <Suspense fallback={<FallbackSpy/>}>
+                    <LazyComponent2/>
+                </Suspense>
+            );
+
+            const screen = page.render(<Test1/>);
+            const firstComponentLocator = screen.getByText('Component1');
+            const secondComponentLocator = screen.getByText('Component2');
+
+            await vi.advanceTimersByTimeAsync(1_000);
+
+            await expect.element(
+                firstComponentLocator,
+            ).toBeInTheDocument();
+
+            screen.rerender(<Test2/>);
+
+            await expect.element(
+                secondComponentLocator,
+            ).toBeInTheDocument();
+
+            // at the moment of render, second component should be already
+            // loaded and not trigger fallback
+            expect(FallbackSpy).toBeCalledTimes(0);
         });
     });
 });
