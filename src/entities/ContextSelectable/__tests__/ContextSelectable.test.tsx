@@ -16,19 +16,27 @@ describe('ContextSelectable', () => {
         expect(ContextSelectable.createContext).toBeDefined();
         expect(ContextSelectable.useProxy).toBeDefined();
         expect(ContextSelectable.useSelector).toBeDefined();
+        expect(ContextSelectable.createContextWithHooks).toBeDefined();
+        expect(ContextSelectable.createUseProxyHook).toBeDefined();
+        expect(ContextSelectable.createUseSelectorHook).toBeDefined();
 
-        expect(Object.keys(ContextSelectable).length).toBe(6);
+        expect(Object.keys(ContextSelectable).length).toBe(9);
     });
 
-    it('components that do not consume state should not update', async () => {
+    it(`
+        components whose selected state is unchanged should not rerender
+    `, async () => {
         const DELAY = 1_000;
         const wrapperSpy = vi.fn();
         const countSpy = vi.fn();
         const buttonSpy = vi.fn();
 
-        const CounterContext = ContextSelectable.createContext<
+        const {
+            CounterContext,
+            useCounterContextProxy,
+        } = ContextSelectable.createContextWithHooks<
             useCounter.Return
-        >();
+        >().withName('Counter');
 
         const Provider: FC<PropsWithChildren> = ({ children }) => {
             const counter = useCounter();
@@ -56,7 +64,7 @@ describe('ContextSelectable', () => {
             const {
                 increase: _,
                 count,
-            } = ContextSelectable.useProxy(CounterContext);
+            } = useCounterContextProxy();
 
             useEffect(countSpy);
 
@@ -70,7 +78,7 @@ describe('ContextSelectable', () => {
         const Button: FC = () => {
             const {
                 increase,
-            } = ContextSelectable.useProxy(CounterContext);
+            } = useCounterContextProxy();
 
             useEffect(buttonSpy);
 

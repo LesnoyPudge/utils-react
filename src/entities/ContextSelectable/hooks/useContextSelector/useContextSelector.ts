@@ -1,40 +1,38 @@
-import { shallowEqual } from '@lesnoypudge/utils';
 import {
     ContextValue as ContextValueFluent,
     useContextSelector as useContextSelectorFluent,
     Context as ContextFluent,
 } from '@fluentui/react-context-selector';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
-import { ContextSelectable } from '@entities/ContextSelectable/ContextSelectable';
 import { useFunction } from '@hooks/useFunction';
 import { useContext, useRef } from 'react';
+import { createContextSelectable } from '@entities/ContextSelectable/utils';
 
 
 
 const EMPTY_VALUE = {};
 
-const defaultSelector = <
-    _Value,
-    _Return = _Value,
->(v: _Value) => v as unknown as _Return;
+const refEqual = (a: unknown, b: unknown): boolean => {
+    return a === b;
+};
 
 export namespace useContextSelector {
     export type ContextSelectableSelector<
         _Value,
-        _SelectedValue = _Value,
+        _SelectedValue,
     > = (value: _Value) => _SelectedValue;
 }
 
 export const useContextSelector = <
     _Value extends T.UnknownRecord,
-    _SelectedValue = _Value,
+    _SelectedValue,
 >(
-    context: ContextSelectable.createContext.ContextSelectable<_Value>,
+    context: createContextSelectable.ContextSelectable<_Value>,
     selector: useContextSelector.ContextSelectableSelector<
         _Value,
         _SelectedValue
-    > = defaultSelector,
-    equalityFn = shallowEqual,
+    >,
+    equalityFn = refEqual,
 ): _SelectedValue => {
     const contextValue = useContext(
         context,

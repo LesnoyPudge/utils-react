@@ -1,19 +1,25 @@
-import * as c1 from './components';
-import * as c2 from './hooks';
-import * as c3 from './utils';
+import * as components from './components';
+import * as hooks from './hooks';
+import * as utils from './utils';
 
 
 
 export namespace ContextSelectable {
-    export import ConsumerProxy = c1.ContextConsumerProxy;
+    export import ConsumerProxy = components.ContextConsumerProxy;
 
-    export import ConsumerSelector = c1.ContextConsumerSelector;
+    export import ConsumerSelector = components.ContextConsumerSelector;
 
-    export import useProxy = c2.useContextProxy;
+    export import useProxy = hooks.useContextProxy;
 
-    export import useSelector = c2.useContextSelector;
+    export import useSelector = hooks.useContextSelector;
 
-    export import createConsumerProxy = c3.createContextConsumerProxy;
+    export import createConsumerProxy = utils.createContextConsumerProxy;
 
-    export import createContext = c3.createContextSelectable;
+    export import createContext = utils.createContextSelectable;
+
+    export import createUseProxyHook = utils.createUseContextProxyHook;
+
+    export import createUseSelectorHook = utils.createUseContextSelectorHook;
+
+    export import createContextWithHooks = utils.createContextSelectableWithHooks;
 }

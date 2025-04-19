@@ -4,10 +4,10 @@ import {
     Context as ContextFluent,
 } from '@fluentui/react-context-selector';
 import { T } from '@lesnoypudge/types-utils-base/namespace';
-import { ContextSelectable } from '@entities/ContextSelectable/ContextSelectable';
 import { useConst } from '@hooks/useConst';
 import { useFunction } from '@hooks/useFunction';
 import { useMemo, useRef } from 'react';
+import { createContextSelectable } from '@entities/ContextSelectable/utils';
 
 
 
@@ -16,7 +16,7 @@ const EMPTY_VALUE = {};
 export const useContextProxy = <
     _Value extends T.UnknownRecord,
 >(
-    context: ContextSelectable.createContext.ContextSelectable<_Value>,
+    context: createContextSelectable.ContextSelectable<_Value>,
 ): _Value => {
     const usedKeys = useConst(() => new Set<string>());
     const prevSelectedValueRef = useRef<
