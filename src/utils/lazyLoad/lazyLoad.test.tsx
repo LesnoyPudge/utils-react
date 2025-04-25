@@ -274,6 +274,52 @@ describe('lazyLoad', () => {
             // loaded and not trigger fallback
             expect(FallbackSpy).toBeCalledTimes(0);
         });
+
+        it(`
+            should provide trigger for loading components at any time    
+        `, async () => {
+            const DELAY = 3_000;
+
+            const componentSpy = vi.fn(() => Promise.resolve({
+                default: () => <div>Component</div>,
+            }));
+
+            const SuspenseSpy = vi.fn();
+
+            const preloadGroup = lazyLoad.createPreloadGroup();
+
+            const LazyComponent = lazyLoad.modifiedReactLazy(
+                preloadGroup.withPreloadGroup(
+                    lazyLoad.withDelay(
+                        componentSpy,
+                        { delay: DELAY, enable: true },
+                    ),
+                ),
+            );
+
+            const Test: FC = () => {
+                return (
+                    <Suspense fallback={<SuspenseSpy/>}>
+                        <LazyComponent/>
+                    </Suspense>
+                );
+            };
+
+            // loading components before rendering
+            void preloadGroup.trigger();
+            await vi.advanceTimersByTimeAsync(DELAY);
+
+            const screen = page.render(<Test/>);
+
+            const componentLocator = screen.getByText('Component');
+
+            await expect.element(
+                componentLocator,
+            ).toBeInTheDocument();
+
+            expect(componentSpy).toBeCalledTimes(1);
+            expect(SuspenseSpy).toBeCalledTimes(0);
+        });
     });
 
     describe('createAsyncLoadGroup', () => {

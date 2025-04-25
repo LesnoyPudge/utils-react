@@ -1,4 +1,4 @@
-import { ComponentType } from 'react';
+import { ComponentType, LazyExoticComponent } from 'react';
 import { Status } from '../vars';
 
 
@@ -84,4 +84,49 @@ export namespace Types {
     > = (
         ModuleFactory<_Component> | PromiseModuleFactory<_Component>
     );
+
+    export namespace Trigger {
+        export type Fn = () => Promise<void>;
+
+        export type With = {
+            trigger: Fn;
+        };
+    }
+
+    export namespace createPreloadGroup {
+        export type Options = asyncRetry.Options;
+
+        export type PreloadGroupWrapper = <
+            _Component extends BaseComponent,
+        >(
+            factory: PromiseModuleFactory<_Component>,
+        ) => ModuleOrPromiseModuleFactory<_Component>;
+
+        export type Return = (
+            Trigger.With
+            & {
+                withPreloadGroup: PreloadGroupWrapper;
+            }
+        );
+    }
+
+    export namespace createBasePreloadedComponent {
+        export type Options = {
+            delay?: Types.withDelay.Options;
+            retry?: Types.asyncRetry.Options;
+        };
+
+        export type LoadFn = <
+            _Component extends Types.BaseComponent,
+        >(
+            factory: Types.PromiseModuleFactory<_Component>
+        ) => LazyExoticComponent<_Component>;
+
+        export type Return = (
+            Trigger.With
+            & {
+                load: LoadFn;
+            }
+        );
+    }
 }

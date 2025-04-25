@@ -20,7 +20,9 @@ class LazyLoad {
      * Loading is resolved when all components is loaded.
      * Throws error if called component is failed to load.
      */
-    createPreloadGroup(options?: Types.asyncRetry.Options) {
+    createPreloadGroup(
+        options?: Types.createPreloadGroup.Options,
+    ): Types.createPreloadGroup.Return {
         const promiseFactoryList: Types.PromiseModuleFactory<
             Types.BaseComponent
         >[] = [];
@@ -33,9 +35,37 @@ class LazyLoad {
             Promise<Types.Module<Types.BaseComponent> | null> | null
         )[] = [];
 
-        const withPreloadGroup = <_Component extends Types.BaseComponent>(
-            factory: Types.PromiseModuleFactory<_Component>,
-        ): Types.ModuleOrPromiseModuleFactory<_Component> => {
+        const trigger = async () => {
+            const promisesToAwait = promiseFactoryList.map(
+                async (promiseFactory, index) => {
+                    const alreadyLoaded = resolvedModules[index];
+                    if (alreadyLoaded) return alreadyLoaded;
+
+                    const alreadyResolving = promisesInWork[index];
+                    if (alreadyResolving) return alreadyResolving;
+
+                    const modulePromise = asyncRetry(
+                        promiseFactory,
+                        options,
+                    ).then((v) => v ?? null);
+
+                    promisesInWork[index] = modulePromise;
+
+                    return await modulePromise;
+                },
+            );
+
+            const results = await Promise.all(promisesToAwait);
+
+            results.forEach((result, index) => {
+                resolvedModules[index] = result;
+                promisesInWork[index] = null;
+            });
+        };
+
+        const withPreloadGroup: (
+            Types.createPreloadGroup.PreloadGroupWrapper
+        ) = (factory) => {
             const index = promiseFactoryList.length;
 
             resolvedModules[index] = null;
@@ -43,51 +73,33 @@ class LazyLoad {
 
             const moduleOrPromiseModuleFactory = () => {
                 const module = resolvedModules[index];
-                if (module) return module as Types.Module<_Component>;
+                if (module) return module as Types.Module<Types.BaseComponent>;
 
-                const promisesToAwait = promiseFactoryList.map(
-                    async (promiseFactory, index) => {
-                        const alreadyLoaded = resolvedModules[index];
-                        if (alreadyLoaded) return alreadyLoaded;
-
-                        const alreadyResolving = promisesInWork[index];
-                        if (alreadyResolving) return alreadyResolving;
-
-                        const modulePromise = asyncRetry(
-                            promiseFactory,
-                            options,
-                        ).then((v) => v ?? null);
-
-                        promisesInWork[index] = modulePromise;
-
-                        return await modulePromise;
-                    },
-                );
-
-                return new Promise<Types.Module<_Component>>((res, rej) => {
+                return new Promise<
+                    Types.Module<Types.BaseComponent>
+                >((res, rej) => {
                     const asyncBody = async () => {
-                        const results = await Promise.all(promisesToAwait);
-
-                        results.forEach((result, index) => {
-                            resolvedModules[index] = result;
-                            promisesInWork[index] = null;
-                        });
+                        await trigger();
 
                         const loadedComponent = resolvedModules[index];
                         invariant(loadedComponent, 'Failed to lazy load.');
 
-                        return loadedComponent as Types.Module<_Component>;
+                        return loadedComponent as (
+                            Types.Module<Types.BaseComponent>
+                        );
                     };
 
                     asyncBody().then(res).catch(rej);
-                }) as Types.PromiseModule<_Component>;
+                }) as Types.PromiseModule<Types.BaseComponent>;
             };
 
-            return moduleOrPromiseModuleFactory as Types.ModuleOrPromiseModuleFactory<_Component>;
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any
+            return moduleOrPromiseModuleFactory as any;
         };
 
         return {
             withPreloadGroup,
+            trigger,
         };
     };
 
@@ -206,20 +218,25 @@ class LazyLoad {
     /**
      * Creates predefined wrapper for preloaded components.
      */
-    createBasePreloadedComponent(options?: {
-        delay?: Types.withDelay.Options;
-        retry?: Types.asyncRetry.Options;
-    }) {
+    createBasePreloadedComponent(
+        options?: Types.createBasePreloadedComponent.Options,
+    ): Types.createBasePreloadedComponent.Return {
         const {
             withPreloadGroup,
+            trigger,
         } = this.createPreloadGroup(options?.retry);
 
-        return <_Component extends Types.BaseComponent>(
-            factory: Types.PromiseModuleFactory<_Component>,
+        const load: Types.createBasePreloadedComponent.LoadFn = (
+            factory,
         ) => {
             return this.modifiedReactLazy(withPreloadGroup(
                 this.withDelay(factory, options?.delay),
             ));
+        };
+
+        return {
+            trigger,
+            load,
         };
     };
 

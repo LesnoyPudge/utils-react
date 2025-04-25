@@ -1,7 +1,7 @@
 {
     "name": "@lesnoypudge/utils-react",
     "description": "lesnoypudge's utils-react",
-    "version": "18.0.0",
+    "version": "18.1.0",
     "keywords": [
         "lesnoypudge",
         "utils",
@@ -29,8 +29,8 @@
     },
     "dependencies": {
         "@fluentui/react-context-selector": "^9.1.72",
-        "@lesnoypudge/utils": "^19.1.0",
-        "@lesnoypudge/utils-web": "^3.1.0",
+        "@lesnoypudge/utils": "^19.5.2",
+        "@lesnoypudge/utils-web": "^3.4.1",
         "react-error-boundary": "^5.0.0",
         "react-focus-on": "^3.9.4",
         "react-json-pretty": "^2.2.0"
@@ -47,7 +47,7 @@
         "@lesnoypudge/types-global-node": "^1.0.1",
         "@lesnoypudge/types-global-react": "^5.0.0",
         "@lesnoypudge/types-global-web": "^1.0.0",
-        "@lesnoypudge/types-utils-base": "^3.4.1",
+        "@lesnoypudge/types-utils-base": "^3.5.0",
         "@lesnoypudge/types-utils-react": "^5.0.0",
         "@testing-library/dom": "^10.4.0",
         "@testing-library/react": "^16.2.0",
