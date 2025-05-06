@@ -1,5 +1,5 @@
 import { useRefManager } from '@hooks/useRefManager';
-import { useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 
 
 
@@ -10,7 +10,7 @@ import { useLayoutEffect } from 'react';
 export const useSynchronizedAnimation = (
     elementRef: useRefManager.NullableRefManager<HTMLElement>,
 ) => {
-    useLayoutEffect(() => {
+    useEffect(() => {
         return elementRef.effect((node) => {
             if (!node) return;
 
