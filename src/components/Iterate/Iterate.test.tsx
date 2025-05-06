@@ -23,4 +23,24 @@ describe('Iterate', () => {
 
         expect(wrapper.element().childElementCount).toBe(items.length);
     });
+
+    it('should render list with count', () => {
+        const count = 5;
+
+        const screen = page.render((
+            <div data-testid='wrapper'>
+                <Iterate count={count} getKey={(index) => index}>
+                    {(index) => {
+                        return (
+                            <div>{index}</div>
+                        );
+                    }}
+                </Iterate>
+            </div>
+        ));
+
+        const wrapper = screen.getByTestId('wrapper');
+
+        expect(wrapper.element().childElementCount).toBe(count);
+    });
 });
