@@ -5,21 +5,21 @@ import * as utils from './utils';
 
 
 export namespace ContextSelectable {
-    export const {
-        createContextConsumerProxy: createConsumerProxy,
-        createContextSelectable: createContext,
-        createContextSelectableWithHooks: createContextWithHooks,
-        createUseContextProxyHook: createUseProxyHook,
-        createUseContextSelectorHook: createUseSelectorHook,
-    } = utils;
+    export import ConsumerProxy = components.ContextConsumerProxy;
 
-    export const {
-        ContextConsumerProxy: ConsumerProxy,
-        ContextConsumerSelector: ConsumerSelector,
-    } = components;
+    export import ConsumerSelector = components.ContextConsumerSelector;
 
-    export const {
-        useContextProxy: useProxy,
-        useContextSelector: useSelector,
-    } = hooks;
+    export import useProxy = hooks.useContextProxy;
+
+    export import useSelector = hooks.useContextSelector;
+
+    export import createConsumerProxy = utils.createContextConsumerProxy;
+
+    export import createContext = utils.createContextSelectable;
+
+    export import createUseProxyHook = utils.createUseContextProxyHook;
+
+    export import createUseSelectorHook = utils.createUseContextSelectorHook;
+
+    export import createContextWithHooks = utils.createContextSelectableWithHooks;
 }
