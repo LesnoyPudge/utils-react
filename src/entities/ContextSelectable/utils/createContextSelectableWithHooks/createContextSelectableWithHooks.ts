@@ -8,6 +8,12 @@ import {
 
 
 export namespace createContextSelectableWithHooks {
+    export type StaticValues<_Value extends T.UnknownRecord> = {
+        Context: createContextSelectable.ContextSelectable<_Value>;
+        useSelector: createUseContextSelectorHook.Return<_Value>;
+        useProxy: createUseContextProxyHook.Return<_Value>;
+    };
+
     export type Values<
         _Value extends T.UnknownRecord,
         _Name extends string,
@@ -27,6 +33,7 @@ export namespace createContextSelectableWithHooks {
                 createUseContextSelectorHook.Return<_Value>
             );
         }
+        & StaticValues<_Value>
     )>;
 
     export type Return<
@@ -49,18 +56,26 @@ export const createContextSelectableWithHooks = <
                 createContextSelectableWithHooks.Values<_Value, typeof name>
             );
 
-            const context = createContextSelectable<_Value>(defaultValue);
-            const proxyHook = createUseContextProxyHook(context);
-            const selectorHook = createUseContextSelectorHook(context);
+            const Context = createContextSelectable<_Value>(defaultValue);
+            const useProxy = createUseContextProxyHook(Context);
+            const useSelector = createUseContextSelectorHook(Context);
 
             const contextName = `${name}Context`;
             const proxyName = `use${name}ContextProxy`;
             const selectorName = `use${name}ContextSelector`;
 
-            Object.assign(result, {
-                [contextName]: context,
-                [proxyName]: proxyHook,
-                [selectorName]: selectorHook,
+            const staticValues: (
+                createContextSelectableWithHooks.StaticValues<_Value>
+            ) = {
+                Context,
+                useProxy,
+                useSelector,
+            };
+
+            Object.assign(result, staticValues, {
+                [contextName]: Context,
+                [proxyName]: useProxy,
+                [selectorName]: useSelector,
             });
 
             return result;
